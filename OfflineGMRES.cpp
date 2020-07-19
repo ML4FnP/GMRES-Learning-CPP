@@ -10,6 +10,10 @@ const int numCols=20;
 const int numSamples=304;
 
 
+/* Note : Assuming executable is run from cmake "build" subdirectory. Otherwise adjust
+          location where data is read from. */
+
+
 
 
 /* Input: pytorch "device" object (speicifies cpu or GPU)
@@ -27,14 +31,9 @@ torch::Tensor read_data_b(torch::Device device)
     numExample << std::setfill('0') << std::setw(4) << k;
     std::string numExampleString = numExample.str();
 
-
-    std::string b_loc = "/home/kl748/Research/NERSC/GMRES-Learning/DataOuput/bdata/b";
+    std::string b_loc = "../DataOuput2D/bdata/b"; 
     b_loc = b_loc+numExampleString+".dat";
     std::ifstream in1(b_loc.c_str());
-
-    std::string sol_loc = "/home/kl748/Research/NERSC/GMRES-Learning/DataOuput/soldata/res";
-    sol_loc = sol_loc+numExampleString+".dat";
-    std::ifstream in2(sol_loc.c_str());
 
     for (int i = 0; i < numRows; i++) 
     {
@@ -44,12 +43,14 @@ torch::Tensor read_data_b(torch::Device device)
         }
     }
   }
+ // Initizialize on GPU
+  auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false);
 
-  auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); // Initizialize on GPU
+  // One way of coppying over entire array of doubles
+  // torch::Tensor bTensor = torch::from_blob(bdat, {numSamples,numRows, numCols}, options);  
 
-  // torch::Tensor bTensor = torch::from_blob(bdat, {numSamples,numRows, numCols}, options);  // One way of coppying over entire array of doubles
-
-  torch::Tensor bTensor = torch::zeros({numSamples,numRows, numCols},options); // Another way of copying over entire array of doubles to pytorch tensor
+  // Another way of copying over entire array of doubles to pytorch tensor
+  torch::Tensor bTensor = torch::zeros({numSamples,numRows, numCols},options); 
   for (int i = 0; i < numSamples; i++) 
   {
     for (int j = 0; j < numRows; j++) 
@@ -78,9 +79,8 @@ torch::Tensor read_data_sol(torch::Device device)
     numExample << std::setfill('0') << std::setw(4) << k;
     std::string numExampleString = numExample.str();
 
-    std::string sol_loc = "/home/kl748/Research/NERSC/GMRES-Learning/DataOuput/soldata/res";
+    std::string sol_loc = "../DataOuput2D/soldata/res";
     sol_loc = sol_loc+numExampleString+".dat";
-    // std::cout << sol_loc << std::endl; // print out file names
     std::ifstream in2(sol_loc.c_str());
     for (int i = 0; i < numRows; i++) 
     {
@@ -90,12 +90,14 @@ torch::Tensor read_data_sol(torch::Device device)
         }
     }
   }
+  // Initizialize on GPU
+  auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); 
 
-  auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); // Initizialize on GPU
+  // // One way of coppying over entire array of doubles
+  // torch::Tensor SolTensor = torch::from_blob(soldat, {numSamples,numRows, numCols}, options); 
 
-  // torch::Tensor SolTensor = torch::from_blob(soldat, {numSamples,numRows, numCols}, options);  // One way of coppying over entire array of doubles
-
-  torch::Tensor SolTensor = torch::zeros({numSamples,numRows, numCols},options); // Another way of copying over entire array of doubles
+  // Another way of copying over entire array of doubles
+  torch::Tensor SolTensor = torch::zeros({numSamples,numRows, numCols},options);
   for (int i = 0; i < numSamples; i++) 
         {
           for (int j = 0; j < numRows; j++) 
@@ -137,10 +139,10 @@ class CustomDataset : public torch::data::Dataset<CustomDataset>
 
         torch::optional<size_t> size() const override
         {
-          // Return number of samples (This is not used, and can  return anything in this case)
-          // It appears that a size must be defined as done here (i.e this is not optional).
-          // The code breaks without this.
-          // see: https://discuss.pytorch.org/t/custom-dataloader/81874/3
+          /* Return number of samples (This is not used, and can  return anything in this case)
+            It appears that a size must be defined as done here (i.e this is not optional).
+            The code breaks without this.
+            see: https://discuss.pytorch.org/t/custom-dataloader/81874/3 */
           return SolTensor.size(0);
         };
   }; 
@@ -153,8 +155,8 @@ class CustomDataset : public torch::data::Dataset<CustomDataset>
 /* The approach used here uses the "hidden" reference semantics where std::shared_ptr<MyModule> is 
    essentially hidden from the user. Essentially, a module named "MYNET" to be used is called
    "MYNETImpl" instead. Then, TORCH_MODULE defines the actual class "MYNET" to be used. The
-   "generated" class is essentially a wrapper over  std::shared_ptr<LinearImpl>.  */
-//More info: https://pytorch.org/tutorials/advanced/cpp_frontend.html
+   "generated" class is essentially a wrapper over  std::shared_ptr<LinearImpl>.  
+   More info: https://pytorch.org/tutorials/advanced/cpp_frontend.html */
 struct CNN_NetImpl : torch::nn::Module
 {
   CNN_NetImpl(int64_t Dim ) : 
