@@ -68,10 +68,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES
+CMAKE_SOURCE_DIR = /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/OfflineExample
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/build
+CMAKE_BINARY_DIR = /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/OfflineExample/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -100,9 +100,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/build/CMakeFiles /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/OfflineExample/build/CMakeFiles /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/OfflineExample/build/CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/OfflineExample/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -131,17 +131,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named OfflineGMRES
+# Target rules for targets named Main.ex
 
 # Build rule for target.
-OfflineGMRES: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 OfflineGMRES
-.PHONY : OfflineGMRES
+Main.ex: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Main.ex
+.PHONY : Main.ex
 
 # fast build rule for target.
-OfflineGMRES/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OfflineGMRES.dir/build.make CMakeFiles/OfflineGMRES.dir/build
-.PHONY : OfflineGMRES/fast
+Main.ex/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Main.ex.dir/build.make CMakeFiles/Main.ex.dir/build
+.PHONY : Main.ex/fast
 
 OfflineGMRES.o: OfflineGMRES.cpp.o
 
@@ -149,7 +149,7 @@ OfflineGMRES.o: OfflineGMRES.cpp.o
 
 # target to build an object file
 OfflineGMRES.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OfflineGMRES.dir/build.make CMakeFiles/OfflineGMRES.dir/OfflineGMRES.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Main.ex.dir/build.make CMakeFiles/Main.ex.dir/OfflineGMRES.cpp.o
 .PHONY : OfflineGMRES.cpp.o
 
 OfflineGMRES.i: OfflineGMRES.cpp.i
@@ -158,7 +158,7 @@ OfflineGMRES.i: OfflineGMRES.cpp.i
 
 # target to preprocess a source file
 OfflineGMRES.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OfflineGMRES.dir/build.make CMakeFiles/OfflineGMRES.dir/OfflineGMRES.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Main.ex.dir/build.make CMakeFiles/Main.ex.dir/OfflineGMRES.cpp.i
 .PHONY : OfflineGMRES.cpp.i
 
 OfflineGMRES.s: OfflineGMRES.cpp.s
@@ -167,7 +167,7 @@ OfflineGMRES.s: OfflineGMRES.cpp.s
 
 # target to generate assembly for a file
 OfflineGMRES.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OfflineGMRES.dir/build.make CMakeFiles/OfflineGMRES.dir/OfflineGMRES.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Main.ex.dir/build.make CMakeFiles/Main.ex.dir/OfflineGMRES.cpp.s
 .PHONY : OfflineGMRES.cpp.s
 
 # Help Target
@@ -178,7 +178,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... OfflineGMRES"
+	@echo "... Main.ex"
 	@echo "... OfflineGMRES.o"
 	@echo "... OfflineGMRES.i"
 	@echo "... OfflineGMRES.s"

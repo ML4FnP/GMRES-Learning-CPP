@@ -31,7 +31,7 @@ torch::Tensor read_data_b(torch::Device device)
     numExample << std::setfill('0') << std::setw(4) << k;
     std::string numExampleString = numExample.str();
 
-    std::string b_loc = "../DataOuput2D/bdata/b"; 
+    std::string b_loc = "../../DataOuput2D/bdata/b"; 
     b_loc = b_loc+numExampleString+".dat";
     std::ifstream in1(b_loc.c_str());
 
@@ -79,7 +79,7 @@ torch::Tensor read_data_sol(torch::Device device)
     numExample << std::setfill('0') << std::setw(4) << k;
     std::string numExampleString = numExample.str();
 
-    std::string sol_loc = "../DataOuput2D/soldata/res";
+    std::string sol_loc = "../../DataOuput2D/soldata/res";
     sol_loc = sol_loc+numExampleString+".dat";
     std::ifstream in2(sol_loc.c_str());
     for (int i = 0; i < numRows; i++) 
