@@ -1,0 +1,57 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_c6db0/fast && /usr/bin/make  -f CMakeFiles/cmTC_c6db0.dir/build.make CMakeFiles/cmTC_c6db0.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c6db0.dir/src.c.o
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_c6db0.dir/src.c.o   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_c6db0
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c6db0.dir/link.txt --verbose=1
+/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_c6db0.dir/src.c.o  -o cmTC_c6db0 
+/usr/bin/ld: CMakeFiles/cmTC_c6db0.dir/src.c.o: in function `main':
+src.c:(.text+0x46): undefined reference to `pthread_create'
+/usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
+/usr/bin/ld: src.c:(.text+0x5e): undefined reference to `pthread_cancel'
+/usr/bin/ld: src.c:(.text+0x6f): undefined reference to `pthread_join'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_c6db0.dir/build.make:107: cmTC_c6db0] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_c6db0/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_23120/fast && /usr/bin/make  -f CMakeFiles/cmTC_23120.dir/build.make CMakeFiles/cmTC_23120.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_23120.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_23120.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_23120.dir/build.make:86: CMakeFiles/cmTC_23120.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_23120/fast] Error 2
+
+
+
