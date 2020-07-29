@@ -859,11 +859,11 @@ FIND_PACKAGE_MESSAGE_DETAILS_MPI_CXX:INTERNAL=[/opt/intel/compilers_and_librarie
 //Details about finding MPI_Fortran
 FIND_PACKAGE_MESSAGE_DETAILS_MPI_Fortran:INTERNAL=[/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/libmpifort.so][/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/lib/release/libmpi.so][/usr/lib/x86_64-linux-gnu/librt.so][/usr/lib/x86_64-linux-gnu/libpthread.so][/usr/lib/x86_64-linux-gnu/libdl.so][mpifort;mpi;rt;pthread;dl][TRUE][v3.1()]
 //Details about finding OpenMP
-FIND_PACKAGE_MESSAGE_DETAILS_OpenMP:INTERNAL=[TRUE][TRUE][cfound components: CXX Fortran ][v4.5()]
+FIND_PACKAGE_MESSAGE_DETAILS_OpenMP:INTERNAL=[TRUE][TRUE][cfound components: CXX Fortran ][v()]
 //Details about finding OpenMP_CXX
-FIND_PACKAGE_MESSAGE_DETAILS_OpenMP_CXX:INTERNAL=[-fopenmp][/usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so][/usr/lib/x86_64-linux-gnu/libpthread.so][v4.5()]
+FIND_PACKAGE_MESSAGE_DETAILS_OpenMP_CXX:INTERNAL=[-fopenmp][/usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so][/usr/lib/x86_64-linux-gnu/libpthread.so][v()]
 //Details about finding OpenMP_Fortran
-FIND_PACKAGE_MESSAGE_DETAILS_OpenMP_Fortran:INTERNAL=[-fopenmp][/usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so][/usr/lib/x86_64-linux-gnu/libpthread.so][v4.5()]
+FIND_PACKAGE_MESSAGE_DETAILS_OpenMP_Fortran:INTERNAL=[-fopenmp][/usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so][/usr/lib/x86_64-linux-gnu/libpthread.so][v()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding torch

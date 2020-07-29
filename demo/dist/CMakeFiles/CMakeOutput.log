@@ -1940,3 +1940,859 @@ Parsed Fortran OpenMP implicit link information from above output:
   implicit fwks: []
 
 
+Detecting Fortran OpenMP compiler ABI info compiled with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_5ea5f/fast && /usr/bin/make  -f CMakeFiles/cmTC_5ea5f.dir/build.make CMakeFiles/cmTC_5ea5f.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o
+/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/ccEaPVNR.s
+GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ as -v --64 -o CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o /tmp/ccEaPVNR.s
+GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+Linking Fortran executable cmTC_5ea5f
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5ea5f.dir/link.txt --verbose=1
+/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o  -o cmTC_5ea5f  -v 
+Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o -o cmTC_5ea5f -v -l gfortran -l m -shared-libgcc
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec
+rename spec lib to liborig
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_5ea5f' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_5ea5f' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccW0J4mk.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_5ea5f /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_5ea5f' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+
+
+
+Parsed Fortran OpenMP implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_5ea5f/fast && /usr/bin/make  -f CMakeFiles/cmTC_5ea5f.dir/build.make CMakeFiles/cmTC_5ea5f.dir/build]
+  ignore line: [make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp']
+  ignore line: [Building Fortran object CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o]
+  ignore line: [/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/ccEaPVNR.s]
+  ignore line: [GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o /tmp/ccEaPVNR.s]
+  ignore line: [GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [Linking Fortran executable cmTC_5ea5f]
+  ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5ea5f.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o  -o cmTC_5ea5f  -v ]
+  ignore line: [Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o -o cmTC_5ea5f -v -l gfortran -l m -shared-libgcc]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec]
+  ignore line: [rename spec lib to liborig]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_5ea5f' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_5ea5f' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccW0J4mk.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_5ea5f /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccW0J4mk.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lquadmath] ==> ignore
+    arg [-plugin-opt=-pass-through=-lm] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-pie] ==> ignore
+    arg [-znow] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_5ea5f] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o] ==> ignore
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..]
+    arg [CMakeFiles/cmTC_5ea5f.dir/OpenMPTryFlag.f90.o] ==> ignore
+    arg [-lgfortran] ==> lib [gfortran]
+    arg [-lm] ==> lib [m]
+    arg [-lgomp] ==> lib [gomp]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lquadmath] ==> lib [quadmath]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lpthread] ==> lib [pthread]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o] ==> ignore
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9] ==> [/usr/lib/gcc/x86_64-linux-gnu/9]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> [/usr/lib]
+  implicit libs: [gfortran;m;gomp;gcc_s;gcc;quadmath;m;gcc_s;gcc;pthread;c;gcc_s;gcc]
+  implicit dirs: [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib;/usr/lib/gcc/x86_64-linux-gnu/9;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib;/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64;/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8;/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  implicit fwks: []
+
+
+Detecting Fortran OpenMP compiler ABI info compiled with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_6bfc9/fast && /usr/bin/make  -f CMakeFiles/cmTC_6bfc9.dir/build.make CMakeFiles/cmTC_6bfc9.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o
+/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/ccUzPFiO.s
+GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ as -v --64 -o CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o /tmp/ccUzPFiO.s
+GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+Linking Fortran executable cmTC_6bfc9
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6bfc9.dir/link.txt --verbose=1
+/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o  -o cmTC_6bfc9  -v 
+Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o -o cmTC_6bfc9 -v -l gfortran -l m -shared-libgcc
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec
+rename spec lib to liborig
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_6bfc9' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_6bfc9' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFlzYDi.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_6bfc9 /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_6bfc9' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+
+
+
+Parsed Fortran OpenMP implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_6bfc9/fast && /usr/bin/make  -f CMakeFiles/cmTC_6bfc9.dir/build.make CMakeFiles/cmTC_6bfc9.dir/build]
+  ignore line: [make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp']
+  ignore line: [Building Fortran object CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o]
+  ignore line: [/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/ccUzPFiO.s]
+  ignore line: [GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o /tmp/ccUzPFiO.s]
+  ignore line: [GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [Linking Fortran executable cmTC_6bfc9]
+  ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6bfc9.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o  -o cmTC_6bfc9  -v ]
+  ignore line: [Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o -o cmTC_6bfc9 -v -l gfortran -l m -shared-libgcc]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec]
+  ignore line: [rename spec lib to liborig]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_6bfc9' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_6bfc9' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFlzYDi.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_6bfc9 /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccFlzYDi.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lquadmath] ==> ignore
+    arg [-plugin-opt=-pass-through=-lm] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-pie] ==> ignore
+    arg [-znow] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_6bfc9] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o] ==> ignore
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..]
+    arg [CMakeFiles/cmTC_6bfc9.dir/OpenMPTryFlag.f90.o] ==> ignore
+    arg [-lgfortran] ==> lib [gfortran]
+    arg [-lm] ==> lib [m]
+    arg [-lgomp] ==> lib [gomp]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lquadmath] ==> lib [quadmath]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lpthread] ==> lib [pthread]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o] ==> ignore
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9] ==> [/usr/lib/gcc/x86_64-linux-gnu/9]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> [/usr/lib]
+  implicit libs: [gfortran;m;gomp;gcc_s;gcc;quadmath;m;gcc_s;gcc;pthread;c;gcc_s;gcc]
+  implicit dirs: [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib;/usr/lib/gcc/x86_64-linux-gnu/9;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib;/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64;/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8;/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  implicit fwks: []
+
+
+Detecting Fortran OpenMP compiler ABI info compiled with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_0def0/fast && /usr/bin/make  -f CMakeFiles/cmTC_0def0.dir/build.make CMakeFiles/cmTC_0def0.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o
+/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/ccPWj4Mc.s
+GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ as -v --64 -o CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o /tmp/ccPWj4Mc.s
+GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+Linking Fortran executable cmTC_0def0
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0def0.dir/link.txt --verbose=1
+/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o  -o cmTC_0def0  -v 
+Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o -o cmTC_0def0 -v -l gfortran -l m -shared-libgcc
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec
+rename spec lib to liborig
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_0def0' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_0def0' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc4zvPWF.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_0def0 /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_0def0' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+
+
+
+Parsed Fortran OpenMP implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_0def0/fast && /usr/bin/make  -f CMakeFiles/cmTC_0def0.dir/build.make CMakeFiles/cmTC_0def0.dir/build]
+  ignore line: [make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp']
+  ignore line: [Building Fortran object CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o]
+  ignore line: [/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/ccPWj4Mc.s]
+  ignore line: [GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o /tmp/ccPWj4Mc.s]
+  ignore line: [GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [Linking Fortran executable cmTC_0def0]
+  ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0def0.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o  -o cmTC_0def0  -v ]
+  ignore line: [Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o -o cmTC_0def0 -v -l gfortran -l m -shared-libgcc]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec]
+  ignore line: [rename spec lib to liborig]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_0def0' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_0def0' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc4zvPWF.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_0def0 /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cc4zvPWF.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lquadmath] ==> ignore
+    arg [-plugin-opt=-pass-through=-lm] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-pie] ==> ignore
+    arg [-znow] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_0def0] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o] ==> ignore
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..]
+    arg [CMakeFiles/cmTC_0def0.dir/OpenMPTryFlag.f90.o] ==> ignore
+    arg [-lgfortran] ==> lib [gfortran]
+    arg [-lm] ==> lib [m]
+    arg [-lgomp] ==> lib [gomp]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lquadmath] ==> lib [quadmath]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lpthread] ==> lib [pthread]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o] ==> ignore
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9] ==> [/usr/lib/gcc/x86_64-linux-gnu/9]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> [/usr/lib]
+  implicit libs: [gfortran;m;gomp;gcc_s;gcc;quadmath;m;gcc_s;gcc;pthread;c;gcc_s;gcc]
+  implicit dirs: [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib;/usr/lib/gcc/x86_64-linux-gnu/9;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib;/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64;/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8;/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  implicit fwks: []
+
+
+Detecting Fortran OpenMP compiler ABI info compiled with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_f47fd/fast && /usr/bin/make  -f CMakeFiles/cmTC_f47fd.dir/build.make CMakeFiles/cmTC_f47fd.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o
+/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/cc0yKync.s
+GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+ as -v --64 -o CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o /tmp/cc0yKync.s
+GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread'
+Linking Fortran executable cmTC_f47fd
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f47fd.dir/link.txt --verbose=1
+/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o  -o cmTC_f47fd  -v 
+Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o -o cmTC_f47fd -v -l gfortran -l m -shared-libgcc
+Using built-in specs.
+COLLECT_GCC=/usr/bin/f95
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:hsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++,gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none,hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) 
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec
+rename spec lib to liborig
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_f47fd' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_f47fd' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccBkUklB.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_f47fd /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o
+COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_f47fd' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread'
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+
+
+
+Parsed Fortran OpenMP implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_f47fd/fast && /usr/bin/make  -f CMakeFiles/cmTC_f47fd.dir/build.make CMakeFiles/cmTC_f47fd.dir/build]
+  ignore line: [make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp']
+  ignore line: [Building Fortran object CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o]
+  ignore line: [/usr/bin/f95   -fopenmp -v   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -o CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/9/f951 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindOpenMP/OpenMPTryFlag.f90 -quiet -dumpbase OpenMPTryFlag.f90 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o -version -fopenmp -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/9/finclude -o /tmp/cc0yKync.s]
+  ignore line: [GNU Fortran (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [GNU Fortran2008 (Ubuntu 9.3.0-10ubuntu2) version 9.3.0 (x86_64-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o /tmp/cc0yKync.s]
+  ignore line: [GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-c' '-o' 'CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [Linking Fortran executable cmTC_f47fd]
+  ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f47fd.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/f95     -fopenmp -v CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o  -o cmTC_f47fd  -v ]
+  ignore line: [Driving: /usr/bin/f95 -fopenmp -v CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o -o cmTC_f47fd -v -l gfortran -l m -shared-libgcc]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/f95]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper]
+  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:hsa]
+  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 9.3.0-10ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-9/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ gm2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-9 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none hsa --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2) ]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgfortran.spec]
+  ignore line: [rename spec lib to liborig]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_f47fd' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/:/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64/:/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin/:/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/]
+  ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.spec]
+  ignore line: [COLLECT_GCC_OPTIONS='-fopenmp' '-v' '-o' 'cmTC_f47fd' '-v' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-pthread']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/9/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccBkUklB.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_f47fd /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib -L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8 -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o -lgfortran -lm -lgomp -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o /usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccBkUklB.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lquadmath] ==> ignore
+    arg [-plugin-opt=-pass-through=-lm] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-pie] ==> ignore
+    arg [-znow] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_f47fd] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadbegin.o] ==> ignore
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+    arg [-L/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..]
+    arg [CMakeFiles/cmTC_f47fd.dir/OpenMPTryFlag.f90.o] ==> ignore
+    arg [-lgfortran] ==> lib [gfortran]
+    arg [-lm] ==> lib [m]
+    arg [-lgomp] ==> lib [gomp]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lquadmath] ==> lib [quadmath]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lpthread] ==> lib [pthread]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/9/crtoffloadend.o] ==> ignore
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib/../lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9] ==> [/usr/lib/gcc/x86_64-linux-gnu/9]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin]
+  collapse library dir [/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/../tbb/lib/intel64_lin/gcc4.8] ==> [/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/9/../../..] ==> [/usr/lib]
+  implicit libs: [gfortran;m;gomp;gcc_s;gcc;quadmath;m;gcc_s;gcc;pthread;c;gcc_s;gcc]
+  implicit dirs: [/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/libfabric/lib;/usr/lib/gcc/x86_64-linux-gnu/9;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib;/opt/intel/compilers_and_libraries_2020.0.166/linux/ipp/lib/intel64;/opt/intel/compilers_and_libraries_2020.0.166/linux/compiler/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64/gcc4.8;/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib/intel64_lin;/opt/intel/compilers_and_libraries_2020.0.166/linux/tbb/lib/intel64_lin/gcc4.8]
+  implicit fwks: []
+
+
