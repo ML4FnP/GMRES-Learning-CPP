@@ -19,8 +19,63 @@
 
 #include <IBMarkerContainer.H>
 
+#include "MFUtil.H"
+
+#include <torch/torch.h>
+
 
 using namespace amrex;
+
+
+
+
+
+
+/* copy values of single box multifab to Pytorch Tensor  */
+template<typename T_src>
+void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out) {
+
+    const BoxArray & ba            = mf_in.boxArray();
+    const DistributionMapping & dm = mf_in.DistributionMap();
+            int ncomp                = mf_in.nComp();
+            int ngrow                = mf_in.nGrow();
+
+#ifdef _OPENMP
+#pragma omp parallel
+#endif
+
+    for(MFIter mfi(mf_in, true); mfi.isValid(); ++ mfi) {
+        const auto & in_tile  =      mf_in[mfi];
+
+        for(BoxIterator bit(mfi.tilebox()); bit.ok(); ++ bit) {
+            for(int i = 0; i < ncomp; i ++)
+            {
+                tensor_out[bit()[0]][bit()[1]][bit()[2]][i] = in_tile(bit(), i); //asuming i=1 only
+            }
+        }
+    }
+}
+
+
+
+
+template<typename F,typename R, typename U>
+auto Wrapper(F func,R param1, U param2)
+{
+    auto new_function = [func,param1,param2](auto&&... args)
+    {
+        std::cout << "BEGIN decorating...\n"; 
+        std::cout << "stuff before wrapee call. "<< "Param1 = "<< param1  << std::endl;
+        func(args...);   
+        std::cout << "stuff after wrapee call.  "<< "Param2 = "<< param2  << std::endl;
+        std::cout << "END decorating\n";
+
+    };
+    return new_function;
+}
+
+
+
 
 
 //! Defines staggered MultiFab arrays (BoxArrays set according to the
@@ -49,8 +104,6 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
     for (int i=0; i<AMREX_SPACEDIM; i++)
         mf_in[i].setVal(set_val);
 }
-
-
 
 // argv contains the name of the inputs file entered at the command line
 void main_driver(const char * argv) {
@@ -248,7 +301,7 @@ void main_driver(const char * argv) {
     // Define velocities and pressure
 
     // pressure for GMRES solve
-    MultiFab pres(ba, dmap, 1, 1);
+    MultiFab pres(ba, dmap, 1, 1); 
     pres.setVal(0.);  // initial guess
 
     // staggered velocities
@@ -323,6 +376,19 @@ void main_driver(const char * argv) {
 
 
 
+    /* pointer  to advanceStokes functions in src_hydro/advance.cpp  */
+    void (*advanceStokesPtr)(std::array< MultiFab, AMREX_SPACEDIM >&,MultiFab&, 
+                                const std::array< MultiFab,AMREX_SPACEDIM >&,
+                                std::array< MultiFab, AMREX_SPACEDIM >&,
+                                std::array< MultiFab, AMREX_SPACEDIM >&, 
+                                MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,
+                                const Geometry,const Real&
+                                ) = &advanceStokes;
+
+    /* Wrap advanceStokes function pointer */
+    auto advanceStokes_ML=Wrapper(advanceStokesPtr, "Test output1",3.14159) ;//, "parameter 1", 3.14159);
+    auto advanceStokes_ML2=Wrapper(advanceStokesPtr, "Test output2",3.14159) ;//, "parameter 1", 3.14159);
+
     /****************************************************************************
      *                                                                          *
      * Advance Time Steps                                                       *
@@ -362,7 +428,6 @@ void main_driver(const char * argv) {
     for (int d=0; d<AMREX_SPACEDIM; ++d)
         source_terms[d].SumBoundary(geom.periodicity());
 
-
     Real step_strt_time = ParallelDescriptor::second();
 
     // if(variance_coef_mom != 0.0) {
@@ -378,8 +443,23 @@ void main_driver(const char * argv) {
     // }
 
     // Example of overwriting the settings from inputs file
-    gmres::gmres_abs_tol = 1e-3;
 
+    // void (*advanceStokesPtr)(std::array< MultiFab, AMREX_SPACEDIM >&,  MultiFab&, const std::array< MultiFab, 
+    //                             AMREX_SPACEDIM >&,std::array< MultiFab, AMREX_SPACEDIM >&,std::array< MultiFab, AMREX_SPACEDIM >&,
+    //                             MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,const Geometry,const Real& ) = &advanceStokes;
+    // auto advanceStokes_ML=Wrapper(advanceStokes, "parameter 1",3.14159) ;//, "parameter 1", 3.14159);
+
+
+
+
+    gmres::gmres_abs_tol = 1e-3;
+    advanceStokes(
+            umac, pres,              /* LHS */
+            mfluxdiv, source_terms,  /* RHS */
+            alpha_fc, beta, gamma, beta_ed, geom, dt
+        );
+
+    gmres::gmres_abs_tol = 1e-7;
     advanceStokes(
             umac, pres,              /* LHS */
             mfluxdiv, source_terms,  /* RHS */
@@ -394,9 +474,31 @@ void main_driver(const char * argv) {
 
     time = time + dt;
     step ++;
-
     // write out umac & pres to a plotfile
     WritePlotFile(step, time, geom, umac, pres, ib_mc);
+
+
+    gmres::gmres_abs_tol = 1e-8;
+    advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+    gmres::gmres_abs_tol = 1e-9;
+    advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+    
+
+
+
+
+
+
+    // code for converting pressure multifab to tensor
+    // torch::Device device(torch::kCPU);
+    // if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
+    // auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); 
+
+    // torch::Tensor presTensor= torch::ones({max_grid_size[0], max_grid_size[1],max_grid_size[2],1},options);
+    // ConvertToTensor<amrex::MultiFab>(pres,presTensor);
+
+
+
 
 
     // // Call the timer again and compute the maximum difference between the start

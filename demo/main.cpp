@@ -1,4 +1,6 @@
 #include <AMReX.H>
+#include <torch/torch.h>
+
 
 // function declaration
 void main_driver (const char* argv);
