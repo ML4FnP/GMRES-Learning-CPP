@@ -23,9 +23,8 @@
 
 #include <torch/torch.h>
 
-
 using namespace amrex;
-
+using namespace torch::indexing;
 
 
 
@@ -47,13 +46,136 @@ void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out) {
     for(MFIter mfi(mf_in, true); mfi.isValid(); ++ mfi) {
         const auto & in_tile  =      mf_in[mfi];
 
-        for(BoxIterator bit(mfi.tilebox()); bit.ok(); ++ bit) {
-            for(int i = 0; i < ncomp; i ++)
-            {
-                tensor_out[bit()[0]][bit()[1]][bit()[2]][i] = in_tile(bit(), i); //asuming i=1 only
-            }
+        for(BoxIterator bit(mfi.tilebox()); bit.ok(); ++ bit)
+         {
+            tensor_out.index({bit()[0],bit()[1],bit()[2]}) = in_tile(bit());
         }
     }
+}
+
+
+std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  umac;
+}
+
+MultiFab& Unpack_pres(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  pres;
+}
+
+
+const std::array< MultiFab, AMREX_SPACEDIM >& Unpack_flux(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  stochMfluxdiv;
+}
+
+
+std::array< MultiFab, AMREX_SPACEDIM >& Unpack_sourceTerms(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  sourceTerms;
+}
+
+
+std::array< MultiFab, AMREX_SPACEDIM >& Unpack_alpha_fc(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  alpha_fc;
+}
+
+MultiFab& Unpack_beta(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  beta;
+}
+
+MultiFab& Unpack_gamma(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  gamma;
+}
+
+
+std::array< MultiFab, NUM_EDGE >& Unpack_beta_ed(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  beta_ed;
+}
+
+const Geometry Unpack_geom(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  geom;
+}
+
+const Real& Unpack_dt(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt)
+{  
+    return  dt;
 }
 
 
@@ -64,15 +186,20 @@ auto Wrapper(F func,R param1, U param2)
 {
     auto new_function = [func,param1,param2](auto&&... args)
     {
+        
         std::cout << "BEGIN decorating...\n"; 
         std::cout << "stuff before wrapee call. "<< "Param1 = "<< param1  << std::endl;
-        func(args...);   
+        // func(args...);   
+        func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...));
         std::cout << "stuff after wrapee call.  "<< "Param2 = "<< param2  << std::endl;
         std::cout << "END decorating\n";
 
     };
     return new_function;
 }
+
 
 
 
@@ -104,6 +231,68 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
     for (int i=0; i<AMREX_SPACEDIM; i++)
         mf_in[i].setVal(set_val);
 }
+
+
+
+
+struct CNN_NetImpl : torch::nn::Module
+{
+  CNN_NetImpl(int64_t Dim ) : 
+        conv1(torch::nn::Conv3dOptions(1, 1, {15,15}).stride(1).padding({7,7}).bias(false)),
+        conv2(torch::nn::Conv3dOptions(1, 1, {13,13}).stride(1).padding({6,6}).bias(false)),
+        lin1(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false)),
+        relu1(torch::nn::LeakyReLUOptions())
+ {
+   // register_module() is needed if we want to use the parameters() method later on
+   register_module("conv1", conv1);
+   register_module("conv2", conv2);
+   register_module("lin1", lin1);
+ }
+
+ torch::Tensor forward(torch::Tensor x, int64_t Dim)
+ {
+  int64_t Current_batchsize= x.size(0);
+   x = x.unsqueeze(1); // add channel dim (second index)
+   x = relu1(conv1(x));
+   x = relu1(conv2(x));
+   x = x.squeeze(1); // remove channel dim (second index)
+   x = x.reshape({Current_batchsize,1,1,-1}); // flatten
+   x = lin1(x);
+   x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
+   return x;
+   // std::cout << x.sizes() << std::endl;
+ }
+
+ torch::nn::Conv3d conv1,conv2;
+ torch::nn::Linear lin1;
+ torch::nn::LeakyReLU relu1;
+
+};
+TORCH_MODULE(CNN_Net);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // argv contains the name of the inputs file entered at the command line
 void main_driver(const char * argv) {
@@ -208,7 +397,9 @@ void main_driver(const char * argv) {
             & generalSeed
         );
 
-
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0, 1);
 
     /****************************************************************************
      *                                                                          *
@@ -397,91 +588,96 @@ void main_driver(const char * argv) {
 
 
     //___________________________________________________________________________
-    // Spread forces to RHS
-    std::array<MultiFab, AMREX_SPACEDIM> source_terms;
-    for (int d=0; d<AMREX_SPACEDIM; ++d){
-        source_terms[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 6);
-        source_terms[d].setVal(0.);
-    }
 
-
-    RealVect f_0 = RealVect{1.0, 0.0, 0.0};
-
-
-    for (IBMarIter pti(ib_mc, ib_lev); pti.isValid(); ++pti) {
-
-        // Get marker data (local to current thread)
-        TileIndex index(pti.index(), pti.LocalTileIndex());
-        AoS & markers = ib_mc.GetParticles(ib_lev).at(index).GetArrayOfStructs();
-        long np = ib_mc.GetParticles(ib_lev).at(index).numParticles();
-
-        for (int i =0; i<np; ++i) {
-            ParticleType & mark = markers[i];
-            for (int d=0; d<AMREX_SPACEDIM; ++d)
-                mark.rdata(IBMReal::forcex + d) = f_0[d];
+    while (step < 1)
+    {
+        // Spread forces to RHS
+        std::array<MultiFab, AMREX_SPACEDIM> source_terms;
+        for (int d=0; d<AMREX_SPACEDIM; ++d){
+            source_terms[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 6);
+            source_terms[d].setVal(0.);
         }
+
+
+        RealVect f_0 = RealVect{2.0*dis(gen), 0.0, 0.0};
+        // Print() << dis(gen) << "rng check" << "\n";
+
+        for (IBMarIter pti(ib_mc, ib_lev); pti.isValid(); ++pti) {
+
+            // Get marker data (local to current thread)
+            TileIndex index(pti.index(), pti.LocalTileIndex());
+            AoS & markers = ib_mc.GetParticles(ib_lev).at(index).GetArrayOfStructs();
+            long np = ib_mc.GetParticles(ib_lev).at(index).numParticles();
+
+            for (int i =0; i<np; ++i) {
+                ParticleType & mark = markers[i];
+                for (int d=0; d<AMREX_SPACEDIM; ++d)
+                    mark.rdata(IBMReal::forcex + d) = f_0[d];
+            }
+        }
+    
+
+        // Spread to the `fc_force` multifab
+        ib_mc.SpreadMarkers(0, source_terms);
+        for (int d=0; d<AMREX_SPACEDIM; ++d)
+            source_terms[d].SumBoundary(geom.periodicity());
+
+        Real step_strt_time = ParallelDescriptor::second();
+
+        // if(variance_coef_mom != 0.0) {
+
+        //     //___________________________________________________________________
+        //     // Fill stochastic terms
+
+        //     sMflux.fillMomStochastic();
+
+        //     // Compute stochastic force terms (and apply to mfluxdiv_*)
+        //     sMflux.StochMomFluxDiv(mfluxdiv_predict, 0, eta_cc, eta_ed, temp_cc, temp_ed, weights, dt);
+        //     sMflux.StochMomFluxDiv(mfluxdiv_correct, 0, eta_cc, eta_ed, temp_cc, temp_ed, weights, dt);
+        // }
+
+        // Example of overwriting the settings from inputs file
+
+        // void (*advanceStokesPtr)(std::array< MultiFab, AMREX_SPACEDIM >&,  MultiFab&, const std::array< MultiFab, 
+        //                             AMREX_SPACEDIM >&,std::array< MultiFab, AMREX_SPACEDIM >&,std::array< MultiFab, AMREX_SPACEDIM >&,
+        //                             MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,const Geometry,const Real& ) = &advanceStokes;
+        // auto advanceStokes_ML=Wrapper(advanceStokes, "parameter 1",3.14159) ;//, "parameter 1", 3.14159);
+
+
+        gmres::gmres_abs_tol = 1e-4;
+        advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+        // advanceStokes(
+        //         umac, pres,              /* LHS */
+        //         mfluxdiv, source_terms,  /* RHS */
+        //         alpha_fc, beta, gamma, beta_ed, geom, dt
+        //     );
+
+
+        gmres::gmres_abs_tol = 1e-7;
+        advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+        // advanceStokes(
+        //         umac, pres,              /* LHS */
+        //         mfluxdiv, source_terms,  /* RHS */
+        //         alpha_fc, beta, gamma, beta_ed, geom, dt
+        //     );
+
+
+        Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
+        ParallelDescriptor::ReduceRealMax(step_stop_time);
+
+        amrex::Print() << "Advanced step " << step << " in " << step_stop_time << " seconds\n";
+
+        time = time + dt;
+        step ++;
+        // write out umac & pres to a plotfile
+        WritePlotFile(step, time, geom, umac, pres, ib_mc);
     }
- 
-
-    // Spread to the `fc_force` multifab
-    ib_mc.SpreadMarkers(0, source_terms);
-    for (int d=0; d<AMREX_SPACEDIM; ++d)
-        source_terms[d].SumBoundary(geom.periodicity());
-
-    Real step_strt_time = ParallelDescriptor::second();
-
-    // if(variance_coef_mom != 0.0) {
-
-    //     //___________________________________________________________________
-    //     // Fill stochastic terms
-
-    //     sMflux.fillMomStochastic();
-
-    //     // Compute stochastic force terms (and apply to mfluxdiv_*)
-    //     sMflux.StochMomFluxDiv(mfluxdiv_predict, 0, eta_cc, eta_ed, temp_cc, temp_ed, weights, dt);
-    //     sMflux.StochMomFluxDiv(mfluxdiv_correct, 0, eta_cc, eta_ed, temp_cc, temp_ed, weights, dt);
-    // }
-
-    // Example of overwriting the settings from inputs file
-
-    // void (*advanceStokesPtr)(std::array< MultiFab, AMREX_SPACEDIM >&,  MultiFab&, const std::array< MultiFab, 
-    //                             AMREX_SPACEDIM >&,std::array< MultiFab, AMREX_SPACEDIM >&,std::array< MultiFab, AMREX_SPACEDIM >&,
-    //                             MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,const Geometry,const Real& ) = &advanceStokes;
-    // auto advanceStokes_ML=Wrapper(advanceStokes, "parameter 1",3.14159) ;//, "parameter 1", 3.14159);
 
 
-
-
-    gmres::gmres_abs_tol = 1e-3;
-    advanceStokes(
-            umac, pres,              /* LHS */
-            mfluxdiv, source_terms,  /* RHS */
-            alpha_fc, beta, gamma, beta_ed, geom, dt
-        );
-
-    gmres::gmres_abs_tol = 1e-7;
-    advanceStokes(
-            umac, pres,              /* LHS */
-            mfluxdiv, source_terms,  /* RHS */
-            alpha_fc, beta, gamma, beta_ed, geom, dt
-        );
-
-
-    Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
-    ParallelDescriptor::ReduceRealMax(step_stop_time);
-
-    amrex::Print() << "Advanced step " << step << " in " << step_stop_time << " seconds\n";
-
-    time = time + dt;
-    step ++;
-    // write out umac & pres to a plotfile
-    WritePlotFile(step, time, geom, umac, pres, ib_mc);
-
-
-    gmres::gmres_abs_tol = 1e-8;
-    advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
-    gmres::gmres_abs_tol = 1e-9;
-    advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+    // gmres::gmres_abs_tol = 1e-8;
+    // advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+    // gmres::gmres_abs_tol = 1e-9;
+    // advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
     
 
 
@@ -490,12 +686,12 @@ void main_driver(const char * argv) {
 
 
     // code for converting pressure multifab to tensor
-    // torch::Device device(torch::kCPU);
-    // if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
-    // auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); 
+    torch::Device device(torch::kCPU);
+    if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
+    auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); 
 
-    // torch::Tensor presTensor= torch::ones({max_grid_size[0], max_grid_size[1],max_grid_size[2],1},options);
-    // ConvertToTensor<amrex::MultiFab>(pres,presTensor);
+    torch::Tensor presTensor= torch::ones({max_grid_size[0], max_grid_size[1],max_grid_size[2]},options);
+    ConvertToTensor<amrex::MultiFab>(pres,presTensor);
 
 
 
