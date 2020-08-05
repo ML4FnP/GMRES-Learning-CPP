@@ -67,9 +67,9 @@ void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) {
     double test ;
 
 
-// #ifdef _OPENMP
-// #pragma omp parallel
-// #endif
+#ifdef _OPENMP
+#pragma omp parallel
+#endif
 
     for(MFIter mfi(mf_out, true); mfi.isValid(); ++ mfi) {
         auto & out_tile  =        mf_out[mfi];
