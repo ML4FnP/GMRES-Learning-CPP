@@ -46,9 +46,40 @@ void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out) {
     for(MFIter mfi(mf_in, true); mfi.isValid(); ++ mfi) {
         const auto & in_tile  =      mf_in[mfi];
 
-        for(BoxIterator bit(mfi.tilebox()); bit.ok(); ++ bit)
+        for(BoxIterator bit(mfi.growntilebox()); bit.ok(); ++ bit)
          {
-            tensor_out.index({bit()[0],bit()[1],bit()[2]}) = in_tile(bit());
+            tensor_out.index({bit()[0]-in_tile.smallEnd()[0],bit()[1]-in_tile.smallEnd()[1],bit()[2]-in_tile.smallEnd()[2]}) = in_tile(bit());
+        }
+    }
+}
+
+
+/* copy values of  Pytorch Tensor to a single box multifab */
+template<typename T_dest>
+void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) {
+
+
+    int   i, j, k;
+    const BoxArray & ba            = mf_out.boxArray();
+    const DistributionMapping & dm = mf_out.DistributionMap();
+            int ncomp                = mf_out.nComp();
+            int ngrow                = mf_out.nGrow();
+    double test ;
+
+
+// #ifdef _OPENMP
+// #pragma omp parallel
+// #endif
+
+    for(MFIter mfi(mf_out, true); mfi.isValid(); ++ mfi) {
+        auto & out_tile  =        mf_out[mfi];
+
+        for(BoxIterator bit(mfi.growntilebox()); bit.ok(); ++ bit)
+         {
+             i = bit()[0]-out_tile.smallEnd()[0];
+             j = bit()[1]-out_tile.smallEnd()[1];
+             k = bit()[2]-out_tile.smallEnd()[2];
+             out_tile(bit()) = tensor_in.index({i,j,k}).item<double>(); //RHS breaks when using iterator and smallEnd member function to compute index
         }
     }
 }
@@ -690,9 +721,11 @@ void main_driver(const char * argv) {
     if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
     auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); 
 
-    torch::Tensor presTensor= torch::ones({max_grid_size[0], max_grid_size[1],max_grid_size[2]},options);
-    ConvertToTensor<amrex::MultiFab>(pres,presTensor);
 
+    const auto & presbox  =   pres[0];
+    torch::Tensor presTensor= torch::ones({max_grid_size[0]-presbox.smallEnd()[0]+1, max_grid_size[1]-presbox.smallEnd()[1]+1,max_grid_size[2]-presbox.smallEnd()[2]+1},options);
+    ConvertToTensor<amrex::MultiFab>(pres,presTensor);
+    TensorToMultifab<amrex::MultiFab>(presTensor,pres);
 
 
 
