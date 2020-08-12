@@ -29,6 +29,59 @@ using namespace torch::indexing;
 
 
 
+// struct Lin_NetImpl : torch::nn::Module
+// {
+//   Lin_NetImpl(int64_t Dim ) : 
+//         lin1(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false))
+//  {
+//    // register_module() is needed if we want to use the parameters() method later on
+//    register_module("lin1", lin1);
+//  }
+
+//  torch::Tensor forward(torch::Tensor x, int64_t Dim)
+//  {
+
+//    x = x.unsqueeze(0); // add batch dim (first index)
+//    int64_t Current_batchsize= x.size(0);
+//    x = x.reshape({Current_batchsize,1,1,-1}); // flatten
+//    x = lin1(x);
+//    x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
+//    return x;
+//  }
+
+//  torch::nn::Linear lin1;
+
+// };
+// TORCH_MODULE(Lin_Net);
+
+
+
+
+struct Net : torch::nn::Module {
+  Net(int64_t Dim)
+    : linear(register_module("linear", torch::nn::Linear(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false))))
+  { }
+   torch::Tensor forward(torch::Tensor x, int64_t Dim)
+   {
+    x = x.unsqueeze(0); // add batch dim (first index)
+    int64_t Current_batchsize= x.size(0);
+    x = x.reshape({Current_batchsize,1,1,-1}); // flatten
+    x = linear(x);
+    x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
+    x = x.squeeze(0); // add batch dim (first index)
+
+    return x;
+   }
+  torch::nn::Linear linear;
+};
+
+
+
+
+
+
+
+
 
 /* copy values of single box multifab to Pytorch Tensor  */
 template<typename T_src>
@@ -213,15 +266,30 @@ const Real& Unpack_dt(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
 
 
 template<typename F,typename R, typename U>
-auto Wrapper(F func,R param1, U param2)
+auto Wrapper(F func,R param1, U param2,torch::Device device,std::shared_ptr<Net> NETPres)
 {
-    auto new_function = [func,param1,param2](auto&&... args)
+    auto new_function = [func,param1,param2,device,NETPres](auto&&... args)
     {
         
+
+        MultiFab& pres =Unpack_pres(args...);
+        const auto & presbox  =   pres[0];
+        int Tensordim1 = max_grid_size[0]-presbox.smallEnd()[0]+1;
+        auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+
+
+
+    // code for converting pressure multifab to tensor
+        torch::Tensor presTensor= torch::ones({max_grid_size[0]-presbox.smallEnd()[0]+1, max_grid_size[1]-presbox.smallEnd()[1]+1,max_grid_size[2]-presbox.smallEnd()[2]+1},options);
+        ConvertToTensor<amrex::MultiFab>(pres,presTensor);
+        torch::Tensor output = NETPres->forward(presTensor,Tensordim1);
+        TensorToMultifab<amrex::MultiFab>(output,pres);
+
+
         std::cout << "BEGIN decorating...\n"; 
         std::cout << "stuff before wrapee call. "<< "Param1 = "<< param1  << std::endl;
         // func(args...);   
-        func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+        func(Unpack_umac(args...),pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...));
         std::cout << "stuff after wrapee call.  "<< "Param2 = "<< param2  << std::endl;
@@ -266,43 +334,40 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
 
 
 
-struct CNN_NetImpl : torch::nn::Module
-{
-  CNN_NetImpl(int64_t Dim ) : 
-        conv1(torch::nn::Conv3dOptions(1, 1, {15,15}).stride(1).padding({7,7}).bias(false)),
-        conv2(torch::nn::Conv3dOptions(1, 1, {13,13}).stride(1).padding({6,6}).bias(false)),
-        lin1(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false)),
-        relu1(torch::nn::LeakyReLUOptions())
- {
-   // register_module() is needed if we want to use the parameters() method later on
-   register_module("conv1", conv1);
-   register_module("conv2", conv2);
-   register_module("lin1", lin1);
- }
+// struct CNN_NetImpl : torch::nn::Module
+// {
+//   CNN_NetImpl(int64_t Dim ) : 
+//         conv1(torch::nn::Conv3dOptions(1, 1, {15,15}).stride(1).padding({7,7}).bias(false)),
+//         conv2(torch::nn::Conv3dOptions(1, 1, {13,13}).stride(1).padding({6,6}).bias(false)),
+//         lin1(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false)),
+//         relu1(torch::nn::LeakyReLUOptions())
+//  {
+//    // register_module() is needed if we want to use the parameters() method later on
+//    register_module("conv1", conv1);
+//    register_module("conv2", conv2);
+//    register_module("lin1", lin1);
+//  }
 
- torch::Tensor forward(torch::Tensor x, int64_t Dim)
- {
-  int64_t Current_batchsize= x.size(0);
-   x = x.unsqueeze(1); // add channel dim (second index)
-   x = relu1(conv1(x));
-   x = relu1(conv2(x));
-   x = x.squeeze(1); // remove channel dim (second index)
-   x = x.reshape({Current_batchsize,1,1,-1}); // flatten
-   x = lin1(x);
-   x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
-   return x;
-   // std::cout << x.sizes() << std::endl;
- }
+//  torch::Tensor forward(torch::Tensor x, int64_t Dim)
+//  {
+//   int64_t Current_batchsize= x.size(0);
+//    x = x.unsqueeze(1); // add channel dim (second index)
+//    x = relu1(conv1(x));
+//    x = relu1(conv2(x));
+//    x = x.squeeze(1); // remove channel dim (second index)
+//    x = x.reshape({Current_batchsize,1,1,-1}); // flatten
+//    x = lin1(x);
+//    x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
+//    return x;
+//    // std::cout << x.sizes() << std::endl;
+//  }
 
- torch::nn::Conv3d conv1,conv2;
- torch::nn::Linear lin1;
- torch::nn::LeakyReLU relu1;
+//  torch::nn::Conv3d conv1,conv2;
+//  torch::nn::Linear lin1;
+//  torch::nn::LeakyReLU relu1;
 
-};
-TORCH_MODULE(CNN_Net);
-
-
-
+// };
+// TORCH_MODULE(CNN_Net);
 
 
 
@@ -596,6 +661,15 @@ void main_driver(const char * argv) {
     // Write out initial state
     WritePlotFile(step, time, geom, umac, pres, ib_mc);
 
+    torch::Device device(torch::kCPU);
+    if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
+
+    const auto & presbox  =   pres[0];
+    int Tensordim1 = max_grid_size[0]-presbox.smallEnd()[0]+1;
+    //   Define model and move to GPU
+    // Lin_Net TestNet(Tensordim1);
+    auto TestNet = std::make_shared<Net>(Tensordim1);
+    TestNet->to(device);
 
 
     /* pointer  to advanceStokes functions in src_hydro/advance.cpp  */
@@ -608,8 +682,9 @@ void main_driver(const char * argv) {
                                 ) = &advanceStokes;
 
     /* Wrap advanceStokes function pointer */
-    auto advanceStokes_ML=Wrapper(advanceStokesPtr, "Test output1",3.14159) ;//, "parameter 1", 3.14159);
-    auto advanceStokes_ML2=Wrapper(advanceStokesPtr, "Test output2",3.14159) ;//, "parameter 1", 3.14159);
+
+    auto advanceStokes_ML=Wrapper(advanceStokesPtr, "Test output1",3.14159,device,TestNet) ;//, "parameter 1", 3.14159);
+    auto advanceStokes_ML2=Wrapper(advanceStokesPtr, "Test output2",3.14159,device,TestNet) ;//, "parameter 1", 3.14159);
 
     /****************************************************************************
      *                                                                          *
@@ -710,22 +785,6 @@ void main_driver(const char * argv) {
     // gmres::gmres_abs_tol = 1e-9;
     // advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
     
-
-
-
-
-
-
-    // code for converting pressure multifab to tensor
-    torch::Device device(torch::kCPU);
-    if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
-    auto options = torch::TensorOptions().dtype(torch::kFloat64).device(torch::kCUDA).requires_grad(false); 
-
-
-    const auto & presbox  =   pres[0];
-    torch::Tensor presTensor= torch::ones({max_grid_size[0]-presbox.smallEnd()[0]+1, max_grid_size[1]-presbox.smallEnd()[1]+1,max_grid_size[2]-presbox.smallEnd()[2]+1},options);
-    ConvertToTensor<amrex::MultiFab>(pres,presTensor);
-    TensorToMultifab<amrex::MultiFab>(presTensor,pres);
 
 
 
