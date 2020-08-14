@@ -58,16 +58,16 @@ using namespace torch::indexing;
 
 
 struct Net : torch::nn::Module {
-  Net(int64_t Dim)
-    : linear(register_module("linear", torch::nn::Linear(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false))))
+  Net(int64_t Dim1, int64_t Dim2, int64_t Dim3)
+    : linear(register_module("linear", torch::nn::Linear(torch::nn::LinearOptions(Dim1*Dim2*Dim3,Dim1*Dim2*Dim3).bias(false))))
   { }
-   torch::Tensor forward(torch::Tensor x, int64_t Dim)
+   torch::Tensor forward(torch::Tensor x, int64_t Dim1, int64_t Dim2, int64_t Dim3)
    {
     x = x.unsqueeze(0); // add batch dim (first index)
     int64_t Current_batchsize= x.size(0);
     x = x.reshape({Current_batchsize,1,1,-1}); // flatten
     x = linear(x);
-    x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
+    x = x.reshape({Current_batchsize,Dim1,Dim2,Dim3}); // unflatten
     x = x.squeeze(0); // add batch dim (first index)
 
     return x;
@@ -91,6 +91,7 @@ void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out) {
     const DistributionMapping & dm = mf_in.DistributionMap();
             int ncomp                = mf_in.nComp();
             int ngrow                = mf_in.nGrow();
+            int i,j,k;
 
 #ifdef _OPENMP
 #pragma omp parallel
@@ -101,7 +102,10 @@ void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out) {
 
         for(BoxIterator bit(mfi.growntilebox()); bit.ok(); ++ bit)
          {
-            tensor_out.index({bit()[0]-in_tile.smallEnd()[0],bit()[1]-in_tile.smallEnd()[1],bit()[2]-in_tile.smallEnd()[2]}) = in_tile(bit());
+            i=int(bit()[0]) - int(in_tile.smallEnd()[0]);
+            j=int(bit()[1]) - int(in_tile.smallEnd()[1]);
+            k=int(bit()[2]) - int(in_tile.smallEnd()[2]);
+            tensor_out.index({i,j,k}) = in_tile(bit());
         }
     }
 }
@@ -145,7 +149,8 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect )
 {  
     return  umac;
 }
@@ -157,7 +162,8 @@ MultiFab& Unpack_pres(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  pres;
 }
@@ -170,7 +176,8 @@ const std::array< MultiFab, AMREX_SPACEDIM >& Unpack_flux(std::array< MultiFab, 
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  stochMfluxdiv;
 }
@@ -183,7 +190,8 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_sourceTerms(std::array< MultiFab,
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  sourceTerms;
 }
@@ -196,7 +204,8 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_alpha_fc(std::array< MultiFab, AM
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  alpha_fc;
 }
@@ -208,7 +217,8 @@ MultiFab& Unpack_beta(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  beta;
 }
@@ -220,7 +230,8 @@ MultiFab& Unpack_gamma(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pr
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  gamma;
 }
@@ -233,7 +244,8 @@ std::array< MultiFab, NUM_EDGE >& Unpack_beta_ed(std::array< MultiFab, AMREX_SPA
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  beta_ed;
 }
@@ -245,7 +257,8 @@ const Geometry Unpack_geom(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  geom;
 }
@@ -257,43 +270,101 @@ const Real& Unpack_dt(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    MultiFab& beta,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt)
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
 {  
     return  dt;
 }
 
 
+torch::Tensor& Unpack_PresCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
+{  
+    return  PresCollect;
+}
+
+void CollectPressure(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect
+                   ,torch::Tensor PresFinal)
+{  
+
+        PresCollect=torch::cat({PresCollect,PresFinal},0);
+    
+}
+
+torch::Tensor& Unpack_RHSCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,torch::Tensor& RHSCollect)
+{  
+    return  RHSCollect;
+}
 
 
-template<typename F,typename R, typename U>
-auto Wrapper(F func,R param1, U param2,torch::Device device,std::shared_ptr<Net> NETPres)
+void CollectRHS(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect, torch::Tensor& RHSCollect
+                   ,torch::Tensor RHSFinal)
+{  
+
+        RHSCollect=torch::cat({RHSCollect,RHSFinal},0);
+    
+}
+
+
+
+
+
+template<typename F>
+auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const IntVect srctermXTensordim)
 {
-    auto new_function = [func,param1,param2,device,NETPres](auto&&... args)
+    auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermXTensordim](auto&&... args)
     {
         
+        func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+        Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+        Unpack_geom(args...),Unpack_dt(args...));
 
-        MultiFab& pres =Unpack_pres(args...);
-        const auto & presbox  =   pres[0];
-        int Tensordim1 = max_grid_size[0]-presbox.smallEnd()[0]+1;
-        auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+        if(RefineSol == true)
+        {
+                auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+                torch::Tensor presTensor= torch::zeros({presTensordim[0]+1 , presTensordim[1]+1,presTensordim[2]+1 },options);
+                torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
+                ConvertToTensor(Unpack_pres(args...),presTensor);
+                ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+                CollectPressure(args...,presTensor.unsqueeze(0));
+                CollectRHS(args...,RHSTensor.unsqueeze(0));
 
+                MultiFab pres ;
+                torch::Tensor output = NETPres->forward(presTensor,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
+                TensorToMultifab<amrex::MultiFab>(output,pres);
+        }
 
-
-    // code for converting pressure multifab to tensor
-        torch::Tensor presTensor= torch::ones({max_grid_size[0]-presbox.smallEnd()[0]+1, max_grid_size[1]-presbox.smallEnd()[1]+1,max_grid_size[2]-presbox.smallEnd()[2]+1},options);
-        ConvertToTensor<amrex::MultiFab>(pres,presTensor);
-        torch::Tensor output = NETPres->forward(presTensor,Tensordim1);
-        TensorToMultifab<amrex::MultiFab>(output,pres);
-
-
-        std::cout << "BEGIN decorating...\n"; 
-        std::cout << "stuff before wrapee call. "<< "Param1 = "<< param1  << std::endl;
-        // func(args...);   
-        func(Unpack_umac(args...),pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
-                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-                Unpack_geom(args...),Unpack_dt(args...));
-        std::cout << "stuff after wrapee call.  "<< "Param2 = "<< param2  << std::endl;
-        std::cout << "END decorating\n";
 
     };
     return new_function;
@@ -661,14 +732,30 @@ void main_driver(const char * argv) {
     // Write out initial state
     WritePlotFile(step, time, geom, umac, pres, ib_mc);
 
+
+    //___________________________________________________
+    // Setup ML 
+
+    // Spread forces to RHS
+    std::array<MultiFab, AMREX_SPACEDIM> source_terms;
+    for (int d=0; d<AMREX_SPACEDIM; ++d){
+        source_terms[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 6);
+        source_terms[d].setVal(0.);
+    }
+
     torch::Device device(torch::kCPU);
     if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
 
     const auto & presbox  =   pres[0];
-    int Tensordim1 = max_grid_size[0]-presbox.smallEnd()[0]+1;
+    IntVect presTensordim = presbox.bigEnd()-presbox.smallEnd();
+
+    const auto & sourceTermxbox  =   source_terms[0][0];
+    IntVect srctermXTensordim = sourceTermxbox.bigEnd()-sourceTermxbox.smallEnd();
+    
+
+
     //   Define model and move to GPU
-    // Lin_Net TestNet(Tensordim1);
-    auto TestNet = std::make_shared<Net>(Tensordim1);
+    auto TestNet = std::make_shared<Net>(int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
     TestNet->to(device);
 
 
@@ -682,9 +769,14 @@ void main_driver(const char * argv) {
                                 ) = &advanceStokes;
 
     /* Wrap advanceStokes function pointer */
+    bool RefineSol=false;
+    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim) ;
+    RefineSol=true;
+    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim) ;
 
-    auto advanceStokes_ML=Wrapper(advanceStokesPtr, "Test output1",3.14159,device,TestNet) ;//, "parameter 1", 3.14159);
-    auto advanceStokes_ML2=Wrapper(advanceStokesPtr, "Test output2",3.14159,device,TestNet) ;//, "parameter 1", 3.14159);
+    auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+    torch::Tensor presCollect= torch::zeros({1,presTensordim[0]+1, presTensordim[1]+1,presTensordim[2]+1},options);
+    torch::Tensor RHSCollect= torch::zeros({1,srctermXTensordim[0]+1, srctermXTensordim[1]+1,srctermXTensordim[2]+1},options);
 
     /****************************************************************************
      *                                                                          *
@@ -695,7 +787,7 @@ void main_driver(const char * argv) {
 
     //___________________________________________________________________________
 
-    while (step < 1)
+    while (step < 50)
     {
         // Spread forces to RHS
         std::array<MultiFab, AMREX_SPACEDIM> source_terms;
@@ -751,7 +843,7 @@ void main_driver(const char * argv) {
 
 
         gmres::gmres_abs_tol = 1e-4;
-        advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+        advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt,presCollect,RHSCollect);
         // advanceStokes(
         //         umac, pres,              /* LHS */
         //         mfluxdiv, source_terms,  /* RHS */
@@ -760,13 +852,12 @@ void main_driver(const char * argv) {
 
 
         gmres::gmres_abs_tol = 1e-7;
-        advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
+        advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt,presCollect,RHSCollect);
         // advanceStokes(
         //         umac, pres,              /* LHS */
         //         mfluxdiv, source_terms,  /* RHS */
         //         alpha_fc, beta, gamma, beta_ed, geom, dt
         //     );
-
 
         Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
         ParallelDescriptor::ReduceRealMax(step_stop_time);
@@ -778,13 +869,6 @@ void main_driver(const char * argv) {
         // write out umac & pres to a plotfile
         WritePlotFile(step, time, geom, umac, pres, ib_mc);
     }
-
-
-    // gmres::gmres_abs_tol = 1e-8;
-    // advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
-    // gmres::gmres_abs_tol = 1e-9;
-    // advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt);
-    
 
 
 
