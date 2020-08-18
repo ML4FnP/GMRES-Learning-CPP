@@ -398,17 +398,43 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
 {
     auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermXTensordim](auto&&... args)
     {
-        
-        func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
-        Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-        Unpack_geom(args...),Unpack_dt(args...));
-
+        MultiFab pres ;
+        auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
         int step=unpack_Step(args...);
-        Print() << step << "\n";
+
+
+        /* Use NN to predict pressure */
+        if (RefineSol==false and step>15 )
+        {
+            torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
+            ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+            torch::Tensor presTensor = NETPres->forward(RHSTensor.unsqueeze(0),int(srctermXTensordim[0]+1),int(srctermXTensordim[1]+1),int(srctermXTensordim[2]+1)
+                             ,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
+            TensorToMultifab<amrex::MultiFab>(presTensor,pres);
+        
+        }
+
+
+
+        if(RefineSol==false and step>15)
+        {
+            Print() << "Check 1" << "\n";
+            func(Unpack_umac(args...),pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            Unpack_geom(args...),Unpack_dt(args...));
+            Print() << "Check 2" << "\n";
+        }else
+        {
+            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            Unpack_geom(args...),Unpack_dt(args...));  
+        }
+        
+
+
 
         if(RefineSol == true and step>10)
         {
-                auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
                 torch::Tensor presTensor= torch::zeros({presTensordim[0]+1 , presTensordim[1]+1,presTensordim[2]+1 },options);
                 torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
                 ConvertToTensor(Unpack_pres(args...),presTensor);
