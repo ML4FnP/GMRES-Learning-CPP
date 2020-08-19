@@ -392,61 +392,13 @@ int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
 
 
 
-
-template<typename F>
-auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const IntVect srctermXTensordim)
+void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Tensor& PresCollect,const IntVect presTensordim,const IntVect srctermXTensordim)
 {
-    auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermXTensordim](auto&&... args)
-    {
-        MultiFab pres ;
-        auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
-        int step=unpack_Step(args...);
-
-
-        /* Use NN to predict pressure */
-        if (RefineSol==false and step>15 )
-        {
-            torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
-            ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
-            torch::Tensor presTensor = NETPres->forward(RHSTensor.unsqueeze(0),int(srctermXTensordim[0]+1),int(srctermXTensordim[1]+1),int(srctermXTensordim[2]+1)
-                             ,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
-            TensorToMultifab<amrex::MultiFab>(presTensor,pres);
-        
-        }
-
-
-
-        if(RefineSol==false and step>15)
-        {
-            Print() << "Check 1" << "\n";
-            func(Unpack_umac(args...),pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
-            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-            Unpack_geom(args...),Unpack_dt(args...));
-            Print() << "Check 2" << "\n";
-        }else
-        {
-            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
-            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-            Unpack_geom(args...),Unpack_dt(args...));  
-        }
-        
-
-
-
-        if(RefineSol == true and step>10)
-        {
-                torch::Tensor presTensor= torch::zeros({presTensordim[0]+1 , presTensordim[1]+1,presTensordim[2]+1 },options);
-                torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
-                ConvertToTensor(Unpack_pres(args...),presTensor);
-                ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
-                CollectPressure(args...,presTensor.unsqueeze(0));
-                CollectRHS(args...,RHSTensor.unsqueeze(0));
-
-                /*Setting up learning loop below */
+/*Setting up learning loop below */
                 torch::optim::Adagrad optimizer(NETPres->parameters(), torch::optim::AdagradOptions(0.01));
 
                 /* Create dataset object from tensors that have collected relevant data */
-                auto custom_dataset = CustomDataset(Unpack_RHSCollect(args...),Unpack_PresCollect(args...)).map(torch::data::transforms::Stack<>());
+                auto custom_dataset = CustomDataset(RHSCollect,PresCollect).map(torch::data::transforms::Stack<>());
 
                 int64_t batch_size = 32;
                 float e1 = 1e-5;
@@ -489,16 +441,65 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
                             // Print loop info to console
                             epoch = epoch +1;
                     }
-                    std::cout << "___________" << std::endl;
-                    std::cout << "Loss: "  << loss << std::endl;
-                    std::cout << "Epoch Number: " << epoch << std::endl;
+                    // std::cout << "___________" << std::endl;
+                    // std::cout << "Loss: "  << loss << std::endl;
+                    // std::cout << "Epoch Number: " << epoch << std::endl;
                 }
+}
 
 
+template<typename F>
+auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const IntVect srctermXTensordim,amrex::DistributionMapping dmap, BoxArray  ba)
+{
+    auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermXTensordim,dmap,ba](auto&&... args)
+    {
+        auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+        int step=unpack_Step(args...);
 
-                // MultiFab pres ;
-                // torch::Tensor output = NETPres->forward(presTensor,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
-                // TensorToMultifab<amrex::MultiFab>(output,pres);
+
+        MultiFab pres(ba, dmap, 1, 1); 
+        pres.setVal(0.);  
+
+        /* Use NN to predict pressure */
+        if (RefineSol==false and step>5 )
+        {
+            torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
+            ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+
+            /* Get prediction as tensor */
+            torch::Tensor presTensor = NETPres->forward(RHSTensor.unsqueeze(0),int(srctermXTensordim[0]+1),int(srctermXTensordim[1]+1),int(srctermXTensordim[2]+1)
+                             ,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
+
+            /* Convert tensor to multifab using distribution map of original pressure MultiFab */
+            TensorToMultifab(presTensor.squeeze(0),pres);
+        }
+
+
+        /* Evaluate wrapped function with either the NN prediction or original input */
+        if(RefineSol==false and step>5)
+        {
+            func(Unpack_umac(args...),pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            Unpack_geom(args...),Unpack_dt(args...));
+        }else
+        {
+            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            Unpack_geom(args...),Unpack_dt(args...));  
+        }
+        
+
+
+        /* Add data to collection of tensors and train model */
+        if(RefineSol == true and step%5==0)
+        {
+                torch::Tensor presTensor= torch::zeros({presTensordim[0]+1 , presTensordim[1]+1,presTensordim[2]+1 },options);
+                torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
+                ConvertToTensor(Unpack_pres(args...),presTensor);
+                ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+                CollectPressure(args...,presTensor.unsqueeze(0));
+                CollectRHS(args...,RHSTensor.unsqueeze(0));
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermXTensordim);
         }
 
 
@@ -907,10 +908,12 @@ void main_driver(const char * argv) {
 
     /* Wrap advanceStokes function pointer */
     bool RefineSol=false;
-    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim) ;
+    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim,dmap,ba) ;
     RefineSol=true;
-    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim) ;
+    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim,dmap,ba) ;
 
+
+    /* Initialize tensors that collect all pressure and source term data*/
     auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
     torch::Tensor presCollect= torch::zeros({1,presTensordim[0]+1, presTensordim[1]+1,presTensordim[2]+1},options);
     torch::Tensor RHSCollect= torch::zeros({1,srctermXTensordim[0]+1, srctermXTensordim[1]+1,srctermXTensordim[2]+1},options);
@@ -924,7 +927,7 @@ void main_driver(const char * argv) {
 
     //___________________________________________________________________________
 
-    while (step < 50)
+    while (step < 500)
     {
         // Spread forces to RHS
         std::array<MultiFab, AMREX_SPACEDIM> source_terms;
@@ -979,22 +982,22 @@ void main_driver(const char * argv) {
         // auto advanceStokes_ML=Wrapper(advanceStokes, "parameter 1",3.14159) ;//, "parameter 1", 3.14159);
 
 
-        gmres::gmres_abs_tol = 1e-4;
-        advanceStokes_ML(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt,presCollect,RHSCollect,step);
-        // advanceStokes(
-        //         umac, pres,              /* LHS */
-        //         mfluxdiv, source_terms,  /* RHS */
-        //         alpha_fc, beta, gamma, beta_ed, geom, dt
-        //     );
+        Print() << "COARSE SOLUTION" << "\n"; 
+        gmres::gmres_abs_tol = 1e-5;
+        advanceStokes_ML(umac,pres, /* LHS */
+                        mfluxdiv,source_terms, /* RHS*/
+                        alpha_fc, beta, gamma, beta_ed, geom, dt,
+                        presCollect,RHSCollect,step /* ML */
+                        );
 
-
-        gmres::gmres_abs_tol = 1e-7;
-        advanceStokes_ML2(umac,pres,mfluxdiv,source_terms,alpha_fc, beta, gamma, beta_ed, geom, dt,presCollect,RHSCollect,step);
-        // advanceStokes(
-        //         umac, pres,              /* LHS */
-        //         mfluxdiv, source_terms,  /* RHS */
-        //         alpha_fc, beta, gamma, beta_ed, geom, dt
-        //     );
+        Print() << "REFINE SOLUTION" << "\n"; 
+        
+        gmres::gmres_abs_tol = 1e-8;
+        advanceStokes_ML2(umac,pres, /* LHS */
+                        mfluxdiv,source_terms,/* RHS */
+                        alpha_fc, beta, gamma, beta_ed, geom, dt,
+                        presCollect,RHSCollect,step /* ML */
+                        );
 
         Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
         ParallelDescriptor::ReduceRealMax(step_stop_time);
