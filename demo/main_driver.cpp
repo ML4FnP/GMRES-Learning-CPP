@@ -29,38 +29,14 @@ using namespace torch::indexing;
 
 
 
-// struct Lin_NetImpl : torch::nn::Module
-// {
-//   Lin_NetImpl(int64_t Dim ) : 
-//         lin1(torch::nn::LinearOptions(Dim*Dim*Dim,Dim*Dim*Dim).bias(false))
-//  {
-//    // register_module() is needed if we want to use the parameters() method later on
-//    register_module("lin1", lin1);
-//  }
 
-//  torch::Tensor forward(torch::Tensor x, int64_t Dim)
-//  {
-
-//    x = x.unsqueeze(0); // add batch dim (first index)
-//    int64_t Current_batchsize= x.size(0);
-//    x = x.reshape({Current_batchsize,1,1,-1}); // flatten
-//    x = lin1(x);
-//    x = x.reshape({Current_batchsize,Dim,Dim,Dim}); // unflatten
-//    return x;
-//  }
-
-//  torch::nn::Linear lin1;
-
-// };
-// TORCH_MODULE(Lin_Net);
-
-
-
-
+/* Ideal to explicitly use std::shared_ptr<MyModule> rahter than a "TorchModule" */
+/* Need to set up NN using this approach where the  module is registered and constructed in the initializer list  */
+/* Can also instead first construct the holder with a null pointer and then assign it in the constructor */
 struct Net : torch::nn::Module {
   Net(int64_t Dim1, int64_t Dim2, int64_t Dim3,int64_t Dim4, int64_t Dim5, int64_t Dim6)
     : linear(register_module("linear", torch::nn::Linear(torch::nn::LinearOptions(Dim1*Dim2*Dim3,Dim4*Dim5*Dim6).bias(false))))
-  { }
+    { }
    torch::Tensor forward(torch::Tensor x, int64_t Dim1, int64_t Dim2, int64_t Dim3,int64_t Dim4, int64_t Dim5, int64_t Dim6)
    {
     int64_t Current_batchsize= x.size(0);
@@ -74,7 +50,7 @@ struct Net : torch::nn::Module {
 
 
 
-
+/* Need to define a class to use the Pytorch data loader */
 class CustomDataset : public torch::data::Dataset<CustomDataset>
 {
     private:
@@ -164,6 +140,11 @@ void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) {
         }
     }
 }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Functions for unpacking parameter pack passed to wrapped function. */
 
 
 std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
@@ -389,6 +370,7 @@ int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
        return step;
     
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -448,6 +430,9 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Te
 }
 
 
+
+
+/* ML Wrapper for advanceStokes */
 template<typename F>
 auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const IntVect srctermXTensordim,amrex::DistributionMapping dmap, BoxArray  ba)
 {
@@ -542,6 +527,7 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
 
 
 
+
 // struct CNN_NetImpl : torch::nn::Module
 // {
 //   CNN_NetImpl(int64_t Dim ) : 
@@ -576,19 +562,6 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
 
 // };
 // TORCH_MODULE(CNN_Net);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
