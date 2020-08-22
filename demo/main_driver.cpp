@@ -136,7 +136,7 @@ void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) {
              i = bit()[0]-out_tile.smallEnd()[0];
              j = bit()[1]-out_tile.smallEnd()[1];
              k = bit()[2]-out_tile.smallEnd()[2];
-             out_tile(bit()) = tensor_in.index({i,j,k}).item<double>(); //RHS breaks when using iterator and smallEnd member function to compute index
+             out_tile(bit()) = tensor_in.index({i,j,k}).item<double>();
         }
     }
 }
@@ -432,6 +432,53 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Te
 
 
 
+
+
+void WriteTestMultiFab(int step,
+                   const amrex::Real time,
+                   const amrex::Geometry geom,
+		           const MultiFab& pres)
+{
+    BL_PROFILE_VAR("WritePlotFile()",WritePlotFile);
+    
+    std::string plotfilename = Concatenate("Test",step,7);
+
+
+    amrex::Print() << "Writing plotfile " << plotfilename << "\n";
+    
+    BoxArray ba = pres.boxArray();
+    DistributionMapping dmap = pres.DistributionMap();
+
+    // plot pressure
+    int nPlot = 1;
+
+    MultiFab plotfile(ba, dmap, nPlot, 0);
+
+    Vector<std::string> varNames(nPlot);
+
+    // keep a counter for plotfile variables
+    int cnt = 0;
+
+    varNames[cnt++] = "presTest";
+    
+    // reset plotfile variable counter
+    cnt = 0;
+
+    // copy pressure into plotfile
+    MultiFab::Copy(plotfile, pres, 0, cnt, 1, 0);
+    cnt++;
+
+    // write a plotfile
+    WriteSingleLevelPlotfile(plotfilename,plotfile,varNames,geom,time,step);
+
+}
+
+
+
+
+
+
+
 /* ML Wrapper for advanceStokes */
 template<typename F>
 auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const IntVect srctermXTensordim,amrex::DistributionMapping dmap, BoxArray  ba)
@@ -444,6 +491,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
 
         MultiFab pres(ba, dmap, 1, 1); 
         pres.setVal(0.);  
+
 
         /* Use NN to predict pressure */
         if (RefineSol==false and step>5 )
@@ -769,7 +817,7 @@ void main_driver(const char * argv) {
     // Define velocities and pressure
 
     // pressure for GMRES solve
-    MultiFab pres(ba, dmap, 1, 1); 
+    MultiFab pres(ba, dmap, 1, 1);   /* ncomp=1, ngrow=1 */
     pres.setVal(0.);  // initial guess
 
     // staggered velocities
@@ -962,6 +1010,28 @@ void main_driver(const char * argv) {
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
                         presCollect,RHSCollect,step /* ML */
                         );
+
+
+
+    /* Multifab check data */
+// int ncompPresTest=1;
+// int ngrowPrestTest=1;
+// // WriteTestMultiFab(0,time,geom,pres);
+// MultiFab mfdiff(pres.boxArray(), pres.DistributionMap(), ncompPresTest, ngrowPrestTest); 
+// MultiFab::Copy(mfdiff, pres, 0, 0, ncompPresTest, ngrowPrestTest); /* using same ncomp and ngrow as pres */
+// torch::Tensor presTensor = torch::zeros({presTensordim[0]+1, presTensordim[1]+1,presTensordim[2]+1},options);
+// ConvertToTensor(pres,presTensor);
+// TensorToMultifab(presTensor,pres);
+// // WriteTestMultiFab(1,time,geom,pres);
+// MultiFab::Subtract(mfdiff, pres, 0, 0, ncompPresTest, ngrowPrestTest);
+// for (int icomp = 0; icomp < ncompPresTest; ++icomp) {
+//     Print() << "Component " << icomp << std::endl; 
+//     Print() << "diff Min,max: " << mfdiff.min(icomp,ngrowPrestTest) 
+//     << " , " << mfdiff.max(icomp,ngrowPrestTest) << std::endl;
+// }
+
+
+
 
         Print() << "REFINE SOLUTION" << "\n"; 
         
