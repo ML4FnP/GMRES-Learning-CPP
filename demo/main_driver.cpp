@@ -23,6 +23,7 @@
 
 #include <torch/torch.h>
 
+
 #include <ostream>
 
 using namespace amrex;
@@ -155,7 +156,7 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step , std::vector<double> TimeDataWindow )
+                   ,int step , std::vector<double>& TimeDataWindow )
 {  
     return  umac;
 }
@@ -169,7 +170,7 @@ MultiFab& Unpack_pres(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  pres;
 }
@@ -184,7 +185,7 @@ const std::array< MultiFab, AMREX_SPACEDIM >& Unpack_flux(std::array< MultiFab, 
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  stochMfluxdiv;
 }
@@ -199,7 +200,7 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_sourceTerms(std::array< MultiFab,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  sourceTerms;
 }
@@ -214,7 +215,7 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_alpha_fc(std::array< MultiFab, AM
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  alpha_fc;
 }
@@ -228,7 +229,7 @@ MultiFab& Unpack_beta(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  beta;
 }
@@ -242,7 +243,7 @@ MultiFab& Unpack_gamma(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pr
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  gamma;
 }
@@ -257,7 +258,7 @@ std::array< MultiFab, NUM_EDGE >& Unpack_beta_ed(std::array< MultiFab, AMREX_SPA
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  beta_ed;
 }
@@ -271,7 +272,7 @@ const Geometry Unpack_geom(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  geom;
 }
@@ -285,7 +286,7 @@ const Real& Unpack_dt(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  dt;
 }
@@ -300,7 +301,7 @@ torch::Tensor& Unpack_PresCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,M
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  PresCollect;
 }
@@ -314,7 +315,7 @@ void CollectPressure(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow
+                   ,int step,std::vector<double>& TimeDataWindow
                    ,torch::Tensor PresFinal)
 {  
 
@@ -331,7 +332,7 @@ torch::Tensor& Unpack_RHSCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,Mu
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
     return  RHSCollect;
 }
@@ -346,7 +347,7 @@ void CollectRHS(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow,
+                   ,int step,std::vector<double>& TimeDataWindow,
                    torch::Tensor RHSFinal)
 {  
 
@@ -364,7 +365,7 @@ int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
 
        return step;
@@ -380,7 +381,7 @@ std::vector<double> unpack_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow)
 {  
 
        return TimeDataWindow;
@@ -388,7 +389,7 @@ std::vector<double> unpack_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >
 }
 
 
-std::vector<double> update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
                    std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
                    std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
@@ -397,13 +398,10 @@ std::vector<double> update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, torch::Tensor& RHSCollect
-                   ,int step,std::vector<double> TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,
+                   std::vector<double>& TimeDataWindowIn)
 {  
-
-       return TimeDataWindow;
-
-    // To do: update paramter pack, then update accordingly in wrapper.
-    
+       TimeDataWindow=TimeDataWindowIn;
 }
 
 
@@ -466,11 +464,17 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Te
                 }
 }
 
-double MovingAvg (std::vector<double> TimeDataWindow)
+
+
+double MovingAvg (std::vector<double>& TimeDataWindow)
 {
     int window = TimeDataWindow.size();
-    double sum = accumulate(TimeDataWindow.begin(),TimeDataWindow.end(),0);
-    sum = sum/window;
+    double sum;
+    for(int i = 0 ; i<window ; i++)
+    {
+        sum+=TimeDataWindow[i];
+    }
+    sum = sum/double(window);
     return sum;
 }
 
@@ -522,6 +526,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             ParallelDescriptor::ReduceRealMax(step_stop_time);
             
             TimeDataWindow[WindowIdx]= step_stop_time; /* Add time to window of values */
+            update_TimeDataWindow(args...,TimeDataWindow);
 
             std::ofstream outfile;
             outfile.open("test.txt", std::ios_base::app); // append instead of overwrite
@@ -535,6 +540,9 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
             Unpack_geom(args...),Unpack_dt(args...));  
         }
+
+
+
 
         /* Add data to collection of tensors*/
         if(RefineSol == true and step<(initNum+TimeDataWindow.size()))
@@ -555,20 +563,23 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             CollectRHS(args...,RHSTensor.unsqueeze(0));
         }
 
-        if (step>(initNum+TimeDataWindow.size()))
-        {
-            Print() << "CCCCCCCCCCCCCCCHHHHHHHHHHHHHHHHHHHEEEEEEEEEcCCCCCCCCCKKKKKKKKK1 " << MovingAvg(TimeDataWindow) << " \n";
-            Print() << "CCCCCCCCCCCCCCCHHHHHHHHHHHHHHHHHHHEEEEEEEEEcCCCCCCCCCKKKKKKKKK2 " << TimeDataWindow[WindowIdx] << " \n";
-
-        }
-
-
 
 
         /* Train model */
-        if(RefineSol == true and step%retrainFreq==0)
+        if(RefineSol == true)
         {
-            TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermXTensordim);
+            torch::Tensor CheckNumSamples = Unpack_PresCollect(args...);
+
+            /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
+            if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0)
+            {
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermXTensordim);
+
+            /* Train model every time 3 new data points have been added to training set after initialization period */
+            }else if ( (CheckNumSamples.size(0)-(initNum+TimeDataWindow.size()))%retrainFreq==0 )
+            {
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermXTensordim);
+            }
         }
 
 
