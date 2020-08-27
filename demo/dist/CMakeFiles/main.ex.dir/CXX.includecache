@@ -6997,6 +6997,8 @@ MFUtil.H
 /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/MFUtil.H
 torch/torch.h
 -
+ostream
+-
 
 /opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/mpi.h
 stddef.h
