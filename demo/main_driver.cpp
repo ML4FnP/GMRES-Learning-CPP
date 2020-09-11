@@ -92,7 +92,6 @@ void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out) {
             int ncomp                = mf_in.nComp();
             int ngrow                = mf_in.nGrow();
             int i,j,k;
-
 #ifdef _OPENMP
 #pragma omp parallel
 #endif
@@ -121,7 +120,6 @@ void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) {
     const DistributionMapping & dm = mf_out.DistributionMap();
             int ncomp                = mf_out.nComp();
             int ngrow                = mf_out.nGrow();
-    double test ;
 
 
 #ifdef _OPENMP
@@ -139,6 +137,38 @@ void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) {
              out_tile(bit()) = tensor_in.index({i,j,k}).item<double>();
         }
     }
+}
+
+
+/* copy values of single box std:Array MultiFab to Pytorch Tensor  */
+void Convert_StdArrMF_ToTensor(std::array< MultiFab, AMREX_SPACEDIM >& StdArrMF, torch::Tensor & tensor_out)
+{
+
+    for (int d=0; d<AMREX_SPACEDIM; ++d)
+    {
+                const BoxArray & ba            = StdArrMF[d].boxArray();
+                const DistributionMapping & dm = StdArrMF[d].DistributionMap();
+                    int ncomp                = StdArrMF[d].nComp();
+                    int ngrow                = StdArrMF[d].nGrow();
+                    int i,j,k;
+        #ifdef _OPENMP
+        #pragma omp parallel
+        #endif
+
+
+            for(MFIter mfi(StdArrMF[d], true); mfi.isValid(); ++ mfi) {
+                const auto & in_tile  =      StdArrMF[d][mfi];
+
+                for(BoxIterator bit(mfi.growntilebox()); bit.ok(); ++ bit)
+                {
+                    i=int(bit()[0]) - int(in_tile.smallEnd()[0]);
+                    j=int(bit()[1]) - int(in_tile.smallEnd()[1]);
+                    k=int(bit()[2]) - int(in_tile.smallEnd()[2]);
+                    tensor_out.index({i,j,k,d}) = in_tile(bit());
+                }
+            }
+    }
+
 }
 
 
@@ -405,11 +435,30 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
 }
 
 
+ void TrimSourceMultiFab(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect, torch::Tensor& RHSCollect
+                   ,int step,std::vector<double>& TimeDataWindow,
+                   amrex::DistributionMapping dmap, BoxArray  ba, std::array<MultiFab, AMREX_SPACEDIM>& source_termsTrimmed)
+{  
+    for (int d=0; d<AMREX_SPACEDIM; ++d)
+    {
+        source_termsTrimmed[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 1);
+        MultiFab::Copy(source_termsTrimmed[d], sourceTerms[d], 0, 0, 1, 1); 
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Tensor& PresCollect,const IntVect presTensordim,const IntVect srctermXTensordim)
+void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Tensor& PresCollect,const IntVect presTensordim, const std::vector<int> srctermTensordim)
 {
 /*Setting up learning loop below */
                 torch::optim::Adagrad optimizer(NETPres->parameters(), torch::optim::AdagradOptions(0.01));
@@ -443,7 +492,7 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Te
 
                             // forward pass
                             torch::Tensor output = NETPres->forward(data.to(torch::kFloat32)
-                                                ,int(srctermXTensordim[0]+1),int(srctermXTensordim[1]+1),int(srctermXTensordim[2]+1)
+                                                ,int(srctermTensordim[0]+1),int(srctermTensordim[1]+1),int(srctermTensordim[2]+1)
                                                 ,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
                             //evaulate loss
                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
@@ -483,9 +532,9 @@ double MovingAvg (std::vector<double>& TimeDataWindow)
 
 /* ML Wrapper for advanceStokes */
 template<typename F>
-auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const IntVect srctermXTensordim,amrex::DistributionMapping dmap, BoxArray  ba)
+auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres, const IntVect presTensordim, const std::vector<int> srctermTensordim,amrex::DistributionMapping dmap, BoxArray  ba)
 {
-    auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermXTensordim,dmap,ba](auto&&... args)
+    auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermTensordim,dmap,ba](auto&&... args)
     {
         int retrainFreq =3;
         int initNum     =3;
@@ -495,6 +544,10 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         int WindowIdx=((step-initNum)-1)%TimeDataWindow.size();
 
 
+        torch::Tensor RHSTensor= torch::zeros({srctermTensordim[0]+1 , srctermTensordim[1]+1,srctermTensordim[2]+1 },options);
+        std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
+        TrimSourceMultiFab(args...,dmap,ba,source_termsTrimmed); /* Trim to ngrow=1 */
+        ConvertToTensor(source_termsTrimmed[0],RHSTensor);
 
 
         MultiFab pres(ba, dmap, 1, 1); 
@@ -504,11 +557,13 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         /* Use NN to predict pressure */
         if (RefineSol==false and step>initNum )
         {
-            torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
-            ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+            torch::Tensor RHSTensor= torch::zeros({srctermTensordim[0]+1 , srctermTensordim[1]+1,srctermTensordim[2]+1 },options);
+            std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
+            TrimSourceMultiFab(args...,dmap,ba,source_termsTrimmed);
+            ConvertToTensor(source_termsTrimmed[0],RHSTensor);
 
             /* Get prediction as tensor */
-            torch::Tensor presTensor = NETPres->forward(RHSTensor.unsqueeze(0),int(srctermXTensordim[0]+1),int(srctermXTensordim[1]+1),int(srctermXTensordim[2]+1)
+            torch::Tensor presTensor = NETPres->forward(RHSTensor.unsqueeze(0),int(srctermTensordim[0]+1),int(srctermTensordim[1]+1),int(srctermTensordim[2]+1)
                              ,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
 
             /* Convert tensor to multifab using distribution map of original pressure MultiFab */
@@ -548,17 +603,21 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         if(RefineSol == true and step<(initNum+TimeDataWindow.size()))
         {
             torch::Tensor presTensor= torch::zeros({presTensordim[0]+1 , presTensordim[1]+1,presTensordim[2]+1 },options);
-            torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
+            torch::Tensor RHSTensor= torch::zeros({srctermTensordim[0]+1 , srctermTensordim[1]+1,srctermTensordim[2]+1 },options);
             ConvertToTensor(Unpack_pres(args...),presTensor);
-            ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+            std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
+            TrimSourceMultiFab(args...,dmap,ba,source_termsTrimmed);
+            ConvertToTensor(source_termsTrimmed[0],RHSTensor);
             CollectPressure(args...,presTensor.unsqueeze(0));
             CollectRHS(args...,RHSTensor.unsqueeze(0));
         }else if (RefineSol == true and TimeDataWindow[WindowIdx]>MovingAvg(TimeDataWindow))
         {
             torch::Tensor presTensor= torch::zeros({presTensordim[0]+1 , presTensordim[1]+1,presTensordim[2]+1 },options);
-            torch::Tensor RHSTensor= torch::zeros({srctermXTensordim[0]+1 , srctermXTensordim[1]+1,srctermXTensordim[2]+1 },options);
+            torch::Tensor RHSTensor= torch::zeros({srctermTensordim[0]+1 , srctermTensordim[1]+1,srctermTensordim[2]+1 },options);
             ConvertToTensor(Unpack_pres(args...),presTensor);
-            ConvertToTensor(Unpack_sourceTerms(args...)[0],RHSTensor);
+            std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
+            TrimSourceMultiFab(args...,dmap,ba,source_termsTrimmed);
+            ConvertToTensor(source_termsTrimmed[0],RHSTensor);
             CollectPressure(args...,presTensor.unsqueeze(0));
             CollectRHS(args...,RHSTensor.unsqueeze(0));
         }
@@ -573,12 +632,12 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
             if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0)
             {
-                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermXTensordim);
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermTensordim);
 
             /* Train model every time 3 new data points have been added to training set after initialization period */
             }else if ( (CheckNumSamples.size(0)-(initNum+TimeDataWindow.size()))%retrainFreq==0 )
             {
-                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermXTensordim);
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),presTensordim,srctermTensordim);
             }
         }
 
@@ -905,19 +964,63 @@ void main_driver(const char * argv) {
         source_terms[d].setVal(0.);
     }
 
+    std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
+    for (int d=0; d<AMREX_SPACEDIM; ++d)
+    {
+        source_termsTrimmed[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 1);
+        MultiFab::Copy(source_termsTrimmed[d], source_terms[d], 0, 0, 1, 1); 
+    }
+
+
+
     torch::Device device(torch::kCPU);
     if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
 
+
+    /* Compute dimensions of single component pressure box */
     const auto & presbox  =   pres[0];
     IntVect presTensordim = presbox.bigEnd()-presbox.smallEnd();
 
-    const auto & sourceTermxbox  =   source_terms[0][0];
-    IntVect srctermXTensordim = sourceTermxbox.bigEnd()-sourceTermxbox.smallEnd();
+
+    /* Compute dimensions of each source term component box */
+    std::vector<int> sourceTermTensordims(9);
+    const auto & sourceTermXbox  =   source_termsTrimmed[0][0];
+    const auto & sourceTermYbox  =   source_termsTrimmed[1][0];
+    const auto & sourceTermZbox  =   source_termsTrimmed[2][0];
+    IntVect srctermXTensordim = sourceTermXbox.bigEnd()-sourceTermXbox.smallEnd();
+    IntVect srctermYTensordim = sourceTermYbox.bigEnd()-sourceTermYbox.smallEnd();
+    IntVect srctermZTensordim = sourceTermZbox.bigEnd()-sourceTermZbox.smallEnd();
+    for (int i=0; i<3;++i)
+    {
+        sourceTermTensordims[i  ]=srctermXTensordim[i];
+        sourceTermTensordims[i+3]=srctermYTensordim[i];
+        sourceTermTensordims[i+6]=srctermZTensordim[i];
+    }
+
+    /* Compute dimensions of each umac component box */
+    std::vector<int> umacTensordims(9);
+    const auto & umacXbox  =   umac[0][0];
+    const auto & umacYbox  =   umac[1][0];
+    const auto & umacZbox  =   umac[2][0];
+    IntVect umacXTensordim = umacXbox.bigEnd()-umacXbox.smallEnd();
+    IntVect umacYTensordim = umacYbox.bigEnd()-umacYbox.smallEnd();
+    IntVect umacZTensordim = umacZbox.bigEnd()-umacZbox.smallEnd();
+    for (int i=0; i<3;++i)
+    {
+        umacTensordims[i  ]=umacXTensordim[i];
+        umacTensordims[i+3]=umacYTensordim[i];
+        umacTensordims[i+6]=umacZTensordim[i];
+    }
+
+
+
+    Print() << sourceTermTensordims << "\n";
+    // Print() << "TTEEEEEEEEEEEEESSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTTT" << "\n";
     
 
 
     //   Define model and move to GPU
-    auto TestNet = std::make_shared<Net>(int(srctermXTensordim[0]+1),int(srctermXTensordim[1]+1),int(srctermXTensordim[2]+1)
+    auto TestNet = std::make_shared<Net>(int(sourceTermTensordims[0]+1),int(sourceTermTensordims[1]+1),int(sourceTermTensordims[2]+1)
                                         ,int(presTensordim[0]+1),int(presTensordim[1]+1),int(presTensordim[2]+1));
     TestNet->to(device);
 
@@ -933,15 +1036,15 @@ void main_driver(const char * argv) {
 
     /* Wrap advanceStokes function pointer */
     bool RefineSol=false;
-    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim,dmap,ba) ;
+    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,dmap,ba) ;
     RefineSol=true;
-    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,srctermXTensordim,dmap,ba) ;
+    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,dmap,ba) ;
 
 
     /* Initialize tensors that collect all pressure and source term data*/
     auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
     torch::Tensor presCollect= torch::zeros({1,presTensordim[0]+1, presTensordim[1]+1,presTensordim[2]+1},options);
-    torch::Tensor RHSCollect= torch::zeros({1,srctermXTensordim[0]+1, srctermXTensordim[1]+1,srctermXTensordim[2]+1},options);
+    torch::Tensor RHSCollect= torch::zeros({1,sourceTermTensordims[0]+1, sourceTermTensordims[1]+1,sourceTermTensordims[2]+1},options);
 
     std::vector<double> TimeDataWindow(50);
 
