@@ -4273,3 +4273,228 @@ make: *** [Makefile:141: cmTC_b3df5/fast] Error 2
 
 
 
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_64395/fast && /usr/bin/make  -f CMakeFiles/cmTC_64395.dir/build.make CMakeFiles/cmTC_64395.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_64395.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_64395.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_64395.dir/build.make:86: CMakeFiles/cmTC_64395.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_64395/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_c5738/fast && /usr/bin/make  -f CMakeFiles/cmTC_c5738.dir/build.make CMakeFiles/cmTC_c5738.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_c5738.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_c5738.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_c5738.dir/build.make:86: CMakeFiles/cmTC_c5738.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_c5738/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_90fc2/fast && /usr/bin/make  -f CMakeFiles/cmTC_90fc2.dir/build.make CMakeFiles/cmTC_90fc2.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_90fc2.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_90fc2.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_90fc2.dir/build.make:86: CMakeFiles/cmTC_90fc2.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_90fc2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_e70b2/fast && /usr/bin/make  -f CMakeFiles/cmTC_e70b2.dir/build.make CMakeFiles/cmTC_e70b2.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e70b2.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e70b2.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_e70b2.dir/build.make:86: CMakeFiles/cmTC_e70b2.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_e70b2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_db271/fast && /usr/bin/make  -f CMakeFiles/cmTC_db271.dir/build.make CMakeFiles/cmTC_db271.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_db271.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_db271.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_db271.dir/build.make:86: CMakeFiles/cmTC_db271.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_db271/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_1842d/fast && /usr/bin/make  -f CMakeFiles/cmTC_1842d.dir/build.make CMakeFiles/cmTC_1842d.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_1842d.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_1842d.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_1842d.dir/build.make:86: CMakeFiles/cmTC_1842d.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_1842d/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_7ff6c/fast && /usr/bin/make  -f CMakeFiles/cmTC_7ff6c.dir/build.make CMakeFiles/cmTC_7ff6c.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7ff6c.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_7ff6c.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_7ff6c.dir/build.make:86: CMakeFiles/cmTC_7ff6c.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_7ff6c/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_4dfb2/fast && /usr/bin/make  -f CMakeFiles/cmTC_4dfb2.dir/build.make CMakeFiles/cmTC_4dfb2.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_4dfb2.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_4dfb2.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_4dfb2.dir/build.make:86: CMakeFiles/cmTC_4dfb2.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_4dfb2/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_7eeff/fast && /usr/bin/make  -f CMakeFiles/cmTC_7eeff.dir/build.make CMakeFiles/cmTC_7eeff.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7eeff.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_7eeff.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_7eeff.dir/build.make:86: CMakeFiles/cmTC_7eeff.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_7eeff/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_9a2d4/fast && /usr/bin/make  -f CMakeFiles/cmTC_9a2d4.dir/build.make CMakeFiles/cmTC_9a2d4.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_9a2d4.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_9a2d4.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_9a2d4.dir/build.make:86: CMakeFiles/cmTC_9a2d4.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_9a2d4/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_e5f46/fast && /usr/bin/make  -f CMakeFiles/cmTC_e5f46.dir/build.make CMakeFiles/cmTC_e5f46.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_e5f46.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_e5f46.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_e5f46.dir/build.make:86: CMakeFiles/cmTC_e5f46.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_e5f46/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_335ac/fast && /usr/bin/make  -f CMakeFiles/cmTC_335ac.dir/build.make CMakeFiles/cmTC_335ac.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_335ac.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_335ac.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_335ac.dir/build.make:86: CMakeFiles/cmTC_335ac.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_335ac/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_f1d1c/fast && /usr/bin/make  -f CMakeFiles/cmTC_f1d1c.dir/build.make CMakeFiles/cmTC_f1d1c.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_f1d1c.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_f1d1c.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_f1d1c.dir/build.make:86: CMakeFiles/cmTC_f1d1c.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_f1d1c/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_888ad/fast && /usr/bin/make  -f CMakeFiles/cmTC_888ad.dir/build.make CMakeFiles/cmTC_888ad.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_888ad.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_888ad.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_888ad.dir/build.make:86: CMakeFiles/cmTC_888ad.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_888ad/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_bfdb0/fast && /usr/bin/make  -f CMakeFiles/cmTC_bfdb0.dir/build.make CMakeFiles/cmTC_bfdb0.dir/build
+make[1]: Entering directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_bfdb0.dir/test_mpi.f90.o
+/usr/bin/f95  -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include/gfortran/9.1.0 -I/opt/intel/compilers_and_libraries_2020.0.166/linux/mpi/intel64/include   -c /home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_bfdb0.dir/test_mpi.f90.o
+f951: Fatal Error: Reading module ‘mpi_f08’ at line 1 column 2: Unexpected EOF
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_bfdb0.dir/build.make:86: CMakeFiles/cmTC_bfdb0.dir/test_mpi.f90.o] Error 1
+make[1]: Leaving directory '/home/kl748/Tutorials_Classes/pytorch_practice/torchcpp_practice/OfflineGMRES/demo/dist/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_bfdb0/fast] Error 2
+
+
+

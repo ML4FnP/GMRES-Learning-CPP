@@ -61,10 +61,51 @@ class CustomDataset : public torch::data::Dataset<CustomDataset>
     private:
         torch::Tensor bTensor, SolTensor;
 
+        torch::Tensor SrcTensorFlatx,SrcTensorFlaty,SrcTensorFlatz,SrcTensorFlat;
+        torch::Tensor umacFlatx,umacFlaty,umacFlatz,umacFlat;
+        torch::Tensor bp,PressureFlat;
+
+
     public:
-        CustomDataset(torch::Tensor bIn, torch::Tensor SolIn)
+        CustomDataset(std::array<torch::Tensor,AMREX_SPACEDIM> bIn, torch::Tensor SolIn,std::array<torch::Tensor,AMREX_SPACEDIM> umacTensors)
         {
-          bTensor = bIn;
+
+          auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+          int64_t Current_batchsize= bIn[0].size(0);
+
+          /* xp,xu */
+          umacFlatx=umacTensors[0].reshape({Current_batchsize,1,1,-1});
+          umacFlaty=umacTensors[1].reshape({Current_batchsize,1,1,-1});
+          umacFlatz=umacTensors[2].reshape({Current_batchsize,1,1,-1});
+          umacFlat=torch::cat({umacFlatx,umacFlaty},-1);
+          umacFlat=torch::cat({umacFlat,umacFlatz},-1);
+          PressureFlat=SolIn.reshape({Current_batchsize,1,1,-1});
+          umacFlat=torch::cat({umacFlat,PressureFlat},-1);
+
+
+
+        /* bu,bp */
+          SrcTensorFlatx=bIn[0].reshape({Current_batchsize,1,1,-1});
+          SrcTensorFlaty=bIn[1].reshape({Current_batchsize,1,1,-1});
+          SrcTensorFlatz=bIn[2].reshape({Current_batchsize,1,1,-1});
+          SrcTensorFlat=torch::cat({SrcTensorFlatx,SrcTensorFlaty},-1);
+          SrcTensorFlat=torch::cat({SrcTensorFlat,SrcTensorFlatz},-1);
+          bp =torch::zeros({Current_batchsize,1,1,PressureFlat.size(-1)},options);
+          SrcTensorFlat=torch::cat({SrcTensorFlat,bp},-1);
+
+
+        //   Print() << SrcTensorFlat.size(0) << " "<< SrcTensorFlat.size(1) << " "<< SrcTensorFlat.size(2) << " "<< SrcTensorFlat.size(3) << "\n "; 
+        //   Print() << umacFlat.size(0) << " "<< umacFlat.size(1) << " "<< umacFlat.size(2) << " "<< umacFlat.size(3) << "\n "; 
+
+
+
+
+
+
+
+
+
+          bTensor = bIn[0];
           SolTensor = SolIn;
         };
         
@@ -497,13 +538,13 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
 
 
 
-void  TrainLoop(std::shared_ptr<Net> NETPres,torch::Tensor& RHSCollect,torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,const IntVect presTensordim, const std::vector<int> srctermTensordim, const std::vector<int> umacTensordims)
+void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,const IntVect presTensordim, const std::vector<int> srctermTensordim, const std::vector<int> umacTensordims)
 {
 /*Setting up learning loop below */
                 torch::optim::Adagrad optimizer(NETPres->parameters(), torch::optim::AdagradOptions(0.01));
 
                 /* Create dataset object from tensors that have collected relevant data */
-                auto custom_dataset = CustomDataset(RHSCollect,PresCollect).map(torch::data::transforms::Stack<>());
+                auto custom_dataset = CustomDataset(RHSCollect,PresCollect,umacCollect).map(torch::data::transforms::Stack<>());
 
                 int64_t batch_size = 32;
                 float e1 = 1e-5;
@@ -699,12 +740,12 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
             if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0)
             {
-                TrainLoop(NETPres,Unpack_RHSCollect(args...)[0],Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,srctermTensordim,umacTensordims);
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,srctermTensordim,umacTensordims);
 
             /* Train model every time 3 new data points have been added to training set after initialization period */
             }else if ( (CheckNumSamples.size(0)-(initNum+TimeDataWindow.size()))%retrainFreq==0 )
             {
-                TrainLoop(NETPres,Unpack_RHSCollect(args...)[0],Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,srctermTensordim,umacTensordims);
+                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,srctermTensordim,umacTensordims);
             }
         }
 
