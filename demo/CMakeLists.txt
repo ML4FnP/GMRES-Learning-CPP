@@ -1,93 +1,55 @@
 cmake_minimum_required(VERSION 3.17)
 
+project(main)
+
 enable_language(Fortran)
 
-project(main)
-find_package(AMReX)
-find_package(Torch REQUIRED PATHS "/home/kl748/Programs/libtorch" )
+find_package(AMReX REQUIRED HINTS ../../amrex/dist)
+find_package(Torch REQUIRED HINTS ../../libtorch)
+
+# Enable OpenMP
+find_package(OpenMP)
+# If OpenMP is available => Add flags compiler + linker
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
 
 find_library(
     LIBHYDRO
     NAMES hydro
-    PATHS /home/kl748/Programs/FHDeX/exec/lib_hydro/cmake/dist/lib
+    HINTS ../../FHDeX/exec/lib_hydro/cmake/dist/lib
     )
-
+get_filename_component(LIBHYDRO_DIR "${LIBHYDRO}" DIRECTORY)
 
 message("LIBHYDRO = ${LIBHYDRO}")
+message("LIBHYDRO_DIR = ${LIBHYDRO_DIR}")
 
-#
-# Based on the AMReX Config -- this is HACK, and should be automated
-# TODO: this currently assumes macOS (Darwin) -- add linux
-#
+get_target_property(amrex_compile_defs AMReX::amrex  INTERFACE_COMPILE_DEFINITIONS)
+string(REPLACE       "$"     ""    amrex_compile_defs "${amrex_compile_defs}")
+string(REGEX REPLACE "<.*>;" ""    amrex_compile_defs "${amrex_compile_defs}")
+string(REPLACE       ";"     " -D" amrex_compile_defs "-D${amrex_compile_defs}")
 
-set(CMAKE_CXX_FLAGS
-    "-DAMREX_USE_MPI"
-    "-DBL_USE_MPI"
-    "-DAMREX_USE_OMP"
-    "-DBL_USE_OMP"
-    "-DAMREX_SPACEDIM=3"
-    "-DBL_SPACEDIM=3"
-    "-DBL_FORT_USE_UNDERSCORE"
-    "-DAMREX_USE_EB"
-    "-DAMREX_USE_F_INTERFACES"
-    "-DBL_USE_F_INTERFACES"
-    "-DAMREX_PARTICLES"
-    "-O3 -DNDEBUG  -fopenmp -Werror=return-type"
-    )
-
-if(APPLE)
-    set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS}"
-        "-DAMREX_Darwin"
-        "-DBL_Darwin"
-        )
-elseif(UNIX)
-    set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS}"
-        "-DAMREX_Linux"
-        "-DBL_Linux"
-        )
-endif(APPLE)
+list(APPEND CMAKE_CXX_FLAGS "${amrex_compile_defs}")
+list(APPEND CMAKE_CXX_FLAGS "-O3 -DNDEBUG -Werror=return-type")
 
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 message(" *** CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}")
 
-set(CMAKE_Fortran_FLAGS
-    "-DAMREX_USE_MPI"
-    "-DBL_USE_MPI"
-    "-DAMREX_USE_OMP"
-    "-DBL_USE_OMP"
-    "-DAMREX_SPACEDIM=3"
-    "-DBL_SPACEDIM=3"
-    "-DBL_LANG_FORT"
-    "-DAMREX_LANG_FORT"
-    "-DBL_FORT_USE_UNDERSCORE"
-    "-DAMREX_USE_EB"
-    "-DAMREX_USE_F_INTERFACES"
-    "-DBL_USE_F_INTERFACES"
-    "-DAMREX_PARTICLES"
-    "-O3 -DNDEBUG -O3  -fopenmp -fimplicit-none -ffixed-line-length-none -ffree-line-length-none"
-    )
-
-if(APPLE)
-    set(CMAKE_Fortran_FLAGS
-        "${CMAKE_Fortran_FLAGS}"
-        "-DBL_Darwin"
-        )
-elseif(UNIX)
-    set(CMAKE_Fortran_FLAGS
-        "${CMAKE_Fortran_FLAGS}"
-        "-DBL_Linux"
-        )
-endif(APPLE)
+list(APPEND CMAKE_Fortran_FLAGS "${amrex_compile_defs}")
+list(APPEND CMAKE_Fortran_FLAGS "-O3 -DNDEBUG -O3 -fimplicit-none -ffixed-line-length-none -ffree-line-length-none")
 
 string(REPLACE ";" " " CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
 message(" *** CMAKE_Fortran_FLAGS=${CMAKE_Fortran_FLAGS}")
 
-
+# include_directories(
+#     ../../FHDeX/exec/lib_hydro/cmake/dist/include
+#     ../../FHDeX/exec/lib_hydro/cmake/dist/modules
+#     )
 include_directories(
-    /home/kl748/Programs/FHDeX/exec/lib_hydro/cmake/dist/include
-    /home/kl748/Programs/FHDeX/exec/lib_hydro/cmake/dist/modules
+    "${LIBHYDRO_DIR}/../include"
+    "${LIBHYDRO_DIR}/../modules"
     )
 
 
