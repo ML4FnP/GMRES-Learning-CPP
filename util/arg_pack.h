@@ -14,13 +14,32 @@ public:
     }
 
 
-    template<std::size_t i>
-    auto get(){
-        return std::get<i>(m_args);
+    template<std::size_t I>
+    auto get() {
+        return std::get<I>(m_args);
+    }
+
+
+    template<typename Function>
+    auto apply(Function f) {
+        return call(
+            f, m_args,
+            std::make_index_sequence<
+                std::tuple_size<
+                    std::tuple<Args ...>
+                >::value
+            >{}
+        );
     }
 
 private:
     std::tuple<Args ...> m_args;
+
+
+    template<typename Function, typename Tuple, size_t ... I>
+    static auto call(Function f, Tuple t, std::index_sequence<I ...>){
+        return f(std::get<I>(t) ...);
+    }
 };
 
 
