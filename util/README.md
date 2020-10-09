@@ -17,6 +17,18 @@ ap.get<foo>()
 ```
 
 
+### Function Calls / Applying Functions to `arg_pack`
+
+The `arg_pack` is mainly use to manage the input arguments to a function -- at
+some point we want to actually do the function call. This is done using the
+`apply` method, eg:
+```c++
+// int f(int i, int j, int k)
+auto ap = make_arg_pack(1, 2, 3);
+int z = ap.apply(f);
+```
+
+
 ### Compiling the `arg_pack` Tester:
 
 ```
