@@ -24,4 +24,5 @@ pushd dist
 cmake .. -DAMReX_ROOT=$AMREX_ROOT -DCMAKE_INSTALL_PREFIX="."
 make VERBOSE=TRUE -j
 make install
+cp main.ex ./..
 popd

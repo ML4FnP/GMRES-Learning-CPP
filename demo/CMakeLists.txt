@@ -4,8 +4,16 @@ project(main)
 
 enable_language(Fortran)
 
-find_package(AMReX REQUIRED HINTS ../../amrex/dist)
-find_package(Torch REQUIRED HINTS ../../libtorch)
+find_package(AMReX REQUIRED HINTS ../../amrex/dist
+                            HINTS ../../../../Programs/amrex/dist
+            )
+                            
+find_package(Torch REQUIRED HINTS ../../libtorch
+                            HINTS ../../../../Programs/libtorch
+            )
+
+
+
 
 # Enable OpenMP
 find_package(OpenMP)
@@ -20,6 +28,7 @@ find_library(
     LIBHYDRO
     NAMES hydro
     HINTS ../../FHDeX/exec/lib_hydro/cmake/dist/lib
+    HINTS ../../../../Programs/FHDeX/exec/lib_hydro/cmake/dist/lib
     )
 get_filename_component(LIBHYDRO_DIR "${LIBHYDRO}" DIRECTORY)
 
