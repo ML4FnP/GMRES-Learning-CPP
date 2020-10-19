@@ -4,14 +4,30 @@
 #include <tuple>
 
 
+template <class T>
+struct unwrap_refwrapper {
+    using type = T;
+};
+ 
+
+
+template <class T>
+struct unwrap_refwrapper<std::reference_wrapper<T>> {
+    using type = T&;
+};
+ 
+
+
+template <class T>
+using special_decay_t = typename unwrap_refwrapper<typename std::decay<T>::type>::type;
+
+
 
 template<typename ... Args>
 class arg_pack {
 
 public:
-    arg_pack(Args ... args) {
-        m_args = std::make_tuple(args ...);
-    }
+    arg_pack(Args ... args) : m_args(std::forward<Args>(args)...) {}
 
 
     template<std::size_t I>
@@ -33,7 +49,8 @@ public:
     }
 
 private:
-    std::tuple<Args ...> m_args;
+    //std::tuple<Args ...> m_args;
+    std::tuple<special_decay_t<Args> ...> m_args;
 
 
     template<typename Function, typename Tuple, size_t ... I>
