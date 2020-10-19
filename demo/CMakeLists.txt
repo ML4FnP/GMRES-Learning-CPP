@@ -24,12 +24,11 @@ if (OPENMP_FOUND)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
-find_library(
-    LIBHYDRO
-    NAMES hydro
-    HINTS ../../FHDeX/exec/lib_hydro/cmake/dist/lib
-    HINTS ../../../../Programs/FHDeX/exec/lib_hydro/cmake/dist/lib
-    )
+find_library(LIBHYDRO
+             NAMES hydro
+             HINTS ../../FHDeX/exec/lib_hydro/cmake/dist/lib
+             HINTS ../../../../Programs/FHDeX/exec/lib_hydro/cmake/dist/lib
+             )
 get_filename_component(LIBHYDRO_DIR "${LIBHYDRO}" DIRECTORY)
 
 message("LIBHYDRO = ${LIBHYDRO}")
@@ -52,10 +51,6 @@ list(APPEND CMAKE_Fortran_FLAGS "-O3 -DNDEBUG -O3 -fimplicit-none -ffixed-line-l
 string(REPLACE ";" " " CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
 message(" *** CMAKE_Fortran_FLAGS=${CMAKE_Fortran_FLAGS}")
 
-# include_directories(
-#     ../../FHDeX/exec/lib_hydro/cmake/dist/include
-#     ../../FHDeX/exec/lib_hydro/cmake/dist/modules
-#     )
 include_directories(
     "${LIBHYDRO_DIR}/../include"
     "${LIBHYDRO_DIR}/../modules"
