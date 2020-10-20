@@ -23,15 +23,24 @@ using special_decay_t = typename unwrap_refwrapper<typename std::decay<T>::type>
 
 
 
+template <class... Args>
+struct type_list {
+   template <std::size_t N>
+   using type = typename std::tuple_element<N, std::tuple<Args...>>::type;
+};
+
+
+
 template<typename ... Args>
 class arg_pack {
 
 public:
     arg_pack(Args ... args) : m_args(std::forward<Args>(args)...) {}
 
+    using types = type_list<Args...>;
 
     template<std::size_t I>
-    auto get() {
+    typename types::template type<I> get() {
         return std::get<I>(m_args);
     }
 
