@@ -61,26 +61,32 @@ public:
     }
 
 
-    template<typename Function>
-    auto apply(Function f) {
-        return call(
-            f, m_args,
-            std::make_index_sequence<
-                std::tuple_size<
-                    std::tuple<Args ...>
-                >::value
-            >{}
-        );
-    }
+    template<size_t start = 0,
+             size_t end   = std::tuple_size<std::tuple<Args ...>>::value>
+    class caller {
+    public:
+        caller(arg_pack<Args ...> & ap) : m_ap(ap) {}
+
+        template<typename Function>
+        auto operator()(Function f) {
+            return call(
+                f, m_ap.m_args,
+                make_index_sequence<start, end>{}
+            );
+        }
+
+    private:
+        arg_pack<Args ...> & m_ap;
+
+        template<typename Function, typename Tuple, size_t ... I>
+        static auto call(Function f, Tuple t, std::index_sequence<I ...>){
+            return f(std::get<I>(t) ...);
+        }
+    };
+
 
 private:
     std::tuple<special_decay_t<Args> ...> m_args;
-
-
-    template<typename Function, typename Tuple, size_t ... I>
-    static auto call(Function f, Tuple t, std::index_sequence<I ...>){
-        return f(std::get<I>(t) ...);
-    }
 };
 
 
