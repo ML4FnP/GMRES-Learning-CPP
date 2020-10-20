@@ -567,7 +567,7 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPAC
                 int64_t batch_size = 8;
                 float e1 = 1e-5;
                 int64_t epoch = 0;
-                int64_t numEpoch = 250; 
+                int64_t numEpoch = 500; 
                 float loss = 10.0;
 
                 /* Now, we create a data loader object and pass dataset. Note this returns a std::unique_ptr of the correct type that depends on the
@@ -636,7 +636,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
     auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermTensordim,umacTensordims,dmap,ba](auto&&... args)
     {
         int retrainFreq =3;
-        int initNum     =3;
+        int initNum     =20;
         auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
         int step=unpack_Step(args...);
         std::vector<double> TimeDataWindow =unpack_TimeDataWindow(args...);
@@ -729,10 +729,27 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             TimeDataWindow[WindowIdx]= step_stop_time; /* Add time to window of values */
             update_TimeDataWindow(args...,TimeDataWindow);
 
+
+
             std::ofstream outfile;
             outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
-            outfile << step_stop_time << " \n"; 
+            outfile << step_stop_time << std::setw(10) << " \n"; 
 
+
+
+        }else if (RefineSol==false and step<initNum)
+        {
+            Real step_strt_time = ParallelDescriptor::second();
+
+            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+            Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            Unpack_geom(args...),Unpack_dt(args...));  
+
+            Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
+            ParallelDescriptor::ReduceRealMax(step_stop_time);
+            std::ofstream outfile;
+            outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
+            outfile << step_stop_time << std::setw(10) << " \n"; 
 
 
         }else
@@ -1228,7 +1245,23 @@ void main_driver(const char * argv) {
 
     //___________________________________________________________________________
 
-    while (step < 500)
+    MultiFab presDirect(ba, dmap, 1, 1); 
+    pres.setVal(0.);  
+
+    std::array< MultiFab, AMREX_SPACEDIM > umacDirect;
+    defineFC(umacDirect, ba, dmap, 1);
+    setVal(umacDirect, 0.);
+
+    std::array<MultiFab, AMREX_SPACEDIM> source_termsDirect;
+    for (int d=0; d<AMREX_SPACEDIM; ++d){
+        source_termsDirect[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 6);
+        source_termsDirect[d].setVal(0.);
+    }
+
+
+
+
+    while (step < 6000)
     {
         // Spread forces to RHS
         std::array<MultiFab, AMREX_SPACEDIM> source_terms;
@@ -1238,7 +1271,7 @@ void main_driver(const char * argv) {
         }
 
 
-        RealVect f_0 = RealVect{dis(gen), dis(gen), 0.1*dis(gen)};
+        RealVect f_0 = RealVect{dis(gen), dis(gen), dis(gen)};
         // Print() << dis(gen) << "rng check" << "\n";
 
         for (IBMarIter pti(ib_mc, ib_lev); pti.isValid(); ++pti) {
@@ -1261,7 +1294,8 @@ void main_driver(const char * argv) {
         for (int d=0; d<AMREX_SPACEDIM; ++d)
             source_terms[d].SumBoundary(geom.periodicity());
 
-        Real step_strt_time = ParallelDescriptor::second();
+
+
 
         // if(variance_coef_mom != 0.0) {
 
@@ -1283,8 +1317,34 @@ void main_driver(const char * argv) {
         // auto advanceStokes_ML=Wrapper(advanceStokes, "parameter 1",3.14159) ;//, "parameter 1", 3.14159);
 
 
-        // Print() << "COARSE SOLUTION" << "\n"; 
+
         gmres::gmres_abs_tol = 1e-5;
+        // Copy multifabs updated in stokes solver, then run stokes solver using
+        // copied multifabs without ML wrapper. The time-to-solution is written to a text file. 
+        // Quantities as "direct" correspond to this direct call of the Stokes solver
+        MultiFab::Copy(presDirect, pres, 0, 0, 1, 1);
+        for (int d=0; d<AMREX_SPACEDIM; ++d)
+        {
+            MultiFab::Copy(umacDirect[d], umac[d], 0, 0, 1, 1);
+            MultiFab::Copy(source_termsDirect[d], source_terms[d], 0, 0, 1, 6);
+        }
+        Real Direct_step_strt_time = ParallelDescriptor::second();
+        advanceStokes(
+                umacDirect, presDirect,              /* LHS */
+                mfluxdiv, source_termsDirect,  /* RHS */
+                alpha_fc, beta, gamma, beta_ed, geom, dt
+            );
+        Real  Direct_step_stop_time = ParallelDescriptor::second() -  Direct_step_strt_time;
+        ParallelDescriptor::ReduceRealMax( Direct_step_stop_time);
+        std::ofstream outfileDirect;
+        outfileDirect.open("TimeDataDirect.txt", std::ios_base::app); // append instead of overwrite
+        outfileDirect << Direct_step_stop_time << std::setw(10) << " \n"; 
+
+
+
+        Real step_strt_time = ParallelDescriptor::second();
+
+        // Print() << "COARSE SOLUTION" << "\n"; 
         advanceStokes_ML(umac,pres, /* LHS */
                         mfluxdiv,source_terms, /* RHS*/
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
@@ -1293,22 +1353,22 @@ void main_driver(const char * argv) {
 
 
 
-    /* Multifab check data */
-// int ncompPresTest=1;
-// int ngrowPrestTest=1;
-// // WriteTestMultiFab(0,time,geom,pres);
-// MultiFab mfdiff(pres.boxArray(), pres.DistributionMap(), ncompPresTest, ngrowPrestTest); 
-// MultiFab::Copy(mfdiff, pres, 0, 0, ncompPresTest, ngrowPrestTest); /* using same ncomp and ngrow as pres */
-// torch::Tensor presTensor = torch::zeros({presTensordim[0]+1, presTensordim[1]+1,presTensordim[2]+1},options);
-// ConvertToTensor(pres,presTensor);
-// TensorToMultifab(presTensor,pres);
-// // WriteTestMultiFab(1,time,geom,pres);
-// MultiFab::Subtract(mfdiff, pres, 0, 0, ncompPresTest, ngrowPrestTest);
-// for (int icomp = 0; icomp < ncompPresTest; ++icomp) {
-//     Print() << "Component " << icomp << std::endl; 
-//     Print() << "diff Min,max: " << mfdiff.min(icomp,ngrowPrestTest) 
-//     << " , " << mfdiff.max(icomp,ngrowPrestTest) << std::endl;
-// }
+                    /* Multifab check data */
+                // int ncompPresTest=1;
+                // int ngrowPrestTest=1;
+                // // WriteTestMultiFab(0,time,geom,pres);
+                // MultiFab mfdiff(pres.boxArray(), pres.DistributionMap(), ncompPresTest, ngrowPrestTest); 
+                // MultiFab::Copy(mfdiff, pres, 0, 0, ncompPresTest, ngrowPrestTest); /* using same ncomp and ngrow as pres */
+                // torch::Tensor presTensor = torch::zeros({presTensordim[0]+1, presTensordim[1]+1,presTensordim[2]+1},options);
+                // ConvertToTensor(pres,presTensor);
+                // TensorToMultifab(presTensor,pres);
+                // // WriteTestMultiFab(1,time,geom,pres);
+                // MultiFab::Subtract(mfdiff, pres, 0, 0, ncompPresTest, ngrowPrestTest);
+                // for (int icomp = 0; icomp < ncompPresTest; ++icomp) {
+                //     Print() << "Component " << icomp << std::endl; 
+                //     Print() << "diff Min,max: " << mfdiff.min(icomp,ngrowPrestTest) 
+                //     << " , " << mfdiff.max(icomp,ngrowPrestTest) << std::endl;
+                // }
 
 
 
