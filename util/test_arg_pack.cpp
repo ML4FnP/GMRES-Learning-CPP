@@ -4,17 +4,28 @@
 #include "arg_pack.h"
 
 
+template<typename T, T ... ints>
+void print_sequence(std::integer_sequence<T, ints...> int_seq) {
+    std::cout << "The sequence of size " << int_seq.size() << ": ";
+    ((std::cout << ints << ' '),...);
+    std::cout << '\n';
+}
+
+
+
 int f(int i, int j, int k) {
     return i + j*i + k*j*i;
 }
 
+
+
 template<typename T, size_t N>
 T g(std::array<T, N> a) {
-    
     T r = a[0];
     for (int i=1; i<N; ++i) r += a[i];
     return r;
 }
+
 
 
 int main(int argc, char * argv[]) {
@@ -48,6 +59,10 @@ int main(int argc, char * argv[]) {
         std::cout << std::endl;
 
         std::cout << "g(a) = " << ap.apply(g<int, 3>) << std::endl;
+    }
+
+    {
+        print_sequence(make_index_sequence<10, 20>());
     }
 
 }

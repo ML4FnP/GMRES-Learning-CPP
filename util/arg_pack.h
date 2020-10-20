@@ -31,6 +31,22 @@ struct type_list {
 
 
 
+template <std::size_t N0, std::size_t N, std::size_t... Is>
+auto make_index_sequence_impl() {
+    // only one branch is considered. The other may be ill-formed
+    if constexpr (N == N0) return std::index_sequence<Is...>();   // end case
+    else return make_index_sequence_impl<N0, N-1, N-1, Is...>();  // recursion
+}
+
+
+
+template <std::size_t N0, std::size_t N>
+using make_index_sequence = std::decay_t<
+                                decltype(make_index_sequence_impl<N0, N>())
+                            >;
+
+
+
 template<typename ... Args>
 class arg_pack {
 
@@ -58,7 +74,6 @@ public:
     }
 
 private:
-    //std::tuple<Args ...> m_args;
     std::tuple<special_decay_t<Args> ...> m_args;
 
 
