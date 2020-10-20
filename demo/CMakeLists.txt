@@ -12,9 +12,6 @@ find_package(Torch REQUIRED HINTS ../../libtorch
                             HINTS ../../../../Programs/libtorch
             )
 
-
-
-
 # Enable OpenMP
 find_package(OpenMP)
 # If OpenMP is available => Add flags compiler + linker
@@ -52,20 +49,20 @@ string(REPLACE ";" " " CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
 message(" *** CMAKE_Fortran_FLAGS=${CMAKE_Fortran_FLAGS}")
 
 include_directories(
-    "${LIBHYDRO_DIR}/../include"
-    "${LIBHYDRO_DIR}/../modules"
+        "${LIBHYDRO_DIR}/../include"
+        "${LIBHYDRO_DIR}/../modules"
+        "../util"
     )
-
 
 add_executable(main.ex main.cpp main_driver.cpp WritePlotFile.cpp)
 
 target_link_libraries(
-    main.ex
-    AMReX::amrex AMReX::Flags_CXX AMReX::Flags_Fortran AMReX::Flags_FPE
+        main.ex
+        AMReX::amrex AMReX::Flags_CXX AMReX::Flags_Fortran AMReX::Flags_FPE
     )
 
 target_link_libraries(
-    main.ex
-    ${LIBHYDRO}
-    ${TORCH_LIBRARIES}
+        main.ex
+        ${LIBHYDRO}
+        ${TORCH_LIBRARIES}
     )
