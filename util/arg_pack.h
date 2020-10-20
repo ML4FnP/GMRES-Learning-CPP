@@ -8,14 +8,14 @@ template <class T>
 struct unwrap_refwrapper {
     using type = T;
 };
- 
+
 
 
 template <class T>
 struct unwrap_refwrapper<std::reference_wrapper<T>> {
     using type = T&;
 };
- 
+
 
 
 template <class T>
@@ -37,7 +37,7 @@ class arg_pack {
 public:
     arg_pack(Args ... args) : m_args(std::forward<Args>(args)...) {}
 
-    using types = type_list<Args...>;
+    using types = type_list<Args ...>;
 
     template<std::size_t I>
     typename types::template type<I> get() {
@@ -71,7 +71,7 @@ private:
 
 
 template<typename... Args>
-auto make_arg_pack(Args && ... args){
+arg_pack<Args ...> make_arg_pack(Args && ... args){
     return arg_pack<Args ...>(args ...);
 }
 
