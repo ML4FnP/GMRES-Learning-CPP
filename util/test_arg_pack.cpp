@@ -34,20 +34,26 @@ int h(int i, int j) {
 
 
 
-// template<typename Signature>
-// class Wrapper;
-// 
-// 
-// template<typename F, typename ... Args>
-// class Wrapper<F(Args ...)> {
-// public:
-//     template<typename Func>
-//     void operator()(Func func, Args ... args) {
-//         auto ap = make_arg_pack(args ...);
-//         auto ap_caller = decltype(ap)::template caller<>(ap);
-//         // return caller(func);
-//     }
-// };
+template<typename Signature>
+class Wrapper;
+
+
+template<typename F, typename ... Args>
+class Wrapper<F(Args ...)> {
+public:
+
+    template<typename Function>
+    Wrapper(Function func) : caller(arg_pack_caller<F(Args ...)>(func)) {}
+
+    F operator()(Args ... args) {
+        auto ap = make_arg_pack(std::move(args) ...);
+        return caller(ap);
+    }
+
+
+private:
+    arg_pack_caller<F(Args ...)> caller;
+};
 
 
 
@@ -97,20 +103,21 @@ int main(int argc, char * argv[]) {
     }
 
     {
-        // print_sequence(make_index_sequence<10, 20>());
+        print_sequence(make_index_sequence<10, 20>());
 
-        // enum args {i, j, k};
-        // auto ap = make_arg_pack(0, 1, 2, 3);
-        // auto ap_caller = decltype(ap)::caller<1, 3>(ap);
-        // int z = ap_caller(h);
+        enum args {i, j, k};
+        auto ap = make_arg_pack(0, 1, 2, 3);
+        arg_pack_caller<decltype(h)> ap_caller(h);
+        auto subset_ap = ap.subset(make_index_sequence<1, 3>());
+        int z = ap_caller(subset_ap);
 
-        // std::cout << "h(i,j) = " << z << std::endl;
+        std::cout << "h(i,j) = " << z << std::endl;
     }
 
     {
-        //Wrapper<decltype(q1)> wrapped_q1;
-        //wrapped_q1(q1, 1);
-        //Wrapper<decltype(q2)> wrapped_q2;
-        //wrapped_q2(q2, 0.1, 0.3);
+        Wrapper<decltype(q1)> wrapped_q1(q1);
+        wrapped_q1(1);
+        Wrapper<decltype(q2)> wrapped_q2(q2);
+        std::cout << "q2(x,y) = " << wrapped_q2(0.1, 0.3) << std::endl;
     }
 }

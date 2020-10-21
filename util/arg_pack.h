@@ -61,12 +61,22 @@ public:
         return std::get<I>(m_args);
     }
 
+    template<std::size_t ... I>
+    auto subset(std::index_sequence<I ...>) {
+        return make_arg_pack_loc(std::get<I>(m_args) ...);
+    }
+
     auto args() {return m_args;}
 
-    static const size_t size = std::tuple_size<std::tuple<Args ...>>::value;
+    static const std::size_t size = std::tuple_size<std::tuple<Args ...>>::value;
 
 private:
     std::tuple<special_decay_t<Args> ...> m_args;
+
+    template<typename... Args_loc>
+    static auto make_arg_pack_loc(Args_loc & ... args){
+        return arg_pack<Args_loc ...>(args ...);
+    }
 };
 
 
@@ -101,7 +111,7 @@ public:
 private:
     std::function<F(Args ...)> m_func;
 
-    template<typename Function, typename Tuple, size_t ... I>
+    template<typename Function, typename Tuple, std::size_t ... I>
     static auto call(Function f, Tuple t, std::index_sequence<I ...>){
         return f(std::get<I>(t) ...);
     }
