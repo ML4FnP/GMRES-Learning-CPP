@@ -957,16 +957,16 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
 
             if (norm_residNN < norm_resid)
             {
-                amrex::Print() << "Use guess provided by NN" << " \n"
+                amrex::Print() << "Use guess provided by NN" << " \n";
                 use_NN_prediction=true;
             }else if(norm_residNN > norm_resid)
             {
-                amrex::Print() << "10th GMRES resid for NN guess is too high. Discarding NN guess " << " \n"
+                amrex::Print() << "10th GMRES resid for NN guess is too high. Discarding NN guess " << " \n";
                 use_NN_prediction=false;
             }
             
 
-            
+
             ResidDataWindow[WindowIdx]= norm_residNN; /* Add residual to window of values */
 
 
