@@ -856,6 +856,8 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         std::vector<double> TimeDataWindow =unpack_TimeDataWindow(args...);
         std::vector<double> ResidDataWindow =unpack_ResidDataWindow(args...);
         int WindowIdx=((step-initNum)-1)%TimeDataWindow.size();
+        bool use_NN_prediction =false;
+
 
 
         MultiFab presNN(ba, dmap, 1, 1); 
@@ -947,17 +949,32 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...),norm_resid);
 
+            gmres_max_iter = 100;
+
             // amrex::Print() <<  "Direct resid "<<  norm_resid << " *****************" << " \n";
             // amrex::Print() <<  "NN resid "<<  norm_residNN << " *****************" << " \n";
 
-            gmres_max_iter = 100;
 
+            if (norm_residNN < norm_resid)
+            {
+                amrex::Print() << "Use guess provided by NN" << " \n"
+                use_NN_prediction=true;
+            }else if(norm_residNN > norm_resid)
+            {
+                amrex::Print() << "10th GMRES resid for NN guess is too high. Discarding NN guess " << " \n"
+                use_NN_prediction=false;
+            }
+            
+
+            
             ResidDataWindow[WindowIdx]= norm_residNN; /* Add residual to window of values */
+
+
 
         }
 
         /* Evaluate wrapped function with either the NN prediction or original input */
-        if(RefineSol==false and step>initNum)
+        if(RefineSol==false and step>initNum and use_NN_prediction==true)
         {
             Real step_strt_time = ParallelDescriptor::second();
 
@@ -971,7 +988,23 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             TimeDataWindow[WindowIdx]= step_stop_time; /* Add time to window of values */
             update_TimeDataWindow(args...,TimeDataWindow);
 
+            std::ofstream outfile;
+            outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
+            outfile << step_stop_time << std::setw(10) << " \n"; 
 
+        }else if(RefineSol==false and step>initNum and use_NN_prediction==false)
+        {
+            Real step_strt_time = ParallelDescriptor::second();
+
+            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...));
+
+            Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
+            ParallelDescriptor::ReduceRealMax(step_stop_time);
+            
+            TimeDataWindow[WindowIdx]= step_stop_time; /* Add time to window of values */
+            update_TimeDataWindow(args...,TimeDataWindow);
 
             std::ofstream outfile;
             outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
@@ -987,6 +1020,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
 
             Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
             ParallelDescriptor::ReduceRealMax(step_stop_time);
+
             std::ofstream outfile;
             outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
             outfile << step_stop_time << std::setw(10) << " \n"; 
