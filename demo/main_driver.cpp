@@ -236,6 +236,179 @@ void stdArrTensorTostdArrMultifab( std::array<torch::Tensor,AMREX_SPACEDIM>& ten
     }
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* residual computation */
+
+void ResidCompute (std::array< MultiFab, AMREX_SPACEDIM >& umac,
+                   MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   Real& norm_resid)
+{
+
+    Real theta_alpha = 0.;
+    Real norm_pre_rhs;
+
+    const BoxArray& ba = beta.boxArray();
+    const DistributionMapping& dmap = beta.DistributionMap();
+
+    
+
+    // rhs_p GMRES solve
+    MultiFab gmres_rhs_p(ba, dmap, 1, 0);
+    gmres_rhs_p.setVal(0.);
+
+    // rhs_u GMRES solve
+    std::array< MultiFab, AMREX_SPACEDIM > gmres_rhs_u;
+    for (int d=0; d<AMREX_SPACEDIM; ++d) {
+        gmres_rhs_u[d].define(convert(ba,nodal_flag_dir[d]), dmap, 1, 0);
+        gmres_rhs_u[d].setVal(0.);
+    }
+
+    // add forcing to gmres_rhs_u
+    for (int d=0; d<AMREX_SPACEDIM; ++d) {
+        MultiFab::Add(gmres_rhs_u[d], stochMfluxdiv[d], 0, 0, 1, 0);
+        MultiFab::Add(gmres_rhs_u[d], sourceTerms[d], 0, 0, 1, 0);
+    }
+
+
+    // GMRES varibles needed to compute residual
+    StagMGSolver StagSolver;
+    Precon Pcon;
+    std::array<MultiFab, AMREX_SPACEDIM> alphainv_fc;
+    std::array< MultiFab, AMREX_SPACEDIM > tmp_u;
+    std::array< MultiFab, AMREX_SPACEDIM > scr_u;
+    std::array< MultiFab, AMREX_SPACEDIM > r_u;
+    MultiFab tmp_p;
+    MultiFab scr_p;
+    MultiFab r_p;
+
+
+
+    for (int d=0; d<AMREX_SPACEDIM; ++d) {
+        r_u[d]        .define(convert(ba, nodal_flag_dir[d]), dmap, 1,                 1);
+        // w_u[d]        .define(convert(ba, nodal_flag_dir[d]), dmap, 1,                 0);
+        tmp_u[d]      .define(convert(ba, nodal_flag_dir[d]), dmap, 1,                 0);
+        scr_u[d]      .define(convert(ba, nodal_flag_dir[d]), dmap, 1,                 0);
+        // V_u[d]        .define(convert(ba, nodal_flag_dir[d]), dmap, gmres_max_inner+1, 0);
+        alphainv_fc[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 0);
+    } 
+    r_p.define  (ba, dmap,                  1, 1);
+    // w_p.define  (ba_in, dmap_in,                  1, 0);
+    tmp_p.define(ba, dmap,                  1, 0);
+    scr_p.define(ba, dmap,                  1, 0);
+    // V_p.define  (ba_in, dmap_in,gmres_max_inner + 1, 0); // Krylov vectors
+    StagSolver.Define(ba,dmap,geom);
+    Pcon.Define(ba,dmap,geom);
+
+
+    // Vector<Real> cs(gmres_max_inner);
+    // Vector<Real> sn(gmres_max_inner);
+    // Vector<Real>  y(gmres_max_inner);
+    // Vector<Real>  s(gmres_max_inner+1);
+
+    // Vector<Vector<Real>> H(gmres_max_inner + 1, Vector<Real>(gmres_max_inner));
+
+    // int outer_iter, total_iter, i_copy; // for looping iteration
+    // int i=0;
+
+    Real norm_b;            // |b|;           computed once at beginning
+    Real norm_pre_b;        // |M^-1 b|;      computed once at beginning
+    // Real norm_resid;        // |M^-1 (b-Ax)|; computed at beginning of each outer iteration
+    // Real norm_init_resid;   // |M^-1 (b-Ax)|; computed once at beginning
+    Real norm_resid_Stokes; // |b-Ax|;        computed at beginning of each outer iteration
+    // Real norm_init_Stokes;  // |b-Ax|;        computed once at beginning
+    Real norm_u_noprecon;   // u component of norm_resid_Stokes
+    Real norm_p_noprecon;   // p component of norm_resid_Stokes
+    // Real norm_resid_est;
+
+    Real norm_u; // temporary norms used to build full-state norm
+    Real norm_p; // temporary norms used to build full-state norm
+
+    // Vector<Real> inner_prod_vel(AMREX_SPACEDIM);
+    // Real inner_prod_pres;  
+
+    // set alphainv_fc to 1/alpha_fc
+    for (int d=0; d<AMREX_SPACEDIM; ++d) {
+        alphainv_fc[d].setVal(1.);
+        alphainv_fc[d].divide(alpha_fc[d],0,1,0);
+    }
+
+    if (scale_factor != 1.) {
+        theta_alpha = theta_alpha*scale_factor;
+
+        // we will solve for scale*x_p so we need to scale the initial guess
+        pres.mult(scale_factor, 0, 1, pres.nGrow());
+
+        // scale the rhs:
+        for (int d=0; d<AMREX_SPACEDIM; ++d)
+            gmres_rhs_u[d].mult(scale_factor,0,1,gmres_rhs_u[d].nGrow());
+
+        // scale the viscosities:
+        beta.mult(scale_factor, 0, 1, beta.nGrow());
+        gamma.mult(scale_factor, 0, 1, gamma.nGrow());
+        for (int d=0; d<NUM_EDGE; ++d)
+            beta_ed[d].mult(scale_factor, 0, 1, beta_ed[d].nGrow());
+    }
+
+    // First application of preconditioner
+    Pcon.Apply(gmres_rhs_u, gmres_rhs_p, tmp_u, tmp_p, alpha_fc, alphainv_fc,
+               beta, beta_ed, gamma, theta_alpha, geom, StagSolver);
+
+    // preconditioned norm_b: norm_pre_b
+    StagL2Norm(geom, tmp_u, 0, scr_u, norm_u);
+    CCL2Norm(tmp_p, 0, scr_p, norm_p);
+    norm_p       = p_norm_weight*norm_p;
+    norm_pre_b   = sqrt(norm_u*norm_u + norm_p*norm_p);
+    norm_pre_rhs = norm_pre_b;
+
+    // calculate the l2 norm of rhs
+    StagL2Norm(geom, gmres_rhs_u, 0, scr_u, norm_u);
+    CCL2Norm(gmres_rhs_p, 0, scr_p, norm_p);
+    norm_p = p_norm_weight*norm_p;
+    norm_b = sqrt(norm_u*norm_u + norm_p*norm_p);
+
+    // Calculate tmp = Ax
+    ApplyMatrix(tmp_u, tmp_p, umac, pres, alpha_fc, beta, beta_ed, gamma, theta_alpha, geom);
+
+    // tmp = b - Ax
+    for (int d=0; d<AMREX_SPACEDIM; ++d) {
+        MultiFab::Subtract(tmp_u[d], gmres_rhs_u[d], 0, 0, 1, 0);
+        tmp_u[d].mult(-1., 0, 1, 0);
+    }
+    MultiFab::Subtract(tmp_p, gmres_rhs_p, 0, 0, 1, 0);
+    tmp_p.mult(-1., 0, 1, 0);
+
+    // un-preconditioned residuals
+    StagL2Norm(geom, tmp_u, 0, scr_u, norm_u_noprecon);
+    CCL2Norm(tmp_p, 0, scr_p, norm_p_noprecon);
+    norm_p_noprecon   = p_norm_weight*norm_p_noprecon;
+    norm_resid_Stokes = sqrt(norm_u_noprecon*norm_u_noprecon + norm_p_noprecon*norm_p_noprecon);
+
+    // solve for r = M^{-1} tmp
+    Pcon.Apply(tmp_u, tmp_p, r_u, r_p, alpha_fc, alphainv_fc,
+                beta, beta_ed, gamma, theta_alpha, geom, StagSolver);
+
+
+    // resid = sqrt(dot_product(r, r))
+    StagL2Norm(geom, r_u, 0, scr_u, norm_u);
+    CCL2Norm(r_p, 0, scr_p, norm_p);
+    norm_p     = p_norm_weight*norm_p;
+    norm_resid = sqrt(norm_u*norm_u + norm_p*norm_p);
+
+    // amrex::Print() << norm_resid << " *************************************" << " \n";
+    // amrex::Print() << norm_resid_Stokes << " *************************************" << " \n";
+
+}
+
+
+// gmres_rhs_u,gmres_rhs_p,umac,pres,
+// bu,bp,xu,xp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Functions for unpacking parameter pack passed to wrapped function. */
@@ -735,8 +908,6 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
             outfile << step_stop_time << std::setw(10) << " \n"; 
 
-
-
         }else if (RefineSol==false and step<initNum)
         {
             Real step_strt_time = ParallelDescriptor::second();
@@ -750,6 +921,14 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             std::ofstream outfile;
             outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
             outfile << step_stop_time << std::setw(10) << " \n"; 
+
+
+            Real norm_resid;
+            amrex::Print() <<  "Test resid call" <<  " \n";
+            ResidCompute(umac,pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...),norm_resid);
+            amrex::Print() <<  "resid call done "<<  norm_resid << " *****************" << " \n";
 
 
         }else
@@ -845,7 +1024,6 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
     };
     return new_function;
 }
-
 
 
 
@@ -1283,6 +1461,9 @@ void main_driver(const char * argv) {
 
             for (int i =0; i<np; ++i) {
                 ParticleType & mark = markers[i];
+                mark.pos(0)=0.25*dis(gen);
+                mark.pos(1)=0.25*dis(gen);
+                mark.pos(2)=0.25*dis(gen);
                 for (int d=0; d<AMREX_SPACEDIM; ++d)
                     mark.rdata(IBMReal::forcex + d) = f_0[d];
             }
