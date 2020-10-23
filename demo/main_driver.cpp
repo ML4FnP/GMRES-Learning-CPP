@@ -423,7 +423,7 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step , std::vector<double>& TimeDataWindow )
+                   ,int step , std::vector<double>& TimeDataWindow, std::vector<double>& ResidDataWindow )
 {  
     return  umac;
 }
@@ -437,7 +437,7 @@ MultiFab& Unpack_pres(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  pres;
 }
@@ -452,7 +452,7 @@ const std::array< MultiFab, AMREX_SPACEDIM >& Unpack_flux(std::array< MultiFab, 
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  stochMfluxdiv;
 }
@@ -467,7 +467,7 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_sourceTerms(std::array< MultiFab,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  sourceTerms;
 }
@@ -482,7 +482,7 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_alpha_fc(std::array< MultiFab, AM
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  alpha_fc;
 }
@@ -496,7 +496,7 @@ MultiFab& Unpack_beta(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  beta;
 }
@@ -510,7 +510,7 @@ MultiFab& Unpack_gamma(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pr
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  gamma;
 }
@@ -525,7 +525,7 @@ std::array< MultiFab, NUM_EDGE >& Unpack_beta_ed(std::array< MultiFab, AMREX_SPA
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  beta_ed;
 }
@@ -539,7 +539,7 @@ const Geometry Unpack_geom(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  geom;
 }
@@ -553,7 +553,7 @@ const Real& Unpack_dt(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  dt;
 }
@@ -568,27 +568,11 @@ torch::Tensor& Unpack_PresCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,M
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  PresCollect;
 }
 
-void CollectPressure(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow
-                   ,torch::Tensor PresFinal)
-{  
-
-        PresCollect=torch::cat({PresCollect,PresFinal},0);
-    
-}
 
 std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_RHSCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
@@ -599,11 +583,99 @@ std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_RHSCollect(std::array< MultiFab
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  RHSCollect;
 }
 
+
+std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_umacCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
+{  
+    return  umacCollect;
+}
+
+
+int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
+{  
+
+       return step;
+    
+}
+
+std::vector<double> unpack_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
+{  
+
+       return TimeDataWindow;
+    
+}
+
+
+
+
+std::vector<double> unpack_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
+{  
+
+       return TimeDataWindow;
+    
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* functions that require something from the parameter pack ( or act on the pack) but do not simply unpack values are below */
+
+void CollectPressure(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,torch::Tensor PresFinal)
+{  
+
+        PresCollect=torch::cat({PresCollect,PresFinal},0);
+    
+}
 
 void CollectRHS(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
@@ -614,8 +686,8 @@ void CollectRHS(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   std::array<torch::Tensor,AMREX_SPACEDIM> RHSFinal)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,std::array<torch::Tensor,AMREX_SPACEDIM> RHSFinal)
 {  
         for (int d=0; d<AMREX_SPACEDIM; ++d)
         {
@@ -632,63 +704,14 @@ void Collectumac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   std::array<torch::Tensor,AMREX_SPACEDIM> umacFinal)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,std::array<torch::Tensor,AMREX_SPACEDIM> umacFinal)
 {  
         for (int d=0; d<AMREX_SPACEDIM; ++d)
         {
             umacCollect[d]=torch::cat({umacCollect[d],umacFinal[d]},0);
         }
 }
-
-
-std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_umacCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
-{  
-    return  umacCollect;
-}
-
-
-int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
-{  
-
-       return step;
-    
-}
-
-std::vector<double> unpack_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow)
-{  
-
-       return TimeDataWindow;
-    
-}
-
 
 void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
@@ -699,11 +722,28 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   std::vector<double>& TimeDataWindowIn)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,std::vector<double>& TimeDataWindow_In)
 {  
-       TimeDataWindow=TimeDataWindowIn;
+       TimeDataWindow=TimeDataWindow_In;
 }
+
+
+void update_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,std::vector<double>& ResidDataWindow_In)
+{  
+       ResidDataWindow=ResidDataWindow_In;
+}
+
 
 
  void TrimSourceMultiFab(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
@@ -715,8 +755,8 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
                    torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   amrex::DistributionMapping dmap, BoxArray  ba, std::array<MultiFab, AMREX_SPACEDIM>& source_termsTrimmed)
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,amrex::DistributionMapping dmap, BoxArray  ba, std::array<MultiFab, AMREX_SPACEDIM>& source_termsTrimmed)
 {  
     for (int d=0; d<AMREX_SPACEDIM; ++d)
     {
@@ -724,6 +764,7 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
         MultiFab::Copy(source_termsTrimmed[d], sourceTerms[d], 0, 0, 1, 1); 
     }
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -787,13 +828,13 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPAC
 
 
 
-double MovingAvg (std::vector<double>& TimeDataWindow)
+double MovingAvg (std::vector<double>& InDataWindow)
 {
-    int window = TimeDataWindow.size();
+    int window = InDataWindow.size();
     double sum;
     for(int i = 0 ; i<window ; i++)
     {
-        sum+=TimeDataWindow[i];
+        sum+=InDataWindow[i];
     }
     sum = sum/double(window);
     return sum;
@@ -813,15 +854,16 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
         int step=unpack_Step(args...);
         std::vector<double> TimeDataWindow =unpack_TimeDataWindow(args...);
+        std::vector<double> ResidDataWindow =unpack_ResidDataWindow(args...);
         int WindowIdx=((step-initNum)-1)%TimeDataWindow.size();
 
 
-        MultiFab pres(ba, dmap, 1, 1); 
-        pres.setVal(0.);  
+        MultiFab presNN(ba, dmap, 1, 1); 
+        presNN.setVal(0.);  
 
-        std::array< MultiFab, AMREX_SPACEDIM > umac;
-        defineFC(umac, ba, dmap, 1);
-        setVal(umac, 0.);
+        std::array< MultiFab, AMREX_SPACEDIM > umacNN;
+        defineFC(umacNN, ba, dmap, 1);
+        setVal(umacNN, 0.);
 
 
 
@@ -878,12 +920,39 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
 
 
             /* Convert tensor to multifab using distribution map of original pressure MultiFab */
-            TensorToMultifab(presTensor,pres);
+            TensorToMultifab(presTensor,presNN);
 
             /* Convert std::array tensor to std::array multifab using distribution map of original pressure MultiFab */
-            stdArrTensorTostdArrMultifab(umacTensor,umac);
+            stdArrTensorTostdArrMultifab(umacTensor,umacNN);
 
 
+            Real norm_residNN;
+            Real norm_resid;
+
+            gmres_max_iter = 10 ;
+
+            func(umacNN,presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...));
+
+            ResidCompute(umacNN,presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...),norm_residNN);
+
+            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...));
+
+            ResidCompute(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+                Unpack_geom(args...),Unpack_dt(args...),norm_resid);
+
+            // amrex::Print() <<  "Direct resid "<<  norm_resid << " *****************" << " \n";
+            // amrex::Print() <<  "NN resid "<<  norm_residNN << " *****************" << " \n";
+
+            gmres_max_iter = 100;
+
+            ResidDataWindow[WindowIdx]= norm_residNN; /* Add residual to window of values */
 
         }
 
@@ -892,7 +961,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         {
             Real step_strt_time = ParallelDescriptor::second();
 
-            func(umac,pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            func(umacNN,presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...));
 
@@ -921,15 +990,6 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             std::ofstream outfile;
             outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
             outfile << step_stop_time << std::setw(10) << " \n"; 
-
-
-            Real norm_resid;
-            amrex::Print() <<  "Test resid call" <<  " \n";
-            ResidCompute(umac,pres,Unpack_flux(args...),Unpack_sourceTerms(args...),
-                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-                Unpack_geom(args...),Unpack_dt(args...),norm_resid);
-            amrex::Print() <<  "resid call done "<<  norm_resid << " *****************" << " \n";
-
 
         }else
         {
@@ -974,7 +1034,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             CollectRHS(args...,RHSTensor);
 
 
-        }else if (RefineSol == true and TimeDataWindow[WindowIdx]>MovingAvg(TimeDataWindow))
+        }else if (RefineSol == true and TimeDataWindow[WindowIdx]>MovingAvg(TimeDataWindow) and ResidDataWindow[WindowIdx]>MovingAvg(ResidDataWindow) )
         {
             torch::Tensor presTensor= torch::zeros({1,presTensordim[0] , presTensordim[1],presTensordim[2] },options);
             ConvertToTensor(Unpack_pres(args...),presTensor);
@@ -1413,6 +1473,8 @@ void main_driver(const char * argv) {
 
 
     std::vector<double> TimeDataWindow(50);
+    std::vector<double> ResidDataWindow(50);
+
 
     /****************************************************************************
      *                                                                          *
@@ -1461,9 +1523,9 @@ void main_driver(const char * argv) {
 
             for (int i =0; i<np; ++i) {
                 ParticleType & mark = markers[i];
-                mark.pos(0)=0.25*dis(gen);
-                mark.pos(1)=0.25*dis(gen);
-                mark.pos(2)=0.25*dis(gen);
+                // mark.pos(0)=0.25*dis(gen);
+                // mark.pos(1)=0.25*dis(gen);
+                // mark.pos(2)=0.25*dis(gen);
                 for (int d=0; d<AMREX_SPACEDIM; ++d)
                     mark.rdata(IBMReal::forcex + d) = f_0[d];
             }
@@ -1529,7 +1591,7 @@ void main_driver(const char * argv) {
         advanceStokes_ML(umac,pres, /* LHS */
                         mfluxdiv,source_terms, /* RHS*/
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
-                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow /* ML */
+                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow,ResidDataWindow /* ML */
                         );
 
 
@@ -1560,7 +1622,7 @@ void main_driver(const char * argv) {
         advanceStokes_ML2(umac,pres, /* LHS */
                         mfluxdiv,source_terms,/* RHS */
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
-                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow /* ML */
+                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow,ResidDataWindow /* ML */
                         );
 
         Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
