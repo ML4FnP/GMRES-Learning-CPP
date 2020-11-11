@@ -38,6 +38,14 @@ template<typename Signature>
 class Wrapper;
 
 
+template<typename Signature>
+class ReturnWrapper;
+
+
+template<typename Signature>
+class VoidWrapper;
+
+
 template<typename F, typename ... Args>
 class Wrapper<F(Args ...)> {
 public:
@@ -45,14 +53,41 @@ public:
     template<typename Function>
     Wrapper(Function func) : caller(arg_pack_caller<F(Args ...)>(func)) {}
 
+protected:
+    arg_pack_caller<F(Args ...)> caller;
+};
+
+
+template<typename F, typename ... Args>
+class ReturnWrapper<F(Args ...)> : protected Wrapper<F(Args ...)>{
+public:
+
+    template<typename Function>
+    ReturnWrapper(Function func) : Wrapper<F(Args ...)>(func) {}
+
     F operator()(Args ... args) {
         auto ap = make_arg_pack(std::move(args) ...);
-        return caller(ap);
+        // wrapper code running before the wrapped function
+        auto ret = this->caller(ap);
+        // wrapper cude running after the wrapped function
+        return ret;
     }
+};
 
 
-private:
-    arg_pack_caller<F(Args ...)> caller;
+template<typename F, typename ... Args>
+class VoidWrapper<F(Args ...)> : protected Wrapper<F(Args ...)> {
+public:
+
+    template<typename Function>
+    VoidWrapper(Function func) : Wrapper<F(Args...)>(func) {}
+
+    F operator()(Args ... args) {
+        auto ap = make_arg_pack(std::move(args) ...);
+        // wrapper code running before the wrapped function
+        this->caller(ap);
+        // wrapper cude running after the wrapped function
+    }
 };
 
 
@@ -115,9 +150,9 @@ int main(int argc, char * argv[]) {
     }
 
     {
-        Wrapper<decltype(q1)> wrapped_q1(q1);
+        VoidWrapper<decltype(q1)> wrapped_q1(q1);
         wrapped_q1(1);
-        Wrapper<decltype(q2)> wrapped_q2(q2);
+        ReturnWrapper<decltype(q2)> wrapped_q2(q2);
         std::cout << "q2(x,y) = " << wrapped_q2(0.1, 0.3) << std::endl;
     }
 }
