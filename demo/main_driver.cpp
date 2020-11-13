@@ -335,81 +335,9 @@ class CustomDataset : public torch::data::Dataset<CustomDataset>
           SrcTensorFlat=torch::cat({SrcTensorFlat,bp},-1);
 
 
-        //   Print() << SrcTensorFlat.size(0) << " "<< SrcTensorFlat.size(1) << " "<< SrcTensorFlat.size(2) << " "<< SrcTensorFlat.size(3) << "\n "; 
-        //   Print() << umacFlat.size(0) << " "<< umacFlat.size(1) << " "<< umacFlat.size(2) << " "<< umacFlat.size(3) << "\n "; 
-        // Print() << "Test " << SrcTensorFlat[0].size(0) << " " << SrcTensorFlat[0].size(1)<< " " << SrcTensorFlat[0].size(2) << "\n";
-
           bTensor =SrcTensorFlat;
           SolTensor =umacFlat;
 
-         ///////////////////////////////////////////// Testing area
-
-        for (int d=0;d<AMREX_SPACEDIM;d++) 
-          {
-            bIn[d]=bIn[d].unsqueeze(1);
-            umacTensors[d]=umacTensors[d].unsqueeze(1);
-          }
-        SolIn=SolIn.unsqueeze(1);
-
-    
-          /* Concatenate every tensor along the channel dim to yield a tensor of the form (N,3,) */
-        //   SrcTensorCat  =torch::cat({bIn[0],bIn[1],bIn[2]},1);
-
-        /* New plan : Use single small network for every component, use seperate training loops */
-
-
-        // Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << bIn[0].size(0) << " " << bIn[0].size(1)<< " " << bIn[0].size(2)<< " " << bIn[0].size(3) << " " << bIn[0].size(4) << " \n";
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << bIn[1].size(0) << " " << bIn[1].size(1)<< " " << bIn[1].size(2)<< " " << bIn[1].size(3) << " " << bIn[1].size(4) << " \n";
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << bIn[2].size(0) << " " << bIn[2].size(1)<< " " << bIn[2].size(2)<< " " << bIn[2].size(3) << " " << bIn[2].size(4) << " \n";
-
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << umacTensors[0].size(0) << " " << umacTensors[0].size(1)<< " " << umacTensors[0].size(2)<< " " << umacTensors[0].size(3) << " " << umacTensors[0].size(4) << " \n";
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << umacTensors[1].size(0) << " " << umacTensors[1].size(1)<< " " << umacTensors[1].size(2)<< " " << umacTensors[1].size(3) << " " << umacTensors[1].size(4) << " \n";
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << umacTensors[2].size(0) << " " << umacTensors[2].size(1)<< " " << umacTensors[2].size(2)<< " " << umacTensors[2].size(3) << " " << umacTensors[2].size(4) << " \n";
-
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << SolIn.size(0) << " " << SolIn.size(1)<< " " << SolIn.size(2)<< " " << SolIn.size(3) << " " << SolIn.size(4) << " \n";
-
-        
-
-    //    bIn[0]= torch::nn::functional::pad(bIn[0], torch::nn::functional::PadFuncOptions({0, 1, 0, 1,0,0}).mode(torch::kConstant));
-    //    bIn[1]= torch::nn::functional::pad(bIn[1], torch::nn::functional::PadFuncOptions({0, 1, 0, 0,0,1}).mode(torch::kConstant).value(100));
-    //    bIn[2]= torch::nn::functional::pad(bIn[2], torch::nn::functional::PadFuncOptions({0, 0, 0, 1,0,1}).mode(torch::kConstant));
-
-    //     Print() << "!!!!!!!! AUGMENT " << bIn[0].size(0) << " " << bIn[0].size(1)<< " " << bIn[0].size(2)<< " " << bIn[0].size(3) << " " << bIn[0].size(4) << " \n";
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << bIn[1].size(0) << " " << bIn[1].size(1)<< " " << bIn[1].size(2)<< " " << bIn[1].size(3) << " " << bIn[1].size(4) << " \n";
-    //     Print() << "!!!!!!!!!!!!!!!!!!!!!!!!11 " << bIn[2].size(0) << " " << bIn[2].size(1)<< " " << bIn[2].size(2)<< " " << bIn[2].size(3) << " " << bIn[2].size(4) << " \n";
-
-
-
-
-
-    //     Print() << "ENNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" << "\n";
-    //     Print() << bIn[1].index({-1,0,0,0,-1}).item<double>() << "\n" ;
-    //     Print() << "ENNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" << "\n";
-
-
-    //     bIn[0] = bIn[0].index({Slice(),Slice(),Slice(),Slice(0,-1),Slice(0,-1)});
-    //     bIn[1] = bIn[1].index({Slice(),Slice(),Slice(0,-1),Slice(),Slice(0,-1)});
-    //     bIn[2] = bIn[2].index({Slice(),Slice(),Slice(0,-1),Slice(0,-1),Slice()});
-
-    //     Print() << "ENNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" << "\n";
-    //     Print() << bIn[1].index({-1,0,0,0,-1}).item<double>() << "\n" ;
-    //     Print() << "ENNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" << "\n";
-
-    //     Print() << "TEEEESSSTTTT!!!!! " << bIn[0].size(0) << " " << bIn[0].size(1)<< " " << bIn[0].size(2)<< " " << bIn[0].size(3) << " " << bIn[0].size(4) << " \n";
-    //     Print() << "TEEEESSSTTTT!!!!! " << bIn[1].size(0) << " " << bIn[1].size(1)<< " " << bIn[1].size(2)<< " " << bIn[1].size(3) << " " << bIn[1].size(4) << " \n";
-    //     Print() << "TEEEESSSTTTT!!!!! " << bIn[2].size(0) << " " << bIn[2].size(1)<< " " << bIn[2].size(2)<< " " << bIn[2].size(3) << " " << bIn[2].size(4) << " \n";
-
-
-        //   umacTensorsCat=torch::cat({umacTensors[0],umacTensors[1],umacTensors[2]},1);
-
-        //   /* Network input tensor */
-        //   bTest=torch::cat({SrcTensorCat,SrcTensorCat,SrcTensorCat,SrcTensorCat},1);
-
-        //   /* Network solution tensor */
-        //   SrcTest=torch::cat({umacTensorsCat,PresCat},1);
-
-        //  Print() << SrcTest.size(0) << " "<< SrcTest.size(1) << " "<< SrcTest.size(2) << " "<< SrcTest.size(3) << " " << SrcTest.size(4) << "\n "; 
-        //  Print() << bTest.size(0) << " "<< bTest.size(1) << " "<< bTest.size(2) << " "<< bTest.size(3) << " " << bTest.size(4) << "\n "; 
         };
         
         torch::data::Example<> get(size_t index) override
@@ -452,12 +380,6 @@ class CustomDatasetCNN : public torch::data::Dataset<CustomDatasetCNN>
             Pres=Pres.unsqueeze(1);
 
         
-            // At present, this assumes the following format for the 1-box approach. This needs to be generalized for more general distributions.
-            // The x part of the fields have N+3,N+2,N+2 dims
-            // The y part of the fields have N+2,N+3,N+2 dims
-            // The z part of the fields have N+3,N+2,N+3 dims
-            // The pressure fields have N+2,N+2,N+2 dims
-            // N=n_cells=max_grid_size for every dim
 
             // The tensors are padded so that every component is the same size as the largest component (currently N+3).
             // Note: This allows the tensors to be concatencated, and allows the most direct use of the pytorch dataloader
@@ -469,18 +391,13 @@ class CustomDatasetCNN : public torch::data::Dataset<CustomDatasetCNN>
             int max1   = std::max(maxP,maxU);
             int maxDim    = std::max(max1,maxSrc);
             
+            SrcTensor[0]= torch::nn::functional::pad(SrcTensor[0], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(10000000));
+            SrcTensor[1]= torch::nn::functional::pad(SrcTensor[1], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(10000000));
+            SrcTensor[2]= torch::nn::functional::pad(SrcTensor[2], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(10000000));
 
-           Print() << "TEST *********************************** " <<  maxDim  << " \n";
-           Print() << "TEST *********************************** " <<  maxDim-srctermTensordim[8]  << " \n";
-
-
-            SrcTensor[0]= torch::nn::functional::pad(SrcTensor[0], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0,  maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(10000000));
-            SrcTensor[1]= torch::nn::functional::pad(SrcTensor[1], torch::nn::functional::PadFuncOptions({0, 1, 0, 0,0,1}).mode(torch::kConstant).value(10000000));
-            SrcTensor[2]= torch::nn::functional::pad(SrcTensor[2], torch::nn::functional::PadFuncOptions({0, 0, 0, 1,0,1}).mode(torch::kConstant).value(10000000));
-
-            umacTensors[0]= torch::nn::functional::pad(umacTensors[0], torch::nn::functional::PadFuncOptions({0, 1, 0, 1,0,0}).mode(torch::kConstant).value(10000000));
-            umacTensors[1]= torch::nn::functional::pad(umacTensors[1], torch::nn::functional::PadFuncOptions({0, 1, 0, 0,0,1}).mode(torch::kConstant).value(10000000));
-            umacTensors[2]= torch::nn::functional::pad(umacTensors[2], torch::nn::functional::PadFuncOptions({0, 0, 0, 1,0,1}).mode(torch::kConstant).value(10000000));
+            umacTensors[0]= torch::nn::functional::pad(umacTensors[0], torch::nn::functional::PadFuncOptions({0, maxDim-umacTensordims[2], 0, maxDim-umacTensordims[1],0, maxDim-umacTensordims[0]}).mode(torch::kConstant).value(10000000));
+            umacTensors[1]= torch::nn::functional::pad(umacTensors[1], torch::nn::functional::PadFuncOptions({0, maxDim-umacTensordims[5], 0, maxDim-umacTensordims[4],0, maxDim-umacTensordims[3]}).mode(torch::kConstant).value(10000000));
+            umacTensors[2]= torch::nn::functional::pad(umacTensors[2], torch::nn::functional::PadFuncOptions({0, maxDim-umacTensordims[8], 0, maxDim-umacTensordims[7],0, maxDim-umacTensordims[6]}).mode(torch::kConstant).value(10000000));
 
             Pres= torch::nn::functional::pad(Pres, torch::nn::functional::PadFuncOptions({0, maxDim-presTensordim[2], 0, maxDim-presTensordim[1],0,maxDim-presTensordim[0]}).mode(torch::kConstant).value(10000000));
 
@@ -493,10 +410,7 @@ class CustomDatasetCNN : public torch::data::Dataset<CustomDatasetCNN>
             bTensor=SrcTensorCat;
 
             /* Network solution tensor */
-            SolTensor=torch::cat({umacTensorsCat,Pres},1);
-
-            //   PressureFlat=SolIn.reshape({Current_batchsize,1,1,-1});
-            //   umacFlat=torch::cat({umacFlat,PressureFlat},-1);        
+            SolTensor=torch::cat({umacTensorsCat,Pres},1);    
 
         };
         
@@ -1240,13 +1154,15 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                             // Solution data
                             torch::Tensor target = batch.target; 
 
+
                             // Print() <<  batch.data.dim() << " \n";
                             // Print() <<  batch.data.size(0)<< " " << batch.data.size(1) << " \n";
                             // Print() <<  batch.target.size(0)<< " " << batch.target.size(1) << " \n";
-                    //    Print() <<  batch.data.size(0)<< " " << batch.data.size(1) << " " << batch.data.size(2) << " " << batch.data.size(3) << " " << batch.data.size(4) << " \n";
-                    //     Print() <<  srctermTensordim[0] << " " << srctermTensordim[1] << " " << srctermTensordim[2]  << " \n"; 
-                    //     Print() <<  umacTensordims[0] << " " << umacTensordims[1] << " " << umacTensordims[2]  << " \n"; 
-
+                            //    Print() <<  batch.data.size(0)<< " " << batch.data.size(1) << " " << batch.data.size(2) << " " << batch.data.size(3) << " " << batch.data.size(4) << " \n";
+                            //     Print() <<  srctermTensordim[0] << " " << srctermTensordim[1] << " " << srctermTensordim[2]  << " \n"; 
+                            //     Print() <<  umacTensordims[0] << " " << umacTensordims[1] << " " << umacTensordims[2]  << " \n"; 
+                            //    Print() << "TEST *********************************** " <<  maxDim  << " \n";
+                            //    Print() << "TEST *********************************** " <<  maxDim-srctermTensordim[8]  << " \n";
 
                             // Reset gradients
                             optimizerUx.zero_grad();
