@@ -1136,6 +1136,56 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                 float lossUz = 10.0;
                 float lossP  = 10.0;
 
+                // Compute maximal dimension for slicing down tensor output of dataloader object
+                int maxP   = *std::max_element(presTensordim.begin(), presTensordim.end());
+                int maxU   = *std::max_element(umacTensordims.begin(), umacTensordims.end());
+                int maxSrc = *std::max_element(srctermTensordim.begin(), srctermTensordim.end());
+                int max1   = std::max(maxP,maxU);
+                int maxDim    = std::max(max1,maxSrc);
+
+               
+                // Set indicies for removing the padded elements of the tensors used in the dataloader
+                // Note: To use the pytorch dataloader(which makes it easy to use the autograd feature)
+                // we must set tensor data pairs (target and data) as an output. 
+                // To do this, the source,umac,and pressure Multifabs
+                // that are converted to tensors are first concatenated by pading them 
+                // so that every dimension has the same size as the largest dimension.
+                // Below, tensor indicies are set so we remove this padding
+                auto Ux_f1_Slice_x =Slice(0,srctermTensordim[0]-maxDim);
+                auto Ux_f2_Slice_y =Slice(0,srctermTensordim[1]-maxDim);
+                auto Ux_f3_Slice_z =Slice(0,srctermTensordim[2]-maxDim);
+                auto Uy_f1_Slice_x =Slice(0,srctermTensordim[3]-maxDim);
+                auto Uy_f2_Slice_y =Slice(0,srctermTensordim[4]-maxDim);
+                auto Uy_f3_Slice_z =Slice(0,srctermTensordim[5]-maxDim);
+                auto Uz_f1_Slice_x =Slice(0,srctermTensordim[6]-maxDim);
+                auto Uz_f2_Slice_y =Slice(0,srctermTensordim[7]-maxDim);
+                auto Uz_f3_Slice_z =Slice(0,srctermTensordim[8]-maxDim);
+
+                if (srctermTensordim[0]-maxDim==0) Ux_f1_Slice_x =Slice();
+                if (srctermTensordim[1]-maxDim==0) Ux_f2_Slice_y =Slice();
+                if (srctermTensordim[2]-maxDim==0) Ux_f3_Slice_z =Slice();
+                if (srctermTensordim[3]-maxDim==0) Uy_f1_Slice_x =Slice();
+                if (srctermTensordim[4]-maxDim==0) Uy_f2_Slice_y =Slice();
+                if (srctermTensordim[5]-maxDim==0) Uy_f3_Slice_z =Slice();
+                if (srctermTensordim[6]-maxDim==0) Uz_f1_Slice_x =Slice();
+                if (srctermTensordim[7]-maxDim==0) Uz_f2_Slice_y =Slice();
+                if (srctermTensordim[8]-maxDim==0) Uz_f3_Slice_z =Slice();
+
+
+                // auto Ux_f2_Slice_y =Slice(0, srctermTensordim[1]-maxDim);
+                // auto Ux_f3_Slice_z =Slice(0, srctermTensordim[2]-maxDim);
+
+                // auto Uy_f1_Slice_x =Slice(0, srctermTensordim[3]-maxDim);
+                // auto Uy_f2_Slice_y =Slice();
+                // auto Uy_f3_Slice_z =Slice(0, srctermTensordim[5]-maxDim);
+
+                // auto Uz_f1_Slice_x =Slice(0, srctermTensordim[6]-maxDim);
+                // auto Uz_f2_Slice_y =Slice(0, srctermTensordim[7]-maxDim);
+                // auto Uz_f3_Slice_z =Slice();
+
+
+
+
                 /* Now, we create a data loader object and pass dataset. Note this returns a std::unique_ptr of the correct type that depends on the
                 dataset, type of sampler, etc */
                 auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset),batch_size); // random batches
@@ -1154,16 +1204,7 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                             // Solution data
                             torch::Tensor target = batch.target; 
 
-
-                            // Print() <<  batch.data.dim() << " \n";
-                            // Print() <<  batch.data.size(0)<< " " << batch.data.size(1) << " \n";
-                            // Print() <<  batch.target.size(0)<< " " << batch.target.size(1) << " \n";
-                            //    Print() <<  batch.data.size(0)<< " " << batch.data.size(1) << " " << batch.data.size(2) << " " << batch.data.size(3) << " " << batch.data.size(4) << " \n";
-                            //     Print() <<  srctermTensordim[0] << " " << srctermTensordim[1] << " " << srctermTensordim[2]  << " \n"; 
-                            //     Print() <<  umacTensordims[0] << " " << umacTensordims[1] << " " << umacTensordims[2]  << " \n"; 
-                            //    Print() << "TEST *********************************** " <<  maxDim  << " \n";
-                            //    Print() << "TEST *********************************** " <<  maxDim-srctermTensordim[8]  << " \n";
-
+   
                             // Reset gradients
                             optimizerUx.zero_grad();
                             optimizerUy.zero_grad();
@@ -1172,21 +1213,21 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
 
                             // forward pass
                             // Note: Inputs to forward function are de-paded appropriately
-                            torch::Tensor outputUx1 = CNN_11->forward(data.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputUx2 = CNN_12->forward(data.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputUx3 = CNN_13->forward(data.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
+                            torch::Tensor outputUx1 = CNN_11->forward(data.index({Slice(),0,Ux_f1_Slice_x,Ux_f2_Slice_y,Ux_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputUx2 = CNN_12->forward(data.index({Slice(),1,Uy_f1_Slice_x,Uy_f2_Slice_y,Uy_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputUx3 = CNN_13->forward(data.index({Slice(),2,Uz_f1_Slice_x,Uz_f2_Slice_y,Uz_f3_Slice_z}).to(torch::kFloat32));
 
-                            torch::Tensor outputUy1 = CNN_21->forward(data.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputUy2 = CNN_22->forward(data.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputUy3 = CNN_23->forward(data.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
+                            torch::Tensor outputUy1 = CNN_21->forward(data.index({Slice(),0,Ux_f1_Slice_x,Ux_f2_Slice_y,Ux_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputUy2 = CNN_22->forward(data.index({Slice(),1,Uy_f1_Slice_x,Uy_f2_Slice_y,Uy_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputUy3 = CNN_23->forward(data.index({Slice(),2,Uz_f1_Slice_x,Uz_f2_Slice_y,Uz_f3_Slice_z}).to(torch::kFloat32));
 
-                            torch::Tensor outputUz1 = CNN_31->forward(data.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputUz2 = CNN_32->forward(data.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputUz3 = CNN_33->forward(data.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
+                            torch::Tensor outputUz1 = CNN_31->forward(data.index({Slice(),0,Ux_f1_Slice_x,Ux_f2_Slice_y,Ux_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputUz2 = CNN_32->forward(data.index({Slice(),1,Uy_f1_Slice_x,Uy_f2_Slice_y,Uy_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputUz3 = CNN_33->forward(data.index({Slice(),2,Uz_f1_Slice_x,Uz_f2_Slice_y,Uz_f3_Slice_z}).to(torch::kFloat32));
 
-                            torch::Tensor outputP1 = CNN_P1->forward(data.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputP2 = CNN_P2->forward(data.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32));
-                            torch::Tensor outputP3 = CNN_P3->forward(data.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
+                            torch::Tensor outputP1 = CNN_P1->forward(data.index({Slice(),0,Ux_f1_Slice_x,Ux_f2_Slice_y,Ux_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputP2 = CNN_P2->forward(data.index({Slice(),1,Uy_f1_Slice_x,Uy_f2_Slice_y,Uy_f3_Slice_z}).to(torch::kFloat32));
+                            torch::Tensor outputP3 = CNN_P3->forward(data.index({Slice(),2,Uz_f1_Slice_x,Uz_f2_Slice_y,Uz_f3_Slice_z}).to(torch::kFloat32));
 
                             //evaulate loss
                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
