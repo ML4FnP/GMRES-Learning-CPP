@@ -27,7 +27,7 @@ public:
     template<typename Function>
     ReturnWrapper(Function func) : Wrapper<F(Args ...)>(func) {}
 
-    F operator()(Args ... args) {
+    F operator()(Args && ... args) {
         arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
         // wrapper code running before the wrapped function
         auto ret = this->caller(ap);
@@ -50,7 +50,7 @@ public:
     template<typename Function>
     VoidWrapper(Function func) : Wrapper<F(Args...)>(func) {}
 
-    F operator()(Args ... args) {
+    F operator()(Args && ... args) {
         arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
         // wrapper code running before the wrapped function
         this->caller(ap);
