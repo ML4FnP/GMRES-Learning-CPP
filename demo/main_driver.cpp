@@ -430,7 +430,7 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPAC
 
 
 
-double MovingAvg (std::vector<double>& TimeDataWindow) {
+double MovingAvg (std::vector<double> & TimeDataWindow) {
     int window = TimeDataWindow.size();
     double sum;
     for(int i = 0 ; i<window ; i++) {
@@ -474,7 +474,7 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
     MultiFab pres(ba, dmap, 1, 1);
     pres.setVal(0.);
 
-    std::array< MultiFab, AMREX_SPACEDIM > umac;
+    std::array<MultiFab, AMREX_SPACEDIM> umac;
     defineFC(umac, ba, dmap, 1);
     setVal(umac, 0.);
 
@@ -1103,24 +1103,37 @@ void main_driver(const char * argv) {
     TestNet->to(device);
 
 
-    /* pointer  to advanceStokes functions in src_hydro/advance.cpp  */
-    void (*advanceStokesPtr)(std::array< MultiFab, AMREX_SPACEDIM >&,MultiFab&, 
-                                const std::array< MultiFab,AMREX_SPACEDIM >&,
-                                std::array< MultiFab, AMREX_SPACEDIM >&,
-                                std::array< MultiFab, AMREX_SPACEDIM >&, 
-                                MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,
-                                const Geometry,const Real&
-                                ) = &advanceStokes;
+    /* pointer to advanceStokes functions in src_hydro/advance.cpp  */
+    void (*advanceStokesPtr)(
+            std::array< MultiFab, AMREX_SPACEDIM >&,MultiFab&,
+            const std::array< MultiFab,AMREX_SPACEDIM >&,
+            std::array< MultiFab, AMREX_SPACEDIM >&,
+            std::array< MultiFab, AMREX_SPACEDIM >&,
+            MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,
+            const Geometry,const Real&
+        ) = & advanceStokes;
 
     /* Wrap advanceStokes function pointer */
-    bool RefineSol=false;
-    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,umacTensordims,dmap,ba) ;
-    RefineSol=true;
-    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,umacTensordims,dmap,ba) ;
+    bool RefineSol = false;
+    // auto advanceStokes_ML = Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,umacTensordims,dmap,ba);
+    auto advanceStokes_ML = MLAdvanceStokes <decltype(advanceStokes)>(
+            advanceStokes,
+            RefineSol, device, TestNet,
+            presTensordim, sourceTermTensordims, umacTensordims,
+            dmap, ba, 50
+        );
 
+    RefineSol = true;
+    // auto advanceStokes_ML2 = Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,umacTensordims,dmap,ba);
+    auto advanceStokes_ML2 = MLAdvanceStokes <decltype(advanceStokes)>(
+            advanceStokes,
+            RefineSol, device, TestNet,
+            presTensordim, sourceTermTensordims, umacTensordims,
+            dmap, ba, 50
+        );
 
     /* Initialize tensors that collect all pressure and source term data*/
-    auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+    auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false);
     torch::Tensor presCollect= torch::zeros({1,presTensordim[0], presTensordim[1],presTensordim[2]},options);
 
 
@@ -1230,7 +1243,7 @@ void main_driver(const char * argv) {
         }
         Real Direct_step_strt_time = ParallelDescriptor::second();
         advanceStokes(
-                umacDirect, presDirect,              /* LHS */
+                umacDirect, presDirect,        /* LHS */
                 mfluxdiv, source_termsDirect,  /* RHS */
                 alpha_fc, beta, gamma, beta_ed, geom, dt
             );
@@ -1238,19 +1251,18 @@ void main_driver(const char * argv) {
         ParallelDescriptor::ReduceRealMax( Direct_step_stop_time);
         std::ofstream outfileDirect;
         outfileDirect.open("TimeDataDirect.txt", std::ios_base::app); // append instead of overwrite
-        outfileDirect << Direct_step_stop_time << std::setw(10) << " \n"; 
-
+        outfileDirect << Direct_step_stop_time << std::setw(10) << " \n";
 
 
         Real step_strt_time = ParallelDescriptor::second();
 
         // Print() << "COARSE SOLUTION" << "\n";
-        advanceStokes_ML(umac,pres, /* LHS */
-                        mfluxdiv,source_terms, /* RHS*/
-                        alpha_fc, beta, gamma, beta_ed, geom, dt,
-                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow /* ML */
-                        );
-
+        advanceStokes_ML.set_step(step);
+        advanceStokes_ML(
+                umac, pres,             /* LHS */
+                mfluxdiv, source_terms, /* RHS */
+                alpha_fc, beta, gamma, beta_ed, geom, dt
+            );
 
 
                     /* Multifab check data */
@@ -1274,13 +1286,13 @@ void main_driver(const char * argv) {
 
 
         // Print() << "REFINE SOLUTION" << "\n";
-
         gmres::gmres_abs_tol = 1e-6;
-        advanceStokes_ML2(umac,pres, /* LHS */
-                        mfluxdiv,source_terms,/* RHS */
-                        alpha_fc, beta, gamma, beta_ed, geom, dt,
-                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow /* ML */
-                        );
+        advanceStokes_ML2.set_step(step);
+        advanceStokes_ML2(
+                umac, pres,                 /* LHS */
+                mfluxdiv, source_terms,     /* RHS */
+                alpha_fc, beta, gamma, beta_ed, geom, dt
+            );
 
         Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
         ParallelDescriptor::ReduceRealMax(step_stop_time);
