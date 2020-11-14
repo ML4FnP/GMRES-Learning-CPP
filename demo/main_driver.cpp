@@ -430,12 +430,10 @@ void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPAC
 
 
 
-double MovingAvg (std::vector<double>& TimeDataWindow)
-{
+double MovingAvg (std::vector<double>& TimeDataWindow) {
     int window = TimeDataWindow.size();
     double sum;
-    for(int i = 0 ; i<window ; i++)
-    {
+    for(int i = 0 ; i<window ; i++) {
         sum+=TimeDataWindow[i];
     }
     sum = sum/double(window);
