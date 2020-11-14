@@ -463,7 +463,8 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                           .device(torch::kCUDA)
                           .requires_grad(false);
 
-    arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
+    // arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
+    arg_pack<Args ...> ap(args ...);
 
     // int step = ap.template get<ml_step>();
     // std::vector<double> TimeDataWindow = ap.template get<ml_TimeDataWindow>();
