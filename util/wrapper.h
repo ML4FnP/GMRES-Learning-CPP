@@ -13,7 +13,10 @@ class Wrapper<F(Args ...)> {
 public:
 
     template<typename Function>
-    Wrapper(Function func) : caller(arg_pack_caller<F(Args ...)>(func)) {}
+    Wrapper(Function func)
+    : caller(arg_pack_caller<F(Args ...)>(func))
+    {}
+
 
 protected:
     arg_pack_caller<F(Args ...)> caller;

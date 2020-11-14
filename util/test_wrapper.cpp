@@ -28,7 +28,7 @@ public:
     ReturnWrapper(Function func) : Wrapper<F(Args ...)>(func) {}
 
     F operator()(Args ... args) {
-        auto ap = make_arg_pack(std::move(args) ...);
+        arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
         // wrapper code running before the wrapped function
         auto ret = this->caller(ap);
         // wrapper cude running after the wrapped function
@@ -51,7 +51,7 @@ public:
     VoidWrapper(Function func) : Wrapper<F(Args...)>(func) {}
 
     F operator()(Args ... args) {
-        auto ap = make_arg_pack(std::move(args) ...);
+        arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
         // wrapper code running before the wrapped function
         this->caller(ap);
         // wrapper cude running after the wrapped function
