@@ -1005,17 +1005,6 @@ void main_driver(const char * argv) {
     auto TestNet = std::make_shared<Net>(FlatdimIn,FlatdimOut);
     TestNet->to(device);
 
-
-    // /* pointer to advanceStokes functions in src_hydro/advance.cpp  */
-    // void (*advanceStokesPtr)(
-    //         std::array< MultiFab, AMREX_SPACEDIM >&,MultiFab&,
-    //         const std::array< MultiFab,AMREX_SPACEDIM >&,
-    //         std::array< MultiFab, AMREX_SPACEDIM >&,
-    //         std::array< MultiFab, AMREX_SPACEDIM >&,
-    //         MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,
-    //         const Geometry,const Real&
-    //     ) = & advanceStokes;
-
     auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false);
 
     /* Wrap advanceStokes function pointer */
@@ -1041,18 +1030,18 @@ void main_driver(const char * argv) {
     // torch::Tensor presCollect= torch::zeros({1,presTensordim[0], presTensordim[1],presTensordim[2]},options);
 
 
-    std::array<torch::Tensor,AMREX_SPACEDIM> RHSCollect;
-    RHSCollect[0]=torch::zeros({1,sourceTermTensordims[0] , sourceTermTensordims[1],sourceTermTensordims[2] },options);
-    RHSCollect[1]=torch::zeros({1,sourceTermTensordims[3] , sourceTermTensordims[4],sourceTermTensordims[5] },options);
-    RHSCollect[2]=torch::zeros({1,sourceTermTensordims[6] , sourceTermTensordims[7],sourceTermTensordims[8] },options);
+    // std::array<torch::Tensor,AMREX_SPACEDIM> RHSCollect;
+    // RHSCollect[0]=torch::zeros({1,sourceTermTensordims[0] , sourceTermTensordims[1],sourceTermTensordims[2] },options);
+    // RHSCollect[1]=torch::zeros({1,sourceTermTensordims[3] , sourceTermTensordims[4],sourceTermTensordims[5] },options);
+    // RHSCollect[2]=torch::zeros({1,sourceTermTensordims[6] , sourceTermTensordims[7],sourceTermTensordims[8] },options);
 
-    std::array<torch::Tensor,AMREX_SPACEDIM> umacCollect;
-    umacCollect[0]=torch::zeros({1,umacTensordims[0] , umacTensordims[1],umacTensordims[2] },options);
-    umacCollect[1]=torch::zeros({1,umacTensordims[3] , umacTensordims[4],umacTensordims[5] },options);
-    umacCollect[2]=torch::zeros({1,umacTensordims[6] , umacTensordims[7],umacTensordims[8] },options);
+    // std::array<torch::Tensor,AMREX_SPACEDIM> umacCollect;
+    // umacCollect[0]=torch::zeros({1,umacTensordims[0] , umacTensordims[1],umacTensordims[2] },options);
+    // umacCollect[1]=torch::zeros({1,umacTensordims[3] , umacTensordims[4],umacTensordims[5] },options);
+    // umacCollect[2]=torch::zeros({1,umacTensordims[6] , umacTensordims[7],umacTensordims[8] },options);
 
 
-    std::vector<double> TimeDataWindow(50);
+    // std::vector<double> TimeDataWindow(50);
 
     /****************************************************************************
      *                                                                          *

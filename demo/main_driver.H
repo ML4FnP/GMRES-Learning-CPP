@@ -91,6 +91,38 @@ public:
                                                   presTensordim[1],
                                                   presTensordim[2]},
                                                   options);
+
+        RHSCollect[0] = torch::zeros({1,
+                                      srctermTensordim[0],
+                                      srctermTensordim[1],
+                                      srctermTensordim[2]},
+                                      options);
+        RHSCollect[1] = torch::zeros({1,
+                                      srctermTensordim[3],
+                                      srctermTensordim[4],
+                                      srctermTensordim[5]},
+                                      options);
+        RHSCollect[2] = torch::zeros({1,
+                                      srctermTensordim[6],
+                                      srctermTensordim[7],
+                                      srctermTensordim[8]},
+                                      options);
+
+        umacCollect[0] = torch::zeros({1,
+                                       umacTensordims[0],
+                                       umacTensordims[1],
+                                       umacTensordims[2]},
+                                       options);
+        umacCollect[1] = torch::zeros({1,
+                                       umacTensordims[3],
+                                       umacTensordims[4],
+                                       umacTensordims[5]},
+                                       options);
+        umacCollect[2] = torch::zeros({1,
+                                       umacTensordims[6],
+                                       umacTensordims[7],
+                                       umacTensordims[8]},
+                                       options);
     }
 
     F operator()(Args ... args);
@@ -111,6 +143,8 @@ private:
     std::vector<double> TimeDataWindow;
 
     torch::Tensor presCollect;
+    std::array<torch::Tensor,AMREX_SPACEDIM> RHSCollect;
+    std::array<torch::Tensor,AMREX_SPACEDIM> umacCollect;
 };
 
 
