@@ -7,7 +7,7 @@ enable_language(Fortran)
 find_package(AMReX REQUIRED HINTS ../../amrex/dist
                             HINTS ../../../../Programs/amrex/dist
             )
-                            
+
 find_package(Torch REQUIRED HINTS ../../libtorch
                             HINTS ../../../../Programs/libtorch
             )
@@ -54,7 +54,12 @@ include_directories(
         "../util"
     )
 
-add_executable(main.ex main.cpp main_driver.cpp WritePlotFile.cpp)
+add_executable(main.ex
+    main.cpp
+    main_driver.cpp
+    WritePlotFile.cpp
+    ../util/amrex_interfaces.cpp
+)
 
 target_link_libraries(
         main.ex

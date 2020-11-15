@@ -25,11 +25,14 @@
 
 #include "arg_pack.h"
 #include "wrapper.h"
+#include "amrex_interfaces.h"
 
 #include <ostream>
 
+
 using namespace amrex;
 using namespace torch::indexing;
+
 
 //! Defines staggered MultiFab arrays (BoxArrays set according to the
 //! nodal_flag_[x,y,z]). Each MultiFab has 1 component, and 1 ghost cell
@@ -41,6 +44,8 @@ inline void defineFC(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
         mf_in[i].define(convert(ba, nodal_flag_dir[i]), dm, 1, nghost);
 }
 
+
+
 inline void defineEdge(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
                      const BoxArray & ba, const DistributionMapping & dm,
                      int nghost) {
@@ -48,6 +53,7 @@ inline void defineEdge(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
     for (int i=0; i<AMREX_SPACEDIM; i++)
         mf_in[i].define(convert(ba, nodal_flag_edge[i]), dm, 1, nghost);
 }
+
 
 
 //! Sets the value for each component of staggered MultiFab
@@ -150,86 +156,6 @@ class CustomDataset : public torch::data::Dataset<CustomDataset>
   };
 
 
-
-
-
-
-/* copy values of single box multifab to Pytorch Tensor  */
-template<typename T_src>
-void ConvertToTensor(const T_src & mf_in, torch::Tensor & tensor_out)
- {
-
-        const BoxArray & ba            = mf_in.boxArray();
-        const DistributionMapping & dm = mf_in.DistributionMap();
-                int ncomp                = mf_in.nComp();
-                int ngrow                = mf_in.nGrow();
-                int i,j,k;
-    #ifdef _OPENMP
-    #pragma omp parallel
-    #endif
-
-        for(MFIter mfi(mf_in, true); mfi.isValid(); ++ mfi) {
-            const auto & in_tile  =      mf_in[mfi];
-
-            for(BoxIterator bit(mfi.growntilebox()); bit.ok(); ++ bit)
-            {
-                i=int(bit()[0]) - int(in_tile.smallEnd()[0]);
-                j=int(bit()[1]) - int(in_tile.smallEnd()[1]);
-                k=int(bit()[2]) - int(in_tile.smallEnd()[2]);
-                tensor_out.index({0,i,j,k}) = in_tile(bit());
-            }
-        }
-}
-
-
-/* copy values of  Pytorch Tensor to a single box multifab */
-template<typename T_dest>
-void TensorToMultifab(torch::Tensor tensor_in ,T_dest & mf_out) 
-{
-        int   i, j, k;
-        const BoxArray & ba            = mf_out.boxArray();
-        const DistributionMapping & dm = mf_out.DistributionMap();
-                int ncomp                = mf_out.nComp();
-                int ngrow                = mf_out.nGrow();
-
-
-    #ifdef _OPENMP
-    #pragma omp parallel
-    #endif
-
-        for(MFIter mfi(mf_out, true); mfi.isValid(); ++ mfi) {
-            auto & out_tile  =        mf_out[mfi];
-
-            for(BoxIterator bit(mfi.growntilebox()); bit.ok(); ++ bit)
-            {
-                i = bit()[0]-out_tile.smallEnd()[0];
-                j = bit()[1]-out_tile.smallEnd()[1];
-                k = bit()[2]-out_tile.smallEnd()[2];
-                out_tile(bit()) = tensor_in.index({0,i,j,k}).item<double>();
-            }
-        }
-}
-
-
-/* copy values of single box std:Array MultiFab to Pytorch Tensor  */
-void Convert_StdArrMF_To_StdArrTensor(std::array< MultiFab, AMREX_SPACEDIM >& StdArrMF, std::array<torch::Tensor,AMREX_SPACEDIM> & tensor_out)
-{
-
-    for (int d=0; d<AMREX_SPACEDIM; ++d)
-    {
-        ConvertToTensor(StdArrMF[d],tensor_out[d]);
-    }
-}
-
-
-/* copy values of  std::array of Pytorch Tensors to std::array of single box multifabs */
-void stdArrTensorTostdArrMultifab( std::array<torch::Tensor,AMREX_SPACEDIM>& tensor_in ,std::array< MultiFab, AMREX_SPACEDIM >& mf_out) 
-{
-    for (int d=0; d<AMREX_SPACEDIM; ++d)
-    {
-        TensorToMultifab(tensor_in[d],mf_out[d]);
-    }
-}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,25 +275,6 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
 }
 
 
- void TrimSourceMultiFab(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   amrex::DistributionMapping dmap, BoxArray  ba, std::array<MultiFab, AMREX_SPACEDIM>& source_termsTrimmed)
-{
-    for (int d=0; d<AMREX_SPACEDIM; ++d)
-    {
-        source_termsTrimmed[d].define(convert(ba, nodal_flag_dir[d]), dmap, 1, 1);
-        MultiFab::Copy(source_termsTrimmed[d], sourceTerms[d], 0, 0, 1, 1);
-    }
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -449,10 +356,6 @@ double MovingAvg (std::vector<double> & TimeDataWindow) {
 
 template<typename F, typename ... Args>
 F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
-    // auto ap = make_arg_pack(std::move(args) ...);
-    // // wrapper code running before the wrapped function
-    // this->caller(ap);
-    // // wrapper cude running after the wrapped function
 
     // Hard-coded training parameters -- TODO: don't hard-code options
     int retrainFreq = 3;
@@ -463,11 +366,8 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                           .device(torch::kCUDA)
                           .requires_grad(false);
 
-    // arg_pack<Args ...> ap = make_arg_pack(std::move(args) ...);
     arg_pack<Args ...> ap(args ...);
 
-    // int step = ap.template get<ml_step>();
-    // std::vector<double> TimeDataWindow = ap.template get<ml_TimeDataWindow>();
     int WindowIdx = ( step - initNum - 1) % TimeDataWindow.size();
 
     // Set initialial guess for pressure and umac to zero -- TODO: is that
@@ -500,7 +400,7 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
 
 
         std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
-        TrimSourceMultiFab(args ..., dmap, ba, source_termsTrimmed);  // TODO: update
+        TrimSourceMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
         // Convert Std::array<MultiFab,AMREX_SPACEDIM > to
         // std::array<torch::tensor, AMREX_SPACEDIM>
         Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // TODO: update
