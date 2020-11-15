@@ -60,9 +60,13 @@ int main(int argc, char * argv[]) {
         auto ap = make_arg_pack(a);
         arg_pack_caller<decltype(g<int, 3>)> ap_caller(g<int, 3>);
 
-        for (int i=0; i<3; ++i)
-            std::cout << ap.get<0>()[i] << " ";
-        std::cout << std::endl;
+        const auto & x = ap.get<0>();
+        std::cout << "a = [";
+        for (const auto & xi : x) {
+            std::cout << xi;
+            if (& xi != & x.back()) std::cout << ", ";
+        }
+        std::cout << "]" << std::endl;
 
         std::cout << "g(a) = " << ap_caller(ap) << std::endl;
     }

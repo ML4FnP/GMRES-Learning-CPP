@@ -57,16 +57,17 @@ public:
     using types = type_list<Args ...>;
 
     template<std::size_t I>
-    typename types::template type<I> get() {
+    typename types::template type<I> & get() {
         return std::get<I>(m_args);
     }
+
 
     template<std::size_t ... I>
     auto subset(std::index_sequence<I ...>) {
         return make_arg_pack_loc(std::get<I>(m_args) ...);
     }
 
-    auto args() {return m_args;}
+    auto & args() {return m_args;}
 
     static const std::size_t size = std::tuple_size<std::tuple<Args ...>>::value;
 
@@ -112,7 +113,7 @@ private:
     std::function<F(Args ...)> m_func;
 
     template<typename Function, typename Tuple, std::size_t ... I>
-    static auto call(Function f, Tuple t, std::index_sequence<I ...>){
+    static auto call(Function f, Tuple & t, std::index_sequence<I ...>){
         return f(std::get<I>(t) ...);
     }
 };
