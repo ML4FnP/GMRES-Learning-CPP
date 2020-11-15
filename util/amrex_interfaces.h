@@ -95,4 +95,10 @@ void Convert_StdArrTensor_To_StdArrMF(
     );
 
 
+
+void CollectScalar(
+        const torch::Tensor & tensor_in,
+              torch::Tensor & tensor_collect
+    );
+
 #endif

@@ -259,20 +259,20 @@ void Collectumac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
 }
 
 
-void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   std::vector<double>& TimeDataWindowIn)
-{
-       TimeDataWindow=TimeDataWindowIn;
-}
+// void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+//                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+//                    std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+//                    std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+//                    MultiFab& beta,
+//                    MultiFab& gamma,
+//                    std::array< MultiFab, NUM_EDGE >& beta_ed,
+//                    const Geometry geom, const Real& dt,
+//                    torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+//                    ,int step,std::vector<double>& TimeDataWindow,
+//                    std::vector<double>& TimeDataWindowIn)
+// {
+//        TimeDataWindow=TimeDataWindowIn;
+// }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -487,7 +487,7 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
         TensorToMultifab(presTensor, pres);
 
         /* Convert std::array tensor to std::array multifab using distribution map of original pressure MultiFab */
-        stdArrTensorTostdArrMultifab(umacTensor, umac);
+        Convert_StdArrTensor_To_StdArrMF(umacTensor, umac);
     }
 
     /* Evaluate wrapped function with either the NN prediction or original input */
@@ -503,7 +503,7 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
         ParallelDescriptor::ReduceRealMax(step_stop_time);
 
         TimeDataWindow[WindowIdx]= step_stop_time; /* Add time to window of values */
-        update_TimeDataWindow(args..., TimeDataWindow);  // TODO: update
+        // update_TimeDataWindow(args..., TimeDataWindow);  // TODO: update
 
         std::ofstream outfile;
         outfile.open("TimeData.txt", std::ios_base::app); // append instead of overwrite
@@ -537,8 +537,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                                  presTensordim[1],
                                                  presTensordim[2]},
                                                  options);
-        ConvertToTensor(Unpack_pres(args...), presTensor);  // TODO: update
-        CollectPressure(args..., presTensor);  // TODO: update
+        // ConvertToTensor(Unpack_pres(args...), presTensor);
+        ConvertToTensor(ap.template get<arg_pres>(), presTensor);
+        // CollectPressure(args..., presTensor);
+        CollectScalar(presTensor, presCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> umacTensor;
         umacTensor[0] = torch::zeros({1,
@@ -1004,22 +1006,24 @@ void main_driver(const char * argv) {
     TestNet->to(device);
 
 
-    /* pointer to advanceStokes functions in src_hydro/advance.cpp  */
-    void (*advanceStokesPtr)(
-            std::array< MultiFab, AMREX_SPACEDIM >&,MultiFab&,
-            const std::array< MultiFab,AMREX_SPACEDIM >&,
-            std::array< MultiFab, AMREX_SPACEDIM >&,
-            std::array< MultiFab, AMREX_SPACEDIM >&,
-            MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,
-            const Geometry,const Real&
-        ) = & advanceStokes;
+    // /* pointer to advanceStokes functions in src_hydro/advance.cpp  */
+    // void (*advanceStokesPtr)(
+    //         std::array< MultiFab, AMREX_SPACEDIM >&,MultiFab&,
+    //         const std::array< MultiFab,AMREX_SPACEDIM >&,
+    //         std::array< MultiFab, AMREX_SPACEDIM >&,
+    //         std::array< MultiFab, AMREX_SPACEDIM >&,
+    //         MultiFab&,MultiFab&,std::array< MultiFab, NUM_EDGE >&,
+    //         const Geometry,const Real&
+    //     ) = & advanceStokes;
+
+    auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false);
 
     /* Wrap advanceStokes function pointer */
     bool RefineSol = false;
     // auto advanceStokes_ML = Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,umacTensordims,dmap,ba);
     auto advanceStokes_ML = MLAdvanceStokes <decltype(advanceStokes)>(
             advanceStokes,
-            RefineSol, device, TestNet,
+            RefineSol, device, options, TestNet,
             presTensordim, sourceTermTensordims, umacTensordims,
             dmap, ba, 50
         );
@@ -1028,14 +1032,13 @@ void main_driver(const char * argv) {
     // auto advanceStokes_ML2 = Wrapper(advanceStokesPtr,RefineSol,device,TestNet,presTensordim,sourceTermTensordims,umacTensordims,dmap,ba);
     auto advanceStokes_ML2 = MLAdvanceStokes <decltype(advanceStokes)>(
             advanceStokes,
-            RefineSol, device, TestNet,
+            RefineSol, device, options, TestNet,
             presTensordim, sourceTermTensordims, umacTensordims,
             dmap, ba, 50
         );
 
     /* Initialize tensors that collect all pressure and source term data*/
-    auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false);
-    torch::Tensor presCollect= torch::zeros({1,presTensordim[0], presTensordim[1],presTensordim[2]},options);
+    // torch::Tensor presCollect= torch::zeros({1,presTensordim[0], presTensordim[1],presTensordim[2]},options);
 
 
     std::array<torch::Tensor,AMREX_SPACEDIM> RHSCollect;

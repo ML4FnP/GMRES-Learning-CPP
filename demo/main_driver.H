@@ -66,6 +66,7 @@ public:
             Function a_func,
             bool a_RefineSol,
             torch::Device a_device,
+            torch::TensorOptions a_options,
             std::shared_ptr<Net> a_NETPres,
             const IntVect a_presTensordim,
             const std::vector<int> a_srctermTensordim,
@@ -75,6 +76,7 @@ public:
         )
     : Wrapper<F(Args...)>(a_func),
       device(a_device),
+      options(a_options),
       NETPres(a_NETPres),
       presTensordim(a_presTensordim),
       srctermTensordim(a_srctermTensordim),
@@ -83,7 +85,13 @@ public:
       ba(a_ba),
       step(0),
       TimeDataWindow(n_TimeDataWindow)
-    {}
+    {
+        torch::Tensor presCollect = torch::zeros({1,
+                                                  presTensordim[0],
+                                                  presTensordim[1],
+                                                  presTensordim[2]},
+                                                  options);
+    }
 
     F operator()(Args ... args);
 
@@ -92,6 +100,7 @@ public:
 private:
     bool RefineSol;
     torch::Device device;
+    torch::TensorOptions options;
     std::shared_ptr<Net> NETPres;  // TODO: make this class the owner of NETPres
     const IntVect presTensordim;
     const std::vector<int> srctermTensordim;
@@ -100,6 +109,8 @@ private:
     BoxArray ba;
     int step;
     std::vector<double> TimeDataWindow;
+
+    torch::Tensor presCollect;
 };
 
 
