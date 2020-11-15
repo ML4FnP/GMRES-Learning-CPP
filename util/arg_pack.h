@@ -52,7 +52,7 @@ template<typename ... Args>
 class arg_pack {
 
 public:
-    arg_pack(Args & ... args) : m_args(std::forward<Args>(args)...) {}
+    arg_pack(Args & ... args) : m_args(args ...) {}
 
     using types = type_list<Args ...>;
 
@@ -72,7 +72,8 @@ public:
     static const std::size_t size = std::tuple_size<std::tuple<Args ...>>::value;
 
 private:
-    std::tuple<special_decay_t<Args> ...> m_args;
+    // std::tuple<special_decay_t<Args> ...> m_args;
+    std::tuple<Args ...> m_args;
 
     template<typename... Args_loc>
     static auto make_arg_pack_loc(Args_loc & ... args){
