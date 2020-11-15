@@ -580,31 +580,15 @@ void ResidCompute (std::array< MultiFab, AMREX_SPACEDIM >& umac,
     Pcon.Define(ba,dmap,geom);
 
 
-    // Vector<Real> cs(gmres_max_inner);
-    // Vector<Real> sn(gmres_max_inner);
-    // Vector<Real>  y(gmres_max_inner);
-    // Vector<Real>  s(gmres_max_inner+1);
-
-    // Vector<Vector<Real>> H(gmres_max_inner + 1, Vector<Real>(gmres_max_inner));
-
-    // int outer_iter, total_iter, i_copy; // for looping iteration
-    // int i=0;
-
-    Real norm_b;            // |b|;           computed once at beginning
-    Real norm_pre_b;        // |M^-1 b|;      computed once at beginning
-    // Real norm_resid;        // |M^-1 (b-Ax)|; computed at beginning of each outer iteration
-    // Real norm_init_resid;   // |M^-1 (b-Ax)|; computed once at beginning
-    Real norm_resid_Stokes; // |b-Ax|;        computed at beginning of each outer iteration
-    // Real norm_init_Stokes;  // |b-Ax|;        computed once at beginning
+    Real norm_b;            // |b|;           
+    Real norm_pre_b;        // |M^-1 b|;      
+    Real norm_resid_Stokes; // |b-Ax|;        
     Real norm_u_noprecon;   // u component of norm_resid_Stokes
     Real norm_p_noprecon;   // p component of norm_resid_Stokes
-    // Real norm_resid_est;
 
     Real norm_u; // temporary norms used to build full-state norm
     Real norm_p; // temporary norms used to build full-state norm
 
-    // Vector<Real> inner_prod_vel(AMREX_SPACEDIM);
-    // Real inner_prod_pres;  
 
     // set alphainv_fc to 1/alpha_fc
     for (int d=0; d<AMREX_SPACEDIM; ++d) {
@@ -674,14 +658,12 @@ void ResidCompute (std::array< MultiFab, AMREX_SPACEDIM >& umac,
     norm_p     = p_norm_weight*norm_p;
     norm_resid = sqrt(norm_u*norm_u + norm_p*norm_p);
 
-    // amrex::Print() << norm_resid << " *************************************" << " \n";
-    // amrex::Print() << norm_resid_Stokes << " *************************************" << " \n";
+        // gmres_rhs_u,gmres_rhs_p,umac,pres,
+        // bu,bp,xu,xp
 
 }
 
 
-// gmres_rhs_u,gmres_rhs_p,umac,pres,
-// bu,bp,xu,xp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Functions for unpacking parameter pack passed to wrapped function. */
@@ -1113,15 +1095,15 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
 {
                 /*Setting up learning loop below */
 
-                torch::optim::Adagrad optimizerUx({CNN_11->parameters(),CNN_12->parameters(),CNN_13->parameters()}, torch::optim::AdagradOptions(0.01));
-                torch::optim::Adagrad optimizerUy({CNN_21->parameters(),CNN_22->parameters(),CNN_23->parameters()}, torch::optim::AdagradOptions(0.01));
-                torch::optim::Adagrad optimizerUz({CNN_31->parameters(),CNN_32->parameters(),CNN_33->parameters()}, torch::optim::AdagradOptions(0.01));
-                torch::optim::Adagrad optimizerPres({CNN_P1->parameters(),CNN_P2->parameters(),CNN_P3->parameters()}, torch::optim::AdagradOptions(0.01));
+                // torch::optim::Adagrad optimizerUx({CNN_11->parameters(),CNN_12->parameters(),CNN_13->parameters()}, torch::optim::AdagradOptions(0.01));
+                // torch::optim::Adagrad optimizerUy({CNN_21->parameters(),CNN_22->parameters(),CNN_23->parameters()}, torch::optim::AdagradOptions(0.01));
+                // torch::optim::Adagrad optimizerUz({CNN_31->parameters(),CNN_32->parameters(),CNN_33->parameters()}, torch::optim::AdagradOptions(0.01));
+                // torch::optim::Adagrad optimizerPres({CNN_P1->parameters(),CNN_P2->parameters(),CNN_P3->parameters()}, torch::optim::AdagradOptions(0.01));
 
-                // torch::optim::SGD optimizerUx({CNN_11->parameters(),CNN_12->parameters(),CNN_13->parameters()}, torch::optim::SGDOptions (0.001));
-                // torch::optim::SGD optimizerUy({CNN_21->parameters(),CNN_22->parameters(),CNN_23->parameters()}, torch::optim::SGDOptions (0.001));
-                // torch::optim::SGD optimizerUz({CNN_31->parameters(),CNN_32->parameters(),CNN_33->parameters()}, torch::optim::SGDOptions (0.001));
-                // torch::optim::SGD optimizerPres({CNN_P1->parameters(),CNN_P2->parameters(),CNN_P3->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerUx({CNN_11->parameters(),CNN_12->parameters(),CNN_13->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerUy({CNN_21->parameters(),CNN_22->parameters(),CNN_23->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerUz({CNN_31->parameters(),CNN_32->parameters(),CNN_33->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerPres({CNN_P1->parameters(),CNN_P2->parameters(),CNN_P3->parameters()}, torch::optim::SGDOptions (0.001));
 
                 /* Create dataset object from tensors that have collected relevant data */
                 auto custom_dataset = CustomDatasetCNN(RHSCollect,PresCollect,umacCollect,presTensordim, srctermTensordim,umacTensordims).map(torch::data::transforms::Stack<>());
@@ -1129,7 +1111,7 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                 int64_t batch_size = 16;
                 float e1 = 1e-5;
                 int64_t epoch = 0;
-                int64_t numEpoch = 250; 
+                int64_t numEpoch = 1000; 
 
                 float lossUx = 10.0;
                 float lossUy = 10.0;
@@ -1202,10 +1184,6 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                             torch::Tensor outputUx2 = CNN_12->forward(data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32));
                             torch::Tensor outputUx3 = CNN_13->forward(data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32));
 
-                            Print() << outputUx1.size(0) << " " << outputUx1.size(1) <<  " " <<  outputUx1.size(2) <<  " " <<  outputUx1.size(3) << " \n";
-                            Print() << outputUx2.size(0) << " " << outputUx2.size(1) <<  " " <<  outputUx2.size(2) <<  " " <<  outputUx2.size(3) << " \n";
-                            Print() << outputUx3.size(0) << " " << outputUx3.size(1) <<  " " <<  outputUx3.size(2) <<  " " <<  outputUx3.size(3) << " \n";
-
                             torch::Tensor outputUy1 = CNN_21->forward(data.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32));
                             torch::Tensor outputUy2 = CNN_22->forward(data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32));
                             torch::Tensor outputUy3 = CNN_23->forward(data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32));
@@ -1218,28 +1196,50 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                             torch::Tensor outputP2 = CNN_P2->forward(data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32));
                             torch::Tensor outputP3 = CNN_P3->forward(data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32));
 
+
+                            // Pad network outputs with zeros so that all outputs have the same uniform length
+                            // of the maximal dimension. This allows for easy addition of the network outputs.
+                            // The padding is done according to the dimensions of the input source terms 
+                            outputUx1= torch::nn::functional::pad(outputUx1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
+                            outputUx2= torch::nn::functional::pad(outputUx2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
+                            outputUx3= torch::nn::functional::pad(outputUx3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
+
+                            outputUy1= torch::nn::functional::pad(outputUy1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
+                            outputUy2= torch::nn::functional::pad(outputUy2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
+                            outputUy3= torch::nn::functional::pad(outputUy3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
+
+                            outputUz1= torch::nn::functional::pad(outputUz1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
+                            outputUz2= torch::nn::functional::pad(outputUz2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
+                            outputUz3= torch::nn::functional::pad(outputUz3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
+
+                            outputP1= torch::nn::functional::pad(outputP1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
+                            outputP2= torch::nn::functional::pad(outputP2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
+                            outputP3= torch::nn::functional::pad(outputP3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
+
+                            // Slice all tensor outputs so they have the same dimensions as the corresponding  3D U-component tensor
+                            torch::Tensor Uxapprox = outputUx1.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
+                                                   + outputUx2.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
+                                                   + outputUx3.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])});
+
+                            torch::Tensor Uyapprox = outputUy1.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
+                                                   + outputUy2.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
+                                                   + outputUy3.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])});
+
+                            torch::Tensor Uzapprox = outputUz1.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
+                                                   + outputUz2.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
+                                                   + outputUz3.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])});
+
+                            torch::Tensor Papprox  = outputP1.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
+                                                   + outputP2.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
+                                                   + outputP3.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])});
+
                             //evaulate loss
                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
                             // Note: target solution data to  loss function are de-paded appropriately to match de-padded forward function inputs
-
-
-
-                            
-                            torch::Tensor loss_outUx = torch::mse_loss(outputUx1, target.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputUx2, target.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputUx3, target.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
-
-                            torch::Tensor loss_outUy = torch::mse_loss(outputUy1, target.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputUy2, target.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputUy3, target.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
-                            
-                            torch::Tensor loss_outUz = torch::mse_loss(outputUz1, target.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputUz2, target.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputUz3, target.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
-
-                            torch::Tensor loss_outP  = torch::mse_loss(outputP1, target.index({Slice(),0,Slice(),Slice(0,-1),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputP2, target.index({Slice(),1,Slice(0,-1),Slice(),Slice(0,-1)}).to(torch::kFloat32))
-                                                   + torch::mse_loss(outputP3, target.index({Slice(),2,Slice(0,-1),Slice(0,-1),Slice()}).to(torch::kFloat32));
+                            torch::Tensor loss_outUx = torch::mse_loss(Uxapprox, target.index({Slice(),0,Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])}).to(torch::kFloat32));
+                            torch::Tensor loss_outUy = torch::mse_loss(Uyapprox, target.index({Slice(),1,Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])}).to(torch::kFloat32));
+                            torch::Tensor loss_outUz = torch::mse_loss(Uzapprox, target.index({Slice(),2,Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])}).to(torch::kFloat32));
+                            torch::Tensor loss_outP  = torch::mse_loss(Papprox, target.index({Slice(),3,Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])}).to(torch::kFloat32));
 
 
                             lossUx = loss_outUx.item<float>();
@@ -1264,13 +1264,12 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                             // Print loop info to console
                             epoch = epoch +1;
                     }
-                    // std::cout << "___________" << std::endl;
-                    // std::cout << "Loss Ux: "  << lossUx << std::endl;
-                    // std::cout << "Loss Uy: "  << lossUy << std::endl;
-                    // std::cout << "Loss Uz: "  << lossUz << std::endl;
-                    // std::cout << "Loss P : "  << lossP << std::endl;
-
-                    // std::cout << "Epoch Number: " << epoch << std::endl;
+                    std::cout << "___________" << std::endl;
+                    std::cout << "Loss Ux: "  << lossUx << std::endl;
+                    std::cout << "Loss Uy: "  << lossUy << std::endl;
+                    std::cout << "Loss Uz: "  << lossUz << std::endl;
+                    std::cout << "Loss P : "  << lossP << std::endl;
+                    std::cout << "Epoch Number: " << epoch << std::endl;
                 }
 
 }
@@ -1915,6 +1914,7 @@ void main_driver(const char * argv) {
     auto TestNet = std::make_shared<Net>(FlatdimIn,FlatdimOut);
     TestNet->to(device);
 
+    // Define CNN models and move to GPU
     auto CNN_11= std::make_shared<StokesCNNet_11>(FlatdimIn,FlatdimOut);
     auto CNN_12= std::make_shared<StokesCNNet_12>(FlatdimIn,FlatdimOut);
     auto CNN_13= std::make_shared<StokesCNNet_13>(FlatdimIn,FlatdimOut);
@@ -2146,6 +2146,8 @@ void main_driver(const char * argv) {
         // write out umac & pres to a plotfile
         WritePlotFile(step, time, geom, umac, pres, ib_mc);
 
+
+        // For checking CNN implementation
         if(step >9)
         {
             CNN_TrainLoop(CNN_11,CNN_12,CNN_13,CNN_21,CNN_22,CNN_23,
