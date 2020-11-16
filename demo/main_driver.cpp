@@ -327,10 +327,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
 
 
         std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
-        TrimSourceMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
+        TrimMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
         // Convert Std::array<MultiFab,AMREX_SPACEDIM > to
         // std::array<torch::tensor, AMREX_SPACEDIM>
-        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // TODO: update
+        ConvertToTensor(source_termsTrimmed, RHSTensor);
 
 
         // Appropriately flatten input
@@ -411,10 +411,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
 
 
         /* Convert tensor to multifab using distribution map of original pressure MultiFab */
-        TensorToMultifab(presTensor, pres);
+        ConvertToMultiFab(presTensor, pres);
 
         /* Convert std::array tensor to std::array multifab using distribution map of original pressure MultiFab */
-        Convert_StdArrTensor_To_StdArrMF(umacTensor, umac);
+        ConvertToMultiFab(umacTensor, umac);
     }
 
     /* Evaluate wrapped function with either the NN prediction or original input */
@@ -467,7 +467,7 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
         // ConvertToTensor(Unpack_pres(args...), presTensor);
         ConvertToTensor(ap.template get<arg_pres>(), presTensor);
         // CollectPressure(args..., presTensor);
-        CollectScalar(presTensor, presCollect);
+        Collect(presTensor, presCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> umacTensor;
         umacTensor[0] = torch::zeros({1,
@@ -486,9 +486,9 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                       umacTensordims[8]},
                                       options);
         // Convert_StdArrMF_To_StdArrTensor(Unpack_umac(args...), umacTensor);  // TODO: update
-        Convert_StdArrMF_To_StdArrTensor(ap.template get<arg_umac>(), umacTensor);
+        ConvertToTensor(ap.template get<arg_umac>(), umacTensor);
         // Collectumac(args..., umacTensor);  // TODO: update
-        CollectMAC(umacTensor, umacCollect);
+        Collect(umacTensor, umacCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> RHSTensor;
         RHSTensor[0] = torch::zeros({1,
@@ -508,10 +508,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                      options);
 
         std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
-        TrimSourceMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
-        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM>
+        TrimMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
+        ConvertToTensor(source_termsTrimmed, RHSTensor);  // Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM>
         // CollectRHS(args..., RHSTensor);  // TODO: update
-        CollectMAC(RHSTensor, RHSCollect);
+        Collect(RHSTensor, RHSCollect);
     } else if ( (RefineSol == true) && (TimeDataWindow[WindowIdx] > MovingAvg(TimeDataWindow)) ) {
         torch::Tensor presTensor = torch::zeros({1,
                                                  presTensordim[0],
@@ -521,7 +521,7 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
         // ConvertToTensor(Unpack_pres(args...), presTensor);  // TODO: update
         ConvertToTensor(ap.template get<arg_pres>(), presTensor);
         //CollectPressure(args..., presTensor);  // TODO: update
-        CollectScalar(presTensor, presCollect);
+        Collect(presTensor, presCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> umacTensor;
         umacTensor[0] = torch::zeros({1,
@@ -540,9 +540,9 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                       umacTensordims[8]},
                                       options);
         // Convert_StdArrMF_To_StdArrTensor(Unpack_umac(args...), umacTensor);  // TODO: update
-        Convert_StdArrMF_To_StdArrTensor(ap.template get<arg_umac>(), umacTensor);
+        ConvertToTensor(ap.template get<arg_umac>(), umacTensor);
         // Collectumac(args..., umacTensor);  // TODO: update
-        CollectMAC(umacTensor, umacCollect);
+        Collect(umacTensor, umacCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> RHSTensor;
         RHSTensor[0] = torch::zeros({1,
@@ -562,10 +562,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                      options);
 
         std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
-        TrimSourceMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);  // TODO: update
-        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM>
+        TrimMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
+        ConvertToTensor(source_termsTrimmed, RHSTensor);  // Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM>
         // CollectRHS(args..., RHSTensor);  // TODO: update
-        CollectMAC(RHSTensor, RHSCollect);
+        Collect(RHSTensor, RHSCollect);
     }
 
 

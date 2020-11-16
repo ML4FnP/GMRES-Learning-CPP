@@ -9,8 +9,7 @@
 
 
 
-//TODO: no need to call it "Source"MultiFab
-void TrimSourceMultiFab(
+void TrimMultiFab(
         const std::array<amrex::MultiFab, AMREX_SPACEDIM> & sourceTerms,
               std::array<amrex::MultiFab, AMREX_SPACEDIM> & source_termsTrimmed
     ) {
@@ -25,9 +24,8 @@ void TrimSourceMultiFab(
 
 
 
-// TODO "StdArr" -> "MAC"
 /* copy values of single box std:Array MultiFab to Pytorch Tensor  */
-void Convert_StdArrMF_To_StdArrTensor(
+void ConvertToTensor(
         const std::array<amrex::MultiFab, AMREX_SPACEDIM> & StdArrMF,
               std::array<torch::Tensor,   AMREX_SPACEDIM> & tensor_out
     ) {
@@ -39,21 +37,20 @@ void Convert_StdArrMF_To_StdArrTensor(
 
 
 
-// TODO "StdArr" -> "MAC"
 /* copy values of  std::array of Pytorch Tensors to std::array of single box multifabs */
-void Convert_StdArrTensor_To_StdArrMF(
+void ConvertToMultiFab(
         const std::array<torch::Tensor,   AMREX_SPACEDIM> & tensor_in,
               std::array<amrex::MultiFab, AMREX_SPACEDIM> & mf_out
     ) {
 
     for (int d=0; d<AMREX_SPACEDIM; ++d) {
-        TensorToMultifab(tensor_in[d], mf_out[d]);
+        ConvertToMultiFab(tensor_in[d], mf_out[d]);
     }
 }
 
 
 
-void CollectScalar(
+void Collect(
         const torch::Tensor & tensor_in,
               torch::Tensor & tensor_collect
     ) {
@@ -63,7 +60,7 @@ void CollectScalar(
 
 
 
-void CollectMAC(
+void Collect(
         const std::array<torch::Tensor, AMREX_SPACEDIM> & mac_tensor_in,
               std::array<torch::Tensor, AMREX_SPACEDIM> & mac_tensor_collect
     ) {
