@@ -668,7 +668,6 @@ void ResidCompute (std::array< MultiFab, AMREX_SPACEDIM >& umac,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Functions for unpacking parameter pack passed to wrapped function. */
 
-
 std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
                    std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
@@ -1216,30 +1215,34 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_11> CNN_11,std::shared_ptr<Stoke
                             outputP2= torch::nn::functional::pad(outputP2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
                             outputP3= torch::nn::functional::pad(outputP3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
 
-                            // Slice all tensor outputs so they have the same dimensions as the corresponding  3D U-component tensor
-                            torch::Tensor Uxapprox = outputUx1.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
-                                                   + outputUx2.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
-                                                   + outputUx3.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])});
-
-                            torch::Tensor Uyapprox = outputUy1.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
-                                                   + outputUy2.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
-                                                   + outputUy3.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])});
-
-                            torch::Tensor Uzapprox = outputUz1.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
-                                                   + outputUz2.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
-                                                   + outputUz3.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])});
-
-                            torch::Tensor Papprox  = outputP1.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
-                                                   + outputP2.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
-                                                   + outputP3.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])});
 
                             //evaulate loss
                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
-                            // Note: target solution data to  loss function are de-paded appropriately to match de-padded forward function inputs
-                            torch::Tensor loss_outUx = torch::mse_loss(Uxapprox, target.index({Slice(),0,Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])}).to(torch::kFloat32));
-                            torch::Tensor loss_outUy = torch::mse_loss(Uyapprox, target.index({Slice(),1,Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])}).to(torch::kFloat32));
-                            torch::Tensor loss_outUz = torch::mse_loss(Uzapprox, target.index({Slice(),2,Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])}).to(torch::kFloat32));
-                            torch::Tensor loss_outP  = torch::mse_loss(Papprox, target.index({Slice(),3,Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])}).to(torch::kFloat32));
+                            // NOTE: The padded outputs of the CNN are de-padded and then  added together as the model output argument of the loss functions
+                            // Note: target solution data input to  loss function are also de-paded appropriately (since they are padded prior to being added to the dataloader)
+                            torch::Tensor loss_outUx = torch::mse_loss(
+                                                    outputUx1.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
+                                                   + outputUx2.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
+                                                   + outputUx3.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])}), 
+                                                   target.index({Slice(),0,Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])}).to(torch::kFloat32));
+
+                            torch::Tensor loss_outUy = torch::mse_loss(
+                                                   outputUy1.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
+                                                   + outputUy2.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
+                                                   + outputUy3.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])}), 
+                                                   target.index({Slice(),1,Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])}).to(torch::kFloat32));
+
+
+                            torch::Tensor loss_outUz = torch::mse_loss(outputUz1.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
+                                                   + outputUz2.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
+                                                   + outputUz3.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])}), 
+                                                   target.index({Slice(),2,Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])}).to(torch::kFloat32));
+                            
+                            
+                            torch::Tensor loss_outP  = torch::mse_loss(outputP1.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
+                                                   + outputP2.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
+                                                   + outputP3.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])}), 
+                                                   target.index({Slice(),3,Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])}).to(torch::kFloat32));
 
 
                             lossUx = loss_outUx.item<float>();
