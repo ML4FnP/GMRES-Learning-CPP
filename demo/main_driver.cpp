@@ -184,28 +184,7 @@ enum args {
     ml_PreFinal
 };
 
-// Index of the cfd variables
-int farg_cfd = arg_umac;
-int larg_cfd = arg_dt;
-// Index of the ml variables
-int farg_ml = ml_PresCollect;
-int larg_ml = ml_PreFinal;
 
-
-void CollectPressure(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow
-                   ,torch::Tensor PresFinal)
-{
-        PresCollect=torch::cat({PresCollect,PresFinal},0);
-}
 
 std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_RHSCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
@@ -221,58 +200,6 @@ std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_RHSCollect(std::array< MultiFab
     return  RHSCollect;
 }
 
-
-void CollectRHS(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   std::array<torch::Tensor,AMREX_SPACEDIM> RHSFinal)
-{
-        for (int d=0; d<AMREX_SPACEDIM; ++d)
-        {
-            RHSCollect[d]=torch::cat({RHSCollect[d],RHSFinal[d]},0);
-        }
-}
-
-void Collectumac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-                   MultiFab& beta,
-                   MultiFab& gamma,
-                   std::array< MultiFab, NUM_EDGE >& beta_ed,
-                   const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-                   ,int step,std::vector<double>& TimeDataWindow,
-                   std::array<torch::Tensor,AMREX_SPACEDIM> umacFinal)
-{
-        for (int d=0; d<AMREX_SPACEDIM; ++d)
-        {
-            umacCollect[d]=torch::cat({umacCollect[d],umacFinal[d]},0);
-        }
-}
-
-
-// void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
-//                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
-//                    std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
-//                    std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
-//                    MultiFab& beta,
-//                    MultiFab& gamma,
-//                    std::array< MultiFab, NUM_EDGE >& beta_ed,
-//                    const Geometry geom, const Real& dt,
-//                    torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
-//                    ,int step,std::vector<double>& TimeDataWindow,
-//                    std::vector<double>& TimeDataWindowIn)
-// {
-//        TimeDataWindow=TimeDataWindowIn;
-// }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -558,8 +485,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                       umacTensordims[7],
                                       umacTensordims[8]},
                                       options);
-        Convert_StdArrMF_To_StdArrTensor(Unpack_umac(args...), umacTensor);  // TODO: update
-        Collectumac(args..., umacTensor);  // TODO: update
+        // Convert_StdArrMF_To_StdArrTensor(Unpack_umac(args...), umacTensor);  // TODO: update
+        Convert_StdArrMF_To_StdArrTensor(ap.template get<arg_umac>(), umacTensor);
+        // Collectumac(args..., umacTensor);  // TODO: update
+        CollectMAC(umacTensor, umacCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> RHSTensor;
         RHSTensor[0] = torch::zeros({1,
@@ -579,17 +508,20 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                      options);
 
         std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
-        TrimSourceMultiFab(args..., dmap, ba, source_termsTrimmed);  // TODO: update
-        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // TODO: update /* Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM> */
-        CollectRHS(args..., RHSTensor);  // TODO: update
+        TrimSourceMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);
+        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM>
+        // CollectRHS(args..., RHSTensor);  // TODO: update
+        CollectMAC(RHSTensor, RHSCollect);
     } else if ( (RefineSol == true) && (TimeDataWindow[WindowIdx] > MovingAvg(TimeDataWindow)) ) {
         torch::Tensor presTensor = torch::zeros({1,
                                                  presTensordim[0],
                                                  presTensordim[1],
                                                  presTensordim[2]},
                                                  options);
-        ConvertToTensor(Unpack_pres(args...), presTensor);  // TODO: update
-        CollectPressure(args..., presTensor);  // TODO: update
+        // ConvertToTensor(Unpack_pres(args...), presTensor);  // TODO: update
+        ConvertToTensor(ap.template get<arg_pres>(), presTensor);
+        //CollectPressure(args..., presTensor);  // TODO: update
+        CollectScalar(presTensor, presCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> umacTensor;
         umacTensor[0] = torch::zeros({1,
@@ -607,8 +539,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                       umacTensordims[7],
                                       umacTensordims[8]},
                                       options);
-        Convert_StdArrMF_To_StdArrTensor(Unpack_umac(args...), umacTensor);  // TODO: update
-        Collectumac(args..., umacTensor);  // TODO: update
+        // Convert_StdArrMF_To_StdArrTensor(Unpack_umac(args...), umacTensor);  // TODO: update
+        Convert_StdArrMF_To_StdArrTensor(ap.template get<arg_umac>(), umacTensor);
+        // Collectumac(args..., umacTensor);  // TODO: update
+        CollectMAC(umacTensor, umacCollect);
 
         std::array<torch::Tensor, AMREX_SPACEDIM> RHSTensor;
         RHSTensor[0] = torch::zeros({1,
@@ -628,9 +562,10 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
                                      options);
 
         std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
-        TrimSourceMultiFab(args..., dmap, ba, source_termsTrimmed);  // TODO: update
-        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // TODO: update /* Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM> */
-        CollectRHS(args..., RHSTensor);  // TODO: update
+        TrimSourceMultiFab(ap.template get<arg_sourceTerms>(), source_termsTrimmed);  // TODO: update
+        Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed, RHSTensor);  // Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM>
+        // CollectRHS(args..., RHSTensor);  // TODO: update
+        CollectMAC(RHSTensor, RHSCollect);
     }
 
 

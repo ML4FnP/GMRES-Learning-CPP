@@ -58,5 +58,17 @@ void CollectScalar(
               torch::Tensor & tensor_collect
     ) {
 
-        tensor_collect = torch::cat({tensor_collect, tensor_collect},0);
+    tensor_collect = torch::cat({tensor_collect, tensor_in}, 0);
+}
+
+
+
+void CollectMAC(
+        const std::array<torch::Tensor, AMREX_SPACEDIM> & mac_tensor_in,
+              std::array<torch::Tensor, AMREX_SPACEDIM> & mac_tensor_collect
+    ) {
+
+    for (int d=0; d<AMREX_SPACEDIM; ++d) {
+        mac_tensor_collect[d]=torch::cat({mac_tensor_collect[d], mac_tensor_in[d]}, 0);
+    }
 }

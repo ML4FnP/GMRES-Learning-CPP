@@ -101,4 +101,11 @@ void CollectScalar(
               torch::Tensor & tensor_collect
     );
 
+
+
+void CollectMAC(
+        const std::array<torch::Tensor, AMREX_SPACEDIM> & mac_tensor_in,
+              std::array<torch::Tensor, AMREX_SPACEDIM> & mac_tensor_collect
+    );
+
 #endif
