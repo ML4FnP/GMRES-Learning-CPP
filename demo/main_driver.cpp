@@ -571,23 +571,30 @@ F MLAdvanceStokes<F(Args ...)>::operator()(Args ... args) {
 
     /* Train model */
     if (RefineSol == true) {
-        torch::Tensor CheckNumSamples = Unpack_PresCollect(args...);  // TODO: update
+        // torch::Tensor CheckNumSamples = Unpack_PresCollect(args...);  // TODO: update
+        torch::Tensor & CheckNumSamples = presCollect;
 
         /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
         if ( (step < (initNum + TimeDataWindow.size())) && (step%retrainFreq == 0)) {
+            // TrainLoop(NETPres,
+            //           Unpack_RHSCollect(args...),
+            //           Unpack_PresCollect(args...),
+            //           Unpack_umacCollect(args...),
+            //           presTensordim, srctermTensordim, umacTensordims);  // TODO: update
             TrainLoop(NETPres,
-                      Unpack_RHSCollect(args...),
-                      Unpack_PresCollect(args...),
-                      Unpack_umacCollect(args...),
-                      presTensordim, srctermTensordim, umacTensordims);  // TODO: update
+                      RHSCollect, presCollect, umacCollect,
+                      presTensordim, srctermTensordim, umacTensordims);
 
         /* Train model every time 3 new data points have been added to training set after initialization period */
         } else if ( ( CheckNumSamples.size(0) - (initNum + TimeDataWindow.size()) )%retrainFreq == 0 ) {
+            // TrainLoop(NETPres,
+            //         Unpack_RHSCollect(args...),
+            //         Unpack_PresCollect(args...),
+            //         Unpack_umacCollect(args...),
+            //         presTensordim,srctermTensordim,umacTensordims);  // TODO: update
             TrainLoop(NETPres,
-                    Unpack_RHSCollect(args...),
-                    Unpack_PresCollect(args...),
-                    Unpack_umacCollect(args...),
-                    presTensordim,srctermTensordim,umacTensordims);  // TODO: update
+                      RHSCollect, presCollect, umacCollect,
+                      presTensordim,srctermTensordim,umacTensordims);
         }
     }
 }
