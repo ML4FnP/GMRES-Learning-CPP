@@ -1,4 +1,4 @@
-# Accelerate GMRES (and other linear solvers) using Machine Learning
+# Accelerate GMRES (and other linear solvers) using Machine Learning in C++
 
 This is the C++ version of the code here: https://github.com/ML4FnP/GMRES-Learning
 
