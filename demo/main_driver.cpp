@@ -1071,7 +1071,7 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                 int64_t batch_size = 16;
                 float e1 = 1e-5;
                 int64_t epoch = 0;
-                int64_t numEpoch = 1000; 
+                int64_t numEpoch = 500; 
 
                 float lossUx = 10.0;
                 float lossUy = 10.0;
@@ -1217,12 +1217,12 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                             // Print loop info to console
                             epoch = epoch +1;
                     }
-                    std::cout << "___________" << std::endl;
-                    std::cout << "Loss Ux: "  << lossUx << std::endl;
-                    std::cout << "Loss Uy: "  << lossUy << std::endl;
-                    std::cout << "Loss Uz: "  << lossUz << std::endl;
-                    std::cout << "Loss P : "  << lossP << std::endl;
-                    std::cout << "Epoch Number: " << epoch << std::endl;
+                    // std::cout << "___________" << std::endl;
+                    // std::cout << "Loss Ux: "  << lossUx << std::endl;
+                    // std::cout << "Loss Uy: "  << lossUy << std::endl;
+                    // std::cout << "Loss Uz: "  << lossUz << std::endl;
+                    // std::cout << "Loss P : "  << lossP << std::endl;
+                    // std::cout << "Epoch Number: " << epoch << std::endl;
                 }
 
 }
@@ -1245,12 +1245,13 @@ double MovingAvg (std::vector<double>& InDataWindow)
 
 /* ML Wrapper for advanceStokes */
 template<typename F>
-auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NETPres,
-                 const IntVect presTensordim, const std::vector<int> srctermTensordim, 
+auto Wrapper(F func,bool RefineSol ,torch::Device device,
+                std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<StokesCNNet_Uy> CNN_UY,
+                std::shared_ptr<StokesCNNet_Uz> CNN_UZ,std::shared_ptr<StokesCNNet_P> CNN_P,                 const IntVect presTensordim, const std::vector<int> srctermTensordim, 
                  const std::vector<int> umacTensordims,amrex::DistributionMapping dmap, 
                  BoxArray  ba)
 {
-    auto new_function = [func,RefineSol,device,NETPres,presTensordim,srctermTensordim,umacTensordims,dmap,ba](auto&&... args)
+    auto new_function = [func,RefineSol,device,CNN_UX,CNN_UY,CNN_UZ,CNN_P,presTensordim,srctermTensordim,umacTensordims,dmap,ba](auto&&... args)
     {
         int retrainFreq =6;
         int initNum     =20;
@@ -1286,43 +1287,69 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
             Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed,RHSTensor); /* Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM> */
 
 
-            /* Appropriately flatten input */ 
-            torch::Tensor SrcTensorFlatx,SrcTensorFlaty,SrcTensorFlatz,SrcTensorFlat,PressureFlat,bp;
+            /* Appropriately Pad input */ 
+                /* Add channel dim to ever tensor component of the Std::array<torch::tensor,Amrex_dim> objects */
+                for (int d=0;d<AMREX_SPACEDIM;d++) 
+                {
+                    RHSTensor[d]=RHSTensor[d].unsqueeze(1);
+                }
 
-            torch::Tensor presTensorTemp= torch::zeros({presTensordim[0] , presTensordim[1],presTensordim[2] },options);
-            PressureFlat=presTensorTemp.reshape({1,1,-1});
+                // The tensors are padded so that every component is the same size as the largest component
+                // Note: This allows the tensors to be concatencated, and allows the most direct use of the pytorch dataloader
+            int maxP   = *std::max_element(presTensordim.begin(), presTensordim.end());
+            int maxU   = *std::max_element(umacTensordims.begin(), umacTensordims.end());
+            int maxSrc = *std::max_element(srctermTensordim.begin(), srctermTensordim.end());
+            int max1   = std::max(maxP,maxU);
+            int maxDim    = std::max(max1,maxSrc);
+            RHSTensor[0]= torch::nn::functional::pad(RHSTensor[0], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
+            RHSTensor[1]= torch::nn::functional::pad(RHSTensor[1], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
+            RHSTensor[2]= torch::nn::functional::pad(RHSTensor[2], torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
+            torch::Tensor SourceTermTensor  =torch::cat({RHSTensor[0],RHSTensor[1],RHSTensor[2]},1);
 
-            SrcTensorFlatx=RHSTensor[0].reshape({1,1,1,-1});
-            SrcTensorFlaty=RHSTensor[1].reshape({1,1,1,-1});
-            SrcTensorFlatz=RHSTensor[2].reshape({1,1,1,-1});
-            SrcTensorFlat=torch::cat({SrcTensorFlatx,SrcTensorFlaty},-1);
-            SrcTensorFlat=torch::cat({SrcTensorFlat,SrcTensorFlatz},-1);
-            bp =torch::zeros({1,1,1,PressureFlat.size(-1)},options);
-            SrcTensorFlat=torch::cat({SrcTensorFlat,bp},-1);
+            // Slicing of source terms
+            auto f1_Slice_x =Slice(0,srctermTensordim[0]-maxDim);
+            auto f1_Slice_y =Slice(0,srctermTensordim[1]-maxDim);
+            auto f1_Slice_z =Slice(0,srctermTensordim[2]-maxDim);
+            auto f2_Slice_x =Slice(0,srctermTensordim[3]-maxDim);
+            auto f2_Slice_y =Slice(0,srctermTensordim[4]-maxDim);
+            auto f2_Slice_z =Slice(0,srctermTensordim[5]-maxDim);
+            auto f3_Slice_x =Slice(0,srctermTensordim[6]-maxDim);
+            auto f3_Slice_y =Slice(0,srctermTensordim[7]-maxDim);
+            auto f3_Slice_z =Slice(0,srctermTensordim[8]-maxDim);
+            if (srctermTensordim[0]-maxDim==0) f1_Slice_x =Slice();
+            if (srctermTensordim[1]-maxDim==0) f1_Slice_y =Slice();
+            if (srctermTensordim[2]-maxDim==0) f1_Slice_z =Slice();
+            if (srctermTensordim[3]-maxDim==0) f2_Slice_x =Slice();
+            if (srctermTensordim[4]-maxDim==0) f2_Slice_y =Slice();
+            if (srctermTensordim[5]-maxDim==0) f2_Slice_z =Slice();
+            if (srctermTensordim[6]-maxDim==0) f3_Slice_x =Slice();
+            if (srctermTensordim[7]-maxDim==0) f3_Slice_y =Slice();
+            if (srctermTensordim[8]-maxDim==0) f3_Slice_z =Slice();
 
             /* Get prediction as tensor */
-            torch::Tensor ModelOut = NETPres->forward(SrcTensorFlat,srctermTensordim,presTensordim,umacTensordims);
-
-
-            /* Extract and reshape flattended pressure output */
-            torch::Tensor presTensor = ModelOut.index({Slice(),Slice(),Slice(),Slice(-presTensordim[0]*presTensordim[1]*presTensordim[2]-1,-1)}); // Pickout pressure
-            presTensor = presTensor.reshape({1,presTensordim[0],presTensordim[1],presTensordim[2]}); // unflatten
-
-
-            /* Extract and reshape flattended staggered velocity output */
             std::array<torch::Tensor,AMREX_SPACEDIM> umacTensor;
-            int umacXFlatLength=umacTensordims[0]*umacTensordims[1]*umacTensordims[2];
-            int umacYFlatLength=umacTensordims[3]*umacTensordims[4]*umacTensordims[5];
-            int umacZFlatLength=umacTensordims[6]*umacTensordims[7]*umacTensordims[8];
-            umacTensor[0] = ModelOut.index({Slice(),Slice(),Slice(),Slice(0,umacXFlatLength)}); // Pickout umacx
-            umacTensor[1] = ModelOut.index({Slice(),Slice(),Slice(),Slice(umacXFlatLength,umacXFlatLength+umacYFlatLength)}); // Pickout umacy
-            umacTensor[2] = ModelOut.index({Slice(),Slice(),Slice(),Slice(umacXFlatLength+umacYFlatLength,umacXFlatLength+umacYFlatLength+umacZFlatLength)}); // Pickout umacz
-            umacTensor[0] = umacTensor[0].reshape({1,umacTensordims[0],umacTensordims[1],umacTensordims[2]}); // unflatten
-            umacTensor[1] = umacTensor[1].reshape({1,umacTensordims[3],umacTensordims[4],umacTensordims[5]}); // unflatten
-            umacTensor[2] = umacTensor[2].reshape({1,umacTensordims[6],umacTensordims[7],umacTensordims[8]}); // unflatten
+            umacTensor[0] = CNN_UX->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
+                                maxDim,srctermTensordim,umacTensordims);
+
+            umacTensor[1] = CNN_UY->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
+                                maxDim,srctermTensordim,umacTensordims);
+                                                
+            umacTensor[2] = CNN_UZ->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
+                                maxDim,srctermTensordim,umacTensordims);
+
+            torch::Tensor presTensor = CNN_P->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
+                                SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
+                                maxDim,srctermTensordim,presTensordim);
 
 
-            /* Convert tensor to multifab using distribution map of original pressure MultiFab */
+            /* Convert tensors to multifab using distribution map of original pressure MultiFab */
             TensorToMultifab(presTensor,presNN);
 
             /* Convert std::array tensor to std::array multifab using distribution map of original pressure MultiFab */
@@ -1429,9 +1456,6 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
 
 
 
-
-
-
         /* Add data to collection of tensors*/
         if(RefineSol == true and step<(initNum+TimeDataWindow.size()))
         {
@@ -1497,16 +1521,21 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,std::shared_ptr<Net> NE
         if(RefineSol == true)
         {
             torch::Tensor CheckNumSamples = Unpack_PresCollect(args...);
+            int SampleIndex=(CheckNumSamples.size(0)-(initNum+TimeDataWindow.size()));
 
             /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
             if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0)
             {
-                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,srctermTensordim,umacTensordims);
+                CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
+                            Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
+                            srctermTensordim,umacTensordims);
 
             /* Train model every time 3 new data points have been added to training set after initialization period */
-            }else if ( (CheckNumSamples.size(0)-(initNum+TimeDataWindow.size()))%retrainFreq==0 )
+            }else if ( SampleIndex>0 and SampleIndex%retrainFreq==0 )
             {
-                TrainLoop(NETPres,Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,srctermTensordim,umacTensordims);
+                CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
+                            Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
+                            srctermTensordim,umacTensordims);
             }
         }
 
@@ -1865,8 +1894,8 @@ void main_driver(const char * argv) {
 
 
     //   Define model and move to GPU
-    auto TestNet = std::make_shared<Net>(FlatdimIn,FlatdimOut);
-    TestNet->to(device);
+    // auto TestNet = std::make_shared<Net>(FlatdimIn,FlatdimOut);
+    // TestNet->to(device);
 
     // Define CNN models and move to GPU
     auto CNN_UX= std::make_shared<StokesCNNet_Ux>();
@@ -1892,12 +1921,14 @@ void main_driver(const char * argv) {
 
     /* Wrap advanceStokes function pointer */
     bool RefineSol=false;
-    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,
+    auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,
+                                CNN_UX,CNN_UY,CNN_UZ,CNN_P,
                                 presTensordim,sourceTermTensordims,
                                 umacTensordims,dmap,ba);
 
     RefineSol=true;
-    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,TestNet,
+    auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,
+                                    CNN_UX,CNN_UY,CNN_UZ,CNN_P,
                                     presTensordim,sourceTermTensordims,
                                     umacTensordims,dmap,ba) ;
 
@@ -1968,9 +1999,9 @@ void main_driver(const char * argv) {
 
             for (int i =0; i<np; ++i) {
                 ParticleType & mark = markers[i];
-                mark.pos(0)=0.05*dis(gen);
-                mark.pos(1)=0.05*dis(gen);
-                mark.pos(2)=0*dis(gen);
+                // mark.pos(0)=0.05*dis(gen);
+                // mark.pos(1)=0.05*dis(gen);
+                // mark.pos(2)=0*dis(gen);
                 for (int d=0; d<AMREX_SPACEDIM; ++d)
                     mark.rdata(IBMReal::forcex + d) = f_0[d];
             }
@@ -2093,12 +2124,12 @@ void main_driver(const char * argv) {
 
 
         // For checking CNN implementation
-        if(step >9)
-        {
-            CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
-                            RHSCollect,presCollect,umacCollect,presTensordim,
-                            sourceTermTensordims,umacTensordims);
-        }
+        // if(step >9)
+        // {
+        //     CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
+        //                     RHSCollect,presCollect,umacCollect,presTensordim,
+        //                     sourceTermTensordims,umacTensordims);
+        // }
 
     }
 
