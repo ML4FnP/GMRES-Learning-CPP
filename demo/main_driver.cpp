@@ -1247,7 +1247,8 @@ double MovingAvg (std::vector<double>& InDataWindow)
 template<typename F>
 auto Wrapper(F func,bool RefineSol ,torch::Device device,
                 std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<StokesCNNet_Uy> CNN_UY,
-                std::shared_ptr<StokesCNNet_Uz> CNN_UZ,std::shared_ptr<StokesCNNet_P> CNN_P,                 const IntVect presTensordim, const std::vector<int> srctermTensordim, 
+                std::shared_ptr<StokesCNNet_Uz> CNN_UZ,std::shared_ptr<StokesCNNet_P> CNN_P,                 
+                const IntVect presTensordim, const std::vector<int> srctermTensordim, 
                  const std::vector<int> umacTensordims,amrex::DistributionMapping dmap, 
                  BoxArray  ba)
 {
