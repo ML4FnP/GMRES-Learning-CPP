@@ -90,26 +90,34 @@ struct Net : torch::nn::Module {
 /* Stokes CNN */
 struct StokesCNNet_Ux : torch::nn::Module {
   StokesCNNet_Ux( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf12(torch::nn::Conv3dOptions(16, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf13(torch::nn::Conv3dOptions(16, 8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf14(torch::nn::Conv3dOptions(8 , 4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf15(torch::nn::Conv3dOptions(4 , 2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf16(torch::nn::Conv3dOptions(2 , 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros)),
+    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
 
-       convf21(torch::nn::Conv3dOptions(1, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf22(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf23(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf24(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf25(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf26(torch::nn::Conv3dOptions(2, 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf21(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
 
-       convf31(torch::nn::Conv3dOptions(1, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf32(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf33(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf34(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf35(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf36(torch::nn::Conv3dOptions(2 ,1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros))
+       convf31(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+
+    //    convf41(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf42(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf43(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf44(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf45(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf46(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
+        LRELU(torch::nn::LeakyReLUOptions().negative_slope(0.01))
     { 
         register_module("convf11", convf11);
         register_module("convf12", convf12);
@@ -131,6 +139,15 @@ struct StokesCNNet_Ux : torch::nn::Module {
         register_module("convf34", convf34);
         register_module("convf35", convf35);
         register_module("convf36", convf36);
+
+        register_module("LRELU", LRELU);
+
+        // register_module("convf41", convf41);
+        // register_module("convf42", convf42);
+        // register_module("convf43", convf43);
+        // register_module("convf44", convf44);
+        // register_module("convf45", convf45);
+        // register_module("convf46", convf46);
     }
 
    torch::Tensor forward(torch::Tensor f1,torch::Tensor f2,torch::Tensor f3,
@@ -138,68 +155,89 @@ struct StokesCNNet_Ux : torch::nn::Module {
    {
         int64_t Current_batchsize= f1.size(0);
 
-        f1 = torch::relu(convf11(f1.unsqueeze(1)));
-        f1 = torch::relu(convf12(f1));
-        f1 = torch::relu(convf13(f1));
-        f1 = torch::relu(convf14(f1));
-        f1 = torch::relu(convf15(f1));
-        f1 = torch::relu(convf16(f1));
+        f1 = LRELU(convf11(f1.unsqueeze(1)));
+        f1 = LRELU(convf12(f1));
+        f1 = LRELU(convf13(f1));
+        f1 = LRELU(convf14(f1));
+        f1 = LRELU(convf15(f1));
+        f1 = (convf16(f1));
         f1 = f1.squeeze(1);
         f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
 
 
-        f2 = torch::relu(convf21(f2.unsqueeze(1)));
-        f2 = torch::relu(convf22(f2));
-        f2 = torch::relu(convf23(f2));
-        f2 = torch::relu(convf24(f2));
-        f2 = torch::relu(convf25(f2));
-        f2 = torch::relu(convf26(f2));
+        f2 = LRELU(convf21(f2.unsqueeze(1)));
+        f2 = LRELU(convf22(f2));
+        f2 = LRELU(convf23(f2));
+        f2 = LRELU(convf24(f2));
+        f2 = LRELU(convf25(f2));
+        f2 = (convf26(f2));
         f2 = f2.squeeze(1);
         f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
 
 
-        f3 = torch::relu(convf31(f3.unsqueeze(1)));
-        f3 = torch::relu(convf32(f3));
-        f3 = torch::relu(convf33(f3));
-        f3 = torch::relu(convf34(f3));
-        f3 = torch::relu(convf35(f3));
-        f3 = torch::relu(convf36(f3));
+        f3 = LRELU(convf31(f3.unsqueeze(1)));
+        f3 = LRELU(convf32(f3));
+        f3 = LRELU(convf33(f3));
+        f3 = LRELU(convf34(f3));
+        f3 = LRELU(convf35(f3));
+        f3 = (convf36(f3));
         f3 = f3.squeeze(1);
         f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
+
+
 
         torch:: Tensor Ux = f1.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
                             + f2.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
                             + f3.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])});
+
+
+    //   Ux = torch::relu(convf41(Ux.unsqueeze(1)));
+    //   Ux = torch::relu(convf42(Ux));
+    //   Ux = torch::relu(convf43(Ux));
+    //   Ux = torch::relu(convf44(Ux));
+    //   Ux = torch::relu(convf45(Ux));
+    //   Ux = convf46(Ux);
+    //   Ux = Ux.squeeze(1);
 
         return Ux;
    }
    torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16;
    torch::nn::Conv3d convf21,convf22,convf23,convf24,convf25,convf26;
    torch::nn::Conv3d convf31,convf32,convf33,convf34,convf35,convf36;
+//    torch::nn::Conv3d convf41,convf42,convf43,convf44,convf45,convf46;
+   torch::nn::LeakyReLU LRELU;
+
 };
 //////////////////////////////////////////////////////////////////////////////
 struct StokesCNNet_Uy : torch::nn::Module {
   StokesCNNet_Uy( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf12(torch::nn::Conv3dOptions(16, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf13(torch::nn::Conv3dOptions(16, 8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf14(torch::nn::Conv3dOptions(8 , 4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf15(torch::nn::Conv3dOptions(4 , 2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf16(torch::nn::Conv3dOptions(2 , 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kReplicate)),
+    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
 
-       convf21(torch::nn::Conv3dOptions(1, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf22(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf23(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf24(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf25(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf26(torch::nn::Conv3dOptions(2, 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kReplicate)),
+       convf21(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
 
-       convf31(torch::nn::Conv3dOptions(1 ,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf32(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf33(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf34(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf35(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kReplicate)),
-       convf36(torch::nn::Conv3dOptions(2 ,1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kReplicate))
+       convf31(torch::nn::Conv3dOptions(1 ,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
+
+    //    convf41(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf42(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf43(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf44(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf45(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+    //    convf46(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
     { 
         register_module("convf11", convf11);
         register_module("convf12", convf12);
@@ -221,6 +259,13 @@ struct StokesCNNet_Uy : torch::nn::Module {
         register_module("convf34", convf34);
         register_module("convf35", convf35);
         register_module("convf36", convf36);
+
+        // register_module("convf41", convf41);
+        // register_module("convf42", convf42);
+        // register_module("convf43", convf43);
+        // register_module("convf44", convf44);
+        // register_module("convf45", convf45);
+        // register_module("convf46", convf46);
     }
 
    torch::Tensor forward(torch::Tensor f1,torch::Tensor f2,torch::Tensor f3,
@@ -233,7 +278,7 @@ struct StokesCNNet_Uy : torch::nn::Module {
         f1 = torch::relu(convf13(f1));
         f1 = torch::relu(convf14(f1));
         f1 = torch::relu(convf15(f1));
-        f1 = torch::relu(convf16(f1));
+        f1 = (convf16(f1));
         f1 = f1.squeeze(1);
         f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
 
@@ -243,7 +288,7 @@ struct StokesCNNet_Uy : torch::nn::Module {
         f2 = torch::relu(convf23(f2));
         f2 = torch::relu(convf24(f2));
         f2 = torch::relu(convf25(f2));
-        f2 = torch::relu(convf26(f2));
+        f2 = (convf26(f2));
         f2 = f2.squeeze(1);
         f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
 
@@ -253,7 +298,7 @@ struct StokesCNNet_Uy : torch::nn::Module {
         f3 = torch::relu(convf33(f3));
         f3 = torch::relu(convf34(f3));
         f3 = torch::relu(convf35(f3));
-        f3 = torch::relu(convf36(f3));
+        f3 = (convf36(f3));
         f3 = f3.squeeze(1);
         f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
 
@@ -261,35 +306,44 @@ struct StokesCNNet_Uy : torch::nn::Module {
                             + f2.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
                             + f3.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])});
 
+    //   Uy = torch::relu(convf41(Uy.unsqueeze(1)));
+    //   Uy = torch::relu(convf42(Uy));
+    //   Uy = torch::relu(convf43(Uy));
+    //   Uy = torch::relu(convf44(Uy));
+    //   Uy = torch::relu(convf45(Uy));
+    //   Uy = convf46(Uy);
+    //   Uy = Uy.squeeze(1);
+
         return Uy;
    }
    torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16;
    torch::nn::Conv3d convf21,convf22,convf23,convf24,convf25,convf26;
    torch::nn::Conv3d convf31,convf32,convf33,convf34,convf35,convf36;
+//    torch::nn::Conv3d convf41,convf42,convf43,convf44,convf45,convf46;
 };
 
 struct StokesCNNet_Uz : torch::nn::Module {
   StokesCNNet_Uz( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf12(torch::nn::Conv3dOptions(16, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf13(torch::nn::Conv3dOptions(16, 8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf14(torch::nn::Conv3dOptions(8 , 4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf15(torch::nn::Conv3dOptions(4 , 2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf16(torch::nn::Conv3dOptions(2 , 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
+    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
 
-       convf21(torch::nn::Conv3dOptions(1 , 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf22(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf23(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf24(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf25(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf26(torch::nn::Conv3dOptions(2, 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf21(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
 
-       convf31(torch::nn::Conv3dOptions(1 ,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf32(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf33(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf34(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf35(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf36(torch::nn::Conv3dOptions(2 ,1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular))
+       convf31(torch::nn::Conv3dOptions(1 ,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
+       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
     { 
         register_module("convf11", convf11);
         register_module("convf12", convf12);
@@ -323,7 +377,7 @@ struct StokesCNNet_Uz : torch::nn::Module {
         f1 = torch::relu(convf13(f1));
         f1 = torch::relu(convf14(f1));
         f1 = torch::relu(convf15(f1));
-        f1 = torch::relu(convf16(f1));
+        f1 = (convf16(f1));
         f1 = f1.squeeze(1);
         f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
 
@@ -333,7 +387,7 @@ struct StokesCNNet_Uz : torch::nn::Module {
         f2 = torch::relu(convf23(f2));
         f2 = torch::relu(convf24(f2));
         f2 = torch::relu(convf25(f2));
-        f2 = torch::relu(convf26(f2));
+        f2 = (convf26(f2));
         f2 = f2.squeeze(1);
         f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
 
@@ -343,7 +397,7 @@ struct StokesCNNet_Uz : torch::nn::Module {
         f3 = torch::relu(convf33(f3));
         f3 = torch::relu(convf34(f3));
         f3 = torch::relu(convf35(f3));
-        f3 = torch::relu(convf36(f3));
+        f3 = (convf36(f3));
         f3 = f3.squeeze(1);
         f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
 
@@ -361,26 +415,26 @@ struct StokesCNNet_Uz : torch::nn::Module {
 
 struct StokesCNNet_P : torch::nn::Module {
   StokesCNNet_P( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf12(torch::nn::Conv3dOptions(16, 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf13(torch::nn::Conv3dOptions(16, 8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf14(torch::nn::Conv3dOptions(8 , 4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf15(torch::nn::Conv3dOptions(4 , 2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf16(torch::nn::Conv3dOptions(2 , 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
+    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
 
-       convf21(torch::nn::Conv3dOptions(1 , 16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf22(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf23(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf24(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf25(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf26(torch::nn::Conv3dOptions(2, 1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf21(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
 
-       convf31(torch::nn::Conv3dOptions(1 ,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf32(torch::nn::Conv3dOptions(16,16, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf33(torch::nn::Conv3dOptions(16,8 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf34(torch::nn::Conv3dOptions(8 ,4 , 3).stride(1).padding(2).dilation(2).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf35(torch::nn::Conv3dOptions(4 ,2 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf36(torch::nn::Conv3dOptions(2 ,1 , 3).stride(1).padding(1).dilation(1).groups(1).bias(false).padding_mode(torch::kCircular))
+       convf31(torch::nn::Conv3dOptions(1 ,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
+       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular))
     { 
         register_module("convf11", convf11);
         register_module("convf12", convf12);
@@ -414,7 +468,7 @@ struct StokesCNNet_P : torch::nn::Module {
         f1 = torch::relu(convf13(f1));
         f1 = torch::relu(convf14(f1));
         f1 = torch::relu(convf15(f1));
-        f1 = torch::relu(convf16(f1));
+        f1 = convf16(f1);
         f1 = f1.squeeze(1);
         f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
 
@@ -424,7 +478,7 @@ struct StokesCNNet_P : torch::nn::Module {
         f2 = torch::relu(convf23(f2));
         f2 = torch::relu(convf24(f2));
         f2 = torch::relu(convf25(f2));
-        f2 = torch::relu(convf26(f2));
+        f2 = convf26(f2);
         f2 = f2.squeeze(1);
         f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
 
@@ -434,7 +488,7 @@ struct StokesCNNet_P : torch::nn::Module {
         f3 = torch::relu(convf33(f3));
         f3 = torch::relu(convf34(f3));
         f3 = torch::relu(convf35(f3));
-        f3 = torch::relu(convf36(f3));
+        f3 = convf36(f3);
         f3 = f3.squeeze(1);
         f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
 
@@ -1176,64 +1230,64 @@ void update_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFa
 
 
 
-void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
-                torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,
-                const IntVect presTensordim, const std::vector<int> srctermTensordim, 
-                const std::vector<int> umacTensordims)
-{
-/*Setting up learning loop below */
-                torch::optim::Adagrad optimizer(NETPres->parameters(), torch::optim::AdagradOptions(0.01));
+// void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+//                 torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,
+//                 const IntVect presTensordim, const std::vector<int> srctermTensordim, 
+//                 const std::vector<int> umacTensordims)
+// {
+// /*Setting up learning loop below */
+//                 torch::optim::Adagrad optimizer(NETPres->parameters(), torch::optim::AdagradOptions(0.01));
 
-                /* Create dataset object from tensors that have collected relevant data */
-                auto custom_dataset = CustomDataset(RHSCollect,PresCollect,umacCollect).map(torch::data::transforms::Stack<>());
+//                 /* Create dataset object from tensors that have collected relevant data */
+//                 auto custom_dataset = CustomDataset(RHSCollect,PresCollect,umacCollect).map(torch::data::transforms::Stack<>());
 
-                int64_t batch_size = 16;
-                float e1 = 1e-5;
-                int64_t epoch = 0;
-                int64_t numEpoch = 250; 
-                float loss = 10.0;
+//                 int64_t batch_size = 16;
+//                 float e1 = 1e-5;
+//                 int64_t epoch = 0;
+//                 int64_t numEpoch = 250; 
+//                 float loss = 10.0;
 
-                /* Now, we create a data loader object and pass dataset. Note this returns a std::unique_ptr of the correct type that depends on the
-                dataset, type of sampler, etc */
-                auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset),batch_size); // random batches
+//                 /* Now, we create a data loader object and pass dataset. Note this returns a std::unique_ptr of the correct type that depends on the
+//                 dataset, type of sampler, etc */
+//                 auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset),batch_size); // random batches
 
-                /* NOTE: Weights and tensors must be of the same type. So, for function calls where input tensors interact with
-                        weights, the input tensors are converted to  single precesion(weights are floats by default). Alternatively we can 
-                        convert weights to double precision (at the cost of performance) */
-                while(loss>e1 && epoch<numEpoch )
-                {
-                    for(torch::data::Example<>& batch: *data_loader) 
-                    {      // RHS data
-                            torch::Tensor data = batch.data; 
-                            // Solution data
-                            torch::Tensor target = batch.target; 
+//                 /* NOTE: Weights and tensors must be of the same type. So, for function calls where input tensors interact with
+//                         weights, the input tensors are converted to  single precesion(weights are floats by default). Alternatively we can 
+//                         convert weights to double precision (at the cost of performance) */
+//                 while(loss>e1 && epoch<numEpoch )
+//                 {
+//                     for(torch::data::Example<>& batch: *data_loader) 
+//                     {      // RHS data
+//                             torch::Tensor data = batch.data; 
+//                             // Solution data
+//                             torch::Tensor target = batch.target; 
 
-                            // Reset gradients
-                            optimizer.zero_grad();
+//                             // Reset gradients
+//                             optimizer.zero_grad();
 
-                            // forward pass
-                            torch::Tensor output = NETPres->forward(data.to(torch::kFloat32),srctermTensordim,presTensordim,umacTensordims);
+//                             // forward pass
+//                             torch::Tensor output = NETPres->forward(data.to(torch::kFloat32),srctermTensordim,presTensordim,umacTensordims);
 
-                            //evaulate loss
-                            // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
-                            torch::Tensor loss_out = torch::mse_loss(output, target.to(torch::kFloat32));
-                            loss = loss_out.item<float>();
+//                             //evaulate loss
+//                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
+//                             torch::Tensor loss_out = torch::mse_loss(output, target.to(torch::kFloat32));
+//                             loss = loss_out.item<float>();
 
-                            // Backward pass
-                            loss_out.backward();
+//                             // Backward pass
+//                             loss_out.backward();
 
-                            // Apply gradients
-                            optimizer.step();
+//                             // Apply gradients
+//                             optimizer.step();
 
-                            // Print loop info to console
-                            epoch = epoch +1;
-                    }
-                    // std::cout << "___________" << std::endl;
-                    // std::cout << "Loss: "  << loss << std::endl;
-                    // std::cout << "Epoch Number: " << epoch << std::endl;
-                }
+//                             // Print loop info to console
+//                             epoch = epoch +1;
+//                     }
+//                     // std::cout << "___________" << std::endl;
+//                     // std::cout << "Loss: "  << loss << std::endl;
+//                     // std::cout << "Epoch Number: " << epoch << std::endl;
+//                 }
 
-}
+// }
 
 
 void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<StokesCNNet_Uy> CNN_UY,
@@ -1249,25 +1303,25 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                 // torch::optim::Adagrad optimizerUz({CNN_31->parameters(),CNN_32->parameters(),CNN_33->parameters()}, torch::optim::AdagradOptions(0.01));
                 // torch::optim::Adagrad optimizerPres({CNN_P1->parameters(),CNN_P2->parameters(),CNN_P3->parameters()}, torch::optim::AdagradOptions(0.01));
 
-                // torch::optim::SGD optimizerUx({CNN_UX->parameters()}, torch::optim::SGDOptions(0.001));
-                // torch::optim::SGD optimizerUy({CNN_UY->parameters()}, torch::optim::SGDOptions (0.001));
-                // torch::optim::SGD optimizerUz({CNN_UZ->parameters()}, torch::optim::SGDOptions (0.001));
-                // torch::optim::SGD optimizerPres({CNN_P->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerUx({CNN_UX->parameters()}, torch::optim::SGDOptions(0.001));
+                torch::optim::SGD optimizerUy({CNN_UY->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerUz({CNN_UZ->parameters()}, torch::optim::SGDOptions (0.001));
+                torch::optim::SGD optimizerPres({CNN_P->parameters()}, torch::optim::SGDOptions (0.001));
 
-                torch::optim::Adagrad optimizerUx({CNN_UX->parameters()}, torch::optim::AdagradOptions(0.001));
-                torch::optim::Adagrad optimizerUy({CNN_UY->parameters()}, torch::optim::AdagradOptions (0.001));
-                torch::optim::Adagrad optimizerUz({CNN_UZ->parameters()}, torch::optim::AdagradOptions (0.001));
-                torch::optim::Adagrad optimizerPres({CNN_P->parameters()}, torch::optim::AdagradOptions (0.001));
+                // torch::optim::Adagrad optimizerUx({CNN_UX->parameters()}, torch::optim::AdagradOptions(0.01));
+                // torch::optim::Adagrad optimizerUy({CNN_UY->parameters()}, torch::optim::AdagradOptions (0.01));
+                // torch::optim::Adagrad optimizerUz({CNN_UZ->parameters()}, torch::optim::AdagradOptions (0.01));
+                // torch::optim::Adagrad optimizerPres({CNN_P->parameters()}, torch::optim::AdagradOptions (0.01));
 
 
 
                 /* Create dataset object from tensors that have collected relevant data */
                 auto custom_dataset = CustomDatasetCNN(RHSCollect,PresCollect,umacCollect,presTensordim, srctermTensordim,umacTensordims).map(torch::data::transforms::Stack<>());
 
-                int64_t batch_size = 16;
+                int64_t batch_size = 32;
                 float e1 = 1e-5;
                 int64_t epoch = 0;
-                int64_t numEpoch = 250; 
+                int64_t numEpoch = 250000; 
 
                 float lossUx = 10.0;
                 float lossUy = 10.0;
@@ -1409,9 +1463,9 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                             optimizerUz.step();
                             optimizerPres.step();
 
+                            epoch = epoch +1;
 
                             // Print loop info to console
-                            epoch = epoch +1;
                     }
                     std::cout << "___________" << std::endl;
                     std::cout << "Loss Ux: "  << lossUx << std::endl;
@@ -1450,8 +1504,8 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
 {
     auto new_function = [func,RefineSol,device,CNN_UX,CNN_UY,CNN_UZ,CNN_P,presTensordim,srctermTensordim,umacTensordims,dmap,ba](auto&&... args)
     {
-        int retrainFreq =10;
-        int initNum     =20;
+        int retrainFreq =128;
+        int initNum     =128;
         auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
         int step=unpack_Step(args...);
         std::vector<double> TimeDataWindow =unpack_TimeDataWindow(args...);
@@ -1721,7 +1775,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             int SampleIndex=(CheckNumSamples.size(0)-(initNum+TimeDataWindow.size()));
 
             /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
-            if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0)
+            if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0 and step>0)
             {
                 CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
                             Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
@@ -2174,7 +2228,7 @@ void main_driver(const char * argv) {
 
 
 
-    int initNum     =20; //number of data points needed before making predictions. Note, must be set in wrapper as well.
+    int initNum     =32; //number of data points needed before making predictions. Note, must be set in wrapper as well.
     while (step < 3000)
     {
         // Spread forces to RHS
@@ -2196,9 +2250,9 @@ void main_driver(const char * argv) {
 
             for (int i =0; i<np; ++i) {
                 ParticleType & mark = markers[i];
-                mark.pos(0)=0.25*dis(gen);
-                mark.pos(1)=0.25*dis(gen);
-                mark.pos(2)=0.25*dis(gen);
+                mark.pos(0)=0.4*dis(gen);
+                mark.pos(1)=0.4*dis(gen);
+                mark.pos(2)=0.4*dis(gen);
                 for (int d=0; d<AMREX_SPACEDIM; ++d)
                     mark.rdata(IBMReal::forcex + d) = f_0[d];
             }
