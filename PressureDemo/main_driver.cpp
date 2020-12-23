@@ -62,379 +62,27 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
 /* Ideal to explicitly use std::shared_ptr<MyModule> rahter than a "TorchModule" */
 /* Need to set up NN using this approach where the  module is registered and constructed in the initializer list  */
 /* Can also instead first construct the holder with a null pointer and then assign it in the constructor */
-
-/* Linear network */
-struct Net : torch::nn::Module {
-  Net(int64_t DimInFlat, int64_t DimOutFlat)
-    :   linear(torch::nn::LinearOptions(DimInFlat,DimOutFlat).bias(false))
-        // conv1(torch::nn::Conv3dOptions(3, 3, 1).stride(1).padding(0).dilation(1).groups(1).bias(false).padding_mode(torch::kZeros))
-    { 
-        register_module("linear", linear);
-        // register_module("conv1", conv1);
-    }
-
-   torch::Tensor forward(torch::Tensor x, const std::vector<int> SrcTermDims, const amrex::IntVect presTensordim,const std::vector<int> umacTensordims )
-   {
-        int64_t Current_batchsize= x.size(0);
-        x = linear(x);
-        return x;
-   }
-  torch::nn::Linear linear;
-//   torch::nn::Conv3d conv1;
-};
-
+/////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
+/////////////////////////////////////////////////////////////////////////////
 /* Stokes CNN */
-struct StokesCNNet_Ux : torch::nn::Module {
-  StokesCNNet_Ux( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-       convf21(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-       convf31(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-    //    convf41(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf42(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf43(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf44(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf45(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf46(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
-        LRELU(torch::nn::LeakyReLUOptions().negative_slope(0.01))
-    { 
-        register_module("convf11", convf11);
-        register_module("convf12", convf12);
-        register_module("convf13", convf13);
-        register_module("convf14", convf14);
-        register_module("convf15", convf15);
-        register_module("convf16", convf16);
-
-        register_module("convf21", convf21);
-        register_module("convf22", convf22);
-        register_module("convf23", convf23);
-        register_module("convf24", convf24);
-        register_module("convf25", convf25);
-        register_module("convf26", convf26);
-
-        register_module("convf31", convf31);
-        register_module("convf32", convf32);
-        register_module("convf33", convf33);
-        register_module("convf34", convf34);
-        register_module("convf35", convf35);
-        register_module("convf36", convf36);
-
-        register_module("LRELU", LRELU);
-
-        // register_module("convf41", convf41);
-        // register_module("convf42", convf42);
-        // register_module("convf43", convf43);
-        // register_module("convf44", convf44);
-        // register_module("convf45", convf45);
-        // register_module("convf46", convf46);
-    }
-
-   torch::Tensor forward(torch::Tensor f1,torch::Tensor f2,torch::Tensor f3,
-                            int maxDim,const std::vector<int> srctermTensordim, const std::vector<int> umacTensordims)
-   {
-        int64_t Current_batchsize= f1.size(0);
-
-        f1 = LRELU(convf11(f1.unsqueeze(1)));
-        f1 = LRELU(convf12(f1));
-        f1 = LRELU(convf13(f1));
-        f1 = LRELU(convf14(f1));
-        f1 = LRELU(convf15(f1));
-        f1 = (convf16(f1));
-        f1 = f1.squeeze(1);
-        f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
-
-
-        f2 = LRELU(convf21(f2.unsqueeze(1)));
-        f2 = LRELU(convf22(f2));
-        f2 = LRELU(convf23(f2));
-        f2 = LRELU(convf24(f2));
-        f2 = LRELU(convf25(f2));
-        f2 = (convf26(f2));
-        f2 = f2.squeeze(1);
-        f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
-
-
-        f3 = LRELU(convf31(f3.unsqueeze(1)));
-        f3 = LRELU(convf32(f3));
-        f3 = LRELU(convf33(f3));
-        f3 = LRELU(convf34(f3));
-        f3 = LRELU(convf35(f3));
-        f3 = (convf36(f3));
-        f3 = f3.squeeze(1);
-        f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
-
-
-
-        torch:: Tensor Ux = f1.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
-                            + f2.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])})
-                            + f3.index({Slice(),Slice(0,umacTensordims[0]),Slice(0,umacTensordims[1]),Slice(0,umacTensordims[2])});
-
-
-    //   Ux = torch::relu(convf41(Ux.unsqueeze(1)));
-    //   Ux = torch::relu(convf42(Ux));
-    //   Ux = torch::relu(convf43(Ux));
-    //   Ux = torch::relu(convf44(Ux));
-    //   Ux = torch::relu(convf45(Ux));
-    //   Ux = convf46(Ux);
-    //   Ux = Ux.squeeze(1);
-
-        return Ux;
-   }
-   torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16;
-   torch::nn::Conv3d convf21,convf22,convf23,convf24,convf25,convf26;
-   torch::nn::Conv3d convf31,convf32,convf33,convf34,convf35,convf36;
-//    torch::nn::Conv3d convf41,convf42,convf43,convf44,convf45,convf46;
-   torch::nn::LeakyReLU LRELU;
-
-};
-//////////////////////////////////////////////////////////////////////////////
-struct StokesCNNet_Uy : torch::nn::Module {
-  StokesCNNet_Uy( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-       convf21(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-       convf31(torch::nn::Conv3dOptions(1 ,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
-
-    //    convf41(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf42(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf43(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf44(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf45(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-    //    convf46(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
-    { 
-        register_module("convf11", convf11);
-        register_module("convf12", convf12);
-        register_module("convf13", convf13);
-        register_module("convf14", convf14);
-        register_module("convf15", convf15);
-        register_module("convf16", convf16);
-
-        register_module("convf21", convf21);
-        register_module("convf22", convf22);
-        register_module("convf23", convf23);
-        register_module("convf24", convf24);
-        register_module("convf25", convf25);
-        register_module("convf26", convf26);
-
-        register_module("convf31", convf31);
-        register_module("convf32", convf32);
-        register_module("convf33", convf33);
-        register_module("convf34", convf34);
-        register_module("convf35", convf35);
-        register_module("convf36", convf36);
-
-        // register_module("convf41", convf41);
-        // register_module("convf42", convf42);
-        // register_module("convf43", convf43);
-        // register_module("convf44", convf44);
-        // register_module("convf45", convf45);
-        // register_module("convf46", convf46);
-    }
-
-   torch::Tensor forward(torch::Tensor f1,torch::Tensor f2,torch::Tensor f3,
-                            int maxDim,const std::vector<int> srctermTensordim, const std::vector<int> umacTensordims)
-   {
-        int64_t Current_batchsize= f1.size(0);
-
-        f1 = torch::relu(convf11(f1.unsqueeze(1)));
-        f1 = torch::relu(convf12(f1));
-        f1 = torch::relu(convf13(f1));
-        f1 = torch::relu(convf14(f1));
-        f1 = torch::relu(convf15(f1));
-        f1 = (convf16(f1));
-        f1 = f1.squeeze(1);
-        f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
-
-
-        f2 = torch::relu(convf21(f2.unsqueeze(1)));
-        f2 = torch::relu(convf22(f2));
-        f2 = torch::relu(convf23(f2));
-        f2 = torch::relu(convf24(f2));
-        f2 = torch::relu(convf25(f2));
-        f2 = (convf26(f2));
-        f2 = f2.squeeze(1);
-        f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
-
-
-        f3 = torch::relu(convf31(f3.unsqueeze(1)));
-        f3 = torch::relu(convf32(f3));
-        f3 = torch::relu(convf33(f3));
-        f3 = torch::relu(convf34(f3));
-        f3 = torch::relu(convf35(f3));
-        f3 = (convf36(f3));
-        f3 = f3.squeeze(1);
-        f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
-
-        torch:: Tensor Uy =   f1.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
-                            + f2.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])})
-                            + f3.index({Slice(),Slice(0,umacTensordims[3]),Slice(0,umacTensordims[4]),Slice(0,umacTensordims[5])});
-
-    //   Uy = torch::relu(convf41(Uy.unsqueeze(1)));
-    //   Uy = torch::relu(convf42(Uy));
-    //   Uy = torch::relu(convf43(Uy));
-    //   Uy = torch::relu(convf44(Uy));
-    //   Uy = torch::relu(convf45(Uy));
-    //   Uy = convf46(Uy);
-    //   Uy = Uy.squeeze(1);
-
-        return Uy;
-   }
-   torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16;
-   torch::nn::Conv3d convf21,convf22,convf23,convf24,convf25,convf26;
-   torch::nn::Conv3d convf31,convf32,convf33,convf34,convf35,convf36;
-//    torch::nn::Conv3d convf41,convf42,convf43,convf44,convf45,convf46;
-};
-
-struct StokesCNNet_Uz : torch::nn::Module {
-  StokesCNNet_Uz( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-       convf21(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-
-       convf31(torch::nn::Conv3dOptions(1 ,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros)),
-       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kZeros))
-    { 
-        register_module("convf11", convf11);
-        register_module("convf12", convf12);
-        register_module("convf13", convf13);
-        register_module("convf14", convf14);
-        register_module("convf15", convf15);
-        register_module("convf16", convf16);
-
-        register_module("convf21", convf21);
-        register_module("convf22", convf22);
-        register_module("convf23", convf23);
-        register_module("convf24", convf24);
-        register_module("convf25", convf25);
-        register_module("convf26", convf26);
-
-        register_module("convf31", convf31);
-        register_module("convf32", convf32);
-        register_module("convf33", convf33);
-        register_module("convf34", convf34);
-        register_module("convf35", convf35);
-        register_module("convf36", convf36);
-    }
-
-   torch::Tensor forward(torch::Tensor f1,torch::Tensor f2,torch::Tensor f3,
-                            int maxDim,const std::vector<int> srctermTensordim, const std::vector<int> umacTensordims)
-   {
-        int64_t Current_batchsize= f1.size(0);
-
-        f1 = torch::relu(convf11(f1.unsqueeze(1)));
-        f1 = torch::relu(convf12(f1));
-        f1 = torch::relu(convf13(f1));
-        f1 = torch::relu(convf14(f1));
-        f1 = torch::relu(convf15(f1));
-        f1 = (convf16(f1));
-        f1 = f1.squeeze(1);
-        f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
-
-
-        f2 = torch::relu(convf21(f2.unsqueeze(1)));
-        f2 = torch::relu(convf22(f2));
-        f2 = torch::relu(convf23(f2));
-        f2 = torch::relu(convf24(f2));
-        f2 = torch::relu(convf25(f2));
-        f2 = (convf26(f2));
-        f2 = f2.squeeze(1);
-        f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
-
-
-        f3 = torch::relu(convf31(f3.unsqueeze(1)));
-        f3 = torch::relu(convf32(f3));
-        f3 = torch::relu(convf33(f3));
-        f3 = torch::relu(convf34(f3));
-        f3 = torch::relu(convf35(f3));
-        f3 = (convf36(f3));
-        f3 = f3.squeeze(1);
-        f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
-
-        torch:: Tensor Uz =   f1.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
-                            + f2.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])})
-                            + f3.index({Slice(),Slice(0,umacTensordims[6]),Slice(0,umacTensordims[7]),Slice(0,umacTensordims[8])});
-
-        return Uz;
-   }
-   torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16;
-   torch::nn::Conv3d convf21,convf22,convf23,convf24,convf25,convf26;
-   torch::nn::Conv3d convf31,convf32,convf33,convf34,convf35,convf36;
-};
-
-
 struct StokesCNNet_P : torch::nn::Module {
   StokesCNNet_P( )
-    :  convf11(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf12(torch::nn::Conv3dOptions(1, 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf13(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-
-       convf21(torch::nn::Conv3dOptions(1 , 1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf22(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf23(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf24(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf25(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf26(torch::nn::Conv3dOptions(1, 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-
-       convf31(torch::nn::Conv3dOptions(1 ,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf32(torch::nn::Conv3dOptions(1,1, 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf33(torch::nn::Conv3dOptions(1,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf34(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf35(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular)),
-       convf36(torch::nn::Conv3dOptions(1 ,1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(false).padding_mode(torch::kCircular))
+    :  convf11(torch::nn::Conv3dOptions(1 , 1,  3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf12(torch::nn::Conv3dOptions(1 , 1,  3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf13(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf14(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf15(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf16(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf17(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf18(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       convf19(torch::nn::Conv3dOptions(1 , 1 , 3).stride(1).padding(3).dilation(3).groups(1).bias(true).padding_mode(torch::kCircular)),
+       LRELU(torch::nn::LeakyReLUOptions().negative_slope(0.01)),
+       BNorm3D1(torch::nn::BatchNorm3dOptions(1).affine(true).track_running_stats(true)),
+       BNorm3D2(torch::nn::BatchNorm3dOptions(1).affine(true).track_running_stats(true)),
+       BNorm3D3(torch::nn::BatchNorm3dOptions(1).affine(true).track_running_stats(true)),
+       BNorm3D4(torch::nn::BatchNorm3dOptions(1).affine(true).track_running_stats(true)),
+       BNorm3D5(torch::nn::BatchNorm3dOptions(1).affine(true).track_running_stats(true))
     { 
         register_module("convf11", convf11);
         register_module("convf12", convf12);
@@ -442,127 +90,41 @@ struct StokesCNNet_P : torch::nn::Module {
         register_module("convf14", convf14);
         register_module("convf15", convf15);
         register_module("convf16", convf16);
-
-        register_module("convf21", convf21);
-        register_module("convf22", convf22);
-        register_module("convf23", convf23);
-        register_module("convf24", convf24);
-        register_module("convf25", convf25);
-        register_module("convf26", convf26);
-
-        register_module("convf31", convf31);
-        register_module("convf32", convf32);
-        register_module("convf33", convf33);
-        register_module("convf34", convf34);
-        register_module("convf35", convf35);
-        register_module("convf36", convf36);
+        register_module("convf17", convf17);
+        register_module("convf18", convf18);
+        register_module("convf19", convf19);
+        register_module("LRELU", LRELU);
+        register_module("BNorm3D1", BNorm3D1);
+        register_module("BNorm3D2", BNorm3D2);
+        register_module("BNorm3D3", BNorm3D3);
+        register_module("BNorm3D4", BNorm3D4);
+        register_module("BNorm3D5", BNorm3D5);
     }
 
-   torch::Tensor forward(torch::Tensor f1,torch::Tensor f2,torch::Tensor f3,
-                            int maxDim,const std::vector<int> srctermTensordim, const IntVect presTensordim)
+   torch::Tensor forward(torch::Tensor divF, const IntVect presTensordim)
    {
-        int64_t Current_batchsize= f1.size(0);
-
-        f1 = torch::relu(convf11(f1.unsqueeze(1)));
-        f1 = torch::relu(convf12(f1));
-        f1 = torch::relu(convf13(f1));
-        f1 = torch::relu(convf14(f1));
-        f1 = torch::relu(convf15(f1));
-        f1 = convf16(f1);
-        f1 = f1.squeeze(1);
-        f1 = torch::nn::functional::pad(f1, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[2], 0, maxDim-srctermTensordim[1],0, maxDim-srctermTensordim[0]}).mode(torch::kConstant).value(0));
-
-
-        f2 = torch::relu(convf21(f2.unsqueeze(1)));
-        f2 = torch::relu(convf22(f2));
-        f2 = torch::relu(convf23(f2));
-        f2 = torch::relu(convf24(f2));
-        f2 = torch::relu(convf25(f2));
-        f2 = convf26(f2);
-        f2 = f2.squeeze(1);
-        f2 = torch::nn::functional::pad(f2, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[5], 0, maxDim-srctermTensordim[4],0, maxDim-srctermTensordim[3]}).mode(torch::kConstant).value(0));
-
-
-        f3 = torch::relu(convf31(f3.unsqueeze(1)));
-        f3 = torch::relu(convf32(f3));
-        f3 = torch::relu(convf33(f3));
-        f3 = torch::relu(convf34(f3));
-        f3 = torch::relu(convf35(f3));
-        f3 = convf36(f3);
-        f3 = f3.squeeze(1);
-        f3 = torch::nn::functional::pad(f3, torch::nn::functional::PadFuncOptions({0, maxDim-srctermTensordim[8], 0, maxDim-srctermTensordim[7],0, maxDim-srctermTensordim[6]}).mode(torch::kConstant).value(0));
-
-        torch:: Tensor P =    f1.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
-                            + f2.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])})
-                            + f3.index({Slice(),Slice(0,presTensordim[0]),Slice(0,presTensordim[1]),Slice(0,presTensordim[2])});
-
+        int64_t Current_batchsize= divF.size(0);
+        divF = LRELU(BNorm3D1(convf11(divF.unsqueeze(1))));
+        divF = LRELU(BNorm3D2(convf12(divF)));
+        divF = LRELU(BNorm3D3(convf13(divF)));
+        divF = LRELU(BNorm3D4(convf14(divF)));
+        divF = LRELU((convf15(divF)));
+        divF = LRELU((convf16(divF)));
+        divF = LRELU((convf17(divF)));
+        divF = LRELU((convf18(divF)));
+        divF = ((convf19(divF)));
+        torch::Tensor P = divF.squeeze(1);
         return P;
    }
-   torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16;
-   torch::nn::Conv3d convf21,convf22,convf23,convf24,convf25,convf26;
-   torch::nn::Conv3d convf31,convf32,convf33,convf34,convf35,convf36;
+   torch::nn::Conv3d convf11,convf12,convf13,convf14,convf15,convf16,convf17,convf18,convf19;
+   torch::nn::LeakyReLU LRELU;
+   torch::nn::BatchNorm3d BNorm3D1,BNorm3D2,BNorm3D3,BNorm3D4,BNorm3D5;
+
 };
 
 //////////////////////////////////////////////////////////////////////////////
 
 /* Need to define a class to use the Pytorch data loader */
-/* Dataset class for linear network */
-class CustomDataset : public torch::data::Dataset<CustomDataset>
-{
-    private:
-        torch::Tensor bTensor, SolTensor;
-        torch::Tensor SrcTensorFlatx,SrcTensorFlaty,SrcTensorFlatz,SrcTensorFlat;
-        torch::Tensor umacFlatx,umacFlaty,umacFlatz,umacFlat;
-        torch::Tensor bp,PressureFlat;
-
-
-        torch::Tensor SrcTensorCat,Pres,umacTensorsCat,bTest,SrcTest;
-
-    public:
-        CustomDataset(std::array<torch::Tensor,AMREX_SPACEDIM> bIn, torch::Tensor SolIn,std::array<torch::Tensor,AMREX_SPACEDIM> umacTensors)
-        {
-          auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
-          int64_t Current_batchsize= bIn[0].size(0);
-
-          /* xp,xu */
-          umacFlatx=umacTensors[0].reshape({Current_batchsize,1,1,-1});
-          umacFlaty=umacTensors[1].reshape({Current_batchsize,1,1,-1});
-          umacFlatz=umacTensors[2].reshape({Current_batchsize,1,1,-1});
-          umacFlat=torch::cat({umacFlatx,umacFlaty},-1);
-          umacFlat=torch::cat({umacFlat,umacFlatz},-1);
-          PressureFlat=SolIn.reshape({Current_batchsize,1,1,-1});
-          umacFlat=torch::cat({umacFlat,PressureFlat},-1);
-
-        /* bu,bp */
-          SrcTensorFlatx=bIn[0].reshape({Current_batchsize,1,1,-1});
-          SrcTensorFlaty=bIn[1].reshape({Current_batchsize,1,1,-1});
-          SrcTensorFlatz=bIn[2].reshape({Current_batchsize,1,1,-1});
-          SrcTensorFlat=torch::cat({SrcTensorFlatx,SrcTensorFlaty},-1);
-          SrcTensorFlat=torch::cat({SrcTensorFlat,SrcTensorFlatz},-1);
-          bp =torch::zeros({Current_batchsize,1,1,PressureFlat.size(-1)},options);
-          SrcTensorFlat=torch::cat({SrcTensorFlat,bp},-1);
-
-
-          bTensor =SrcTensorFlat;
-          SolTensor =umacFlat;
-
-        };
-        
-        torch::data::Example<> get(size_t index) override
-        {
-          return {bTensor[index], SolTensor[index]};
-        };
-
-        torch::optional<size_t> size() const override
-        {
-          /* Return number of samples (This is not used, and can  return anything in this case)
-            It appears that a size must be defined as done here (i.e this is not optional).
-            The code breaks without this.
-            see: https://discuss.pytorch.org/t/custom-dataloader/81874/3 */
-          return SolTensor.size(0);
-        };
-  }; 
-
 /* Dataset class for CNN  */
 class CustomDatasetCNN : public torch::data::Dataset<CustomDatasetCNN>
 {
@@ -617,6 +179,46 @@ class CustomDatasetCNN : public torch::data::Dataset<CustomDatasetCNN>
 
             /* Network solution tensor */
             SolTensor=torch::cat({umacTensorsCat,Pres},1);    
+
+        };
+        
+        torch::data::Example<> get(size_t index) override
+        {
+          return {bTensor[index], SolTensor[index]};
+        };
+
+        torch::optional<size_t> size() const override
+        {
+          /* Return number of samples (This is not used, and can  return anything in this case)
+            It appears that a size must be defined as done here (i.e this is not optional).
+            The code breaks without this.
+            see: https://discuss.pytorch.org/t/custom-dataloader/81874/3 */
+          return SolTensor.size(0);
+        };
+  }; 
+
+class CustomDatasetCNN_Pres : public torch::data::Dataset<CustomDatasetCNN_Pres>
+{
+    private:
+        torch::Tensor bTensor, SolTensor;
+        torch::Tensor Pres;
+
+    public:
+        CustomDatasetCNN_Pres( torch::Tensor DivSrcTensor, torch::Tensor Pres,
+                            const IntVect DivFdim,  const IntVect presTensordim)
+        {
+            auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
+            int64_t Current_batchsize= DivSrcTensor[0].size(0);
+
+            /* Add channel dim to ever tensor component of the Std::array<torch::tensor,Amrex_dim> objects */
+            DivSrcTensor=DivSrcTensor;
+            Pres=Pres;
+
+            /* Network input tensor */
+            bTensor=DivSrcTensor;
+
+            /* Network solution tensor */
+            SolTensor=Pres;    
 
         };
         
@@ -882,7 +484,8 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_umac(std::array< MultiFab, AMREX_
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step , std::vector<double>& TimeDataWindow, std::vector<double>& ResidDataWindow )
 {  
     return  umac;
@@ -896,7 +499,8 @@ MultiFab& Unpack_pres(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  pres;
@@ -911,7 +515,8 @@ const std::array< MultiFab, AMREX_SPACEDIM >& Unpack_flux(std::array< MultiFab, 
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  stochMfluxdiv;
@@ -926,7 +531,8 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_sourceTerms(std::array< MultiFab,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  sourceTerms;
@@ -941,7 +547,8 @@ std::array< MultiFab, AMREX_SPACEDIM >& Unpack_alpha_fc(std::array< MultiFab, AM
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  alpha_fc;
@@ -955,7 +562,8 @@ MultiFab& Unpack_beta(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  beta;
@@ -969,7 +577,8 @@ MultiFab& Unpack_gamma(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pr
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  gamma;
@@ -984,7 +593,8 @@ std::array< MultiFab, NUM_EDGE >& Unpack_beta_ed(std::array< MultiFab, AMREX_SPA
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  beta_ed;
@@ -998,7 +608,8 @@ const Geometry Unpack_geom(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  geom;
@@ -1012,7 +623,8 @@ const Real& Unpack_dt(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pre
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  dt;
@@ -1027,7 +639,8 @@ torch::Tensor& Unpack_PresCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,M
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  PresCollect;
@@ -1042,7 +655,8 @@ std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_RHSCollect(std::array< MultiFab
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  RHSCollect;
@@ -1057,12 +671,28 @@ std::array<torch::Tensor,AMREX_SPACEDIM>& Unpack_umacCollect(std::array< MultiFa
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
     return  umacCollect;
 }
 
+
+torch::Tensor& Unpack_DivFCollect(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
+{  
+    return  DivFCollect;
+}
 
 int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
@@ -1072,7 +702,8 @@ int unpack_Step(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
 
@@ -1088,7 +719,8 @@ std::vector<double> unpack_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
 
@@ -1107,7 +739,8 @@ std::vector<double> unpack_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM 
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow)
 {  
 
@@ -1128,7 +761,8 @@ void CollectPressure(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
                    ,torch::Tensor PresFinal)
 {  
@@ -1145,7 +779,8 @@ void CollectRHS(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
                    ,std::array<torch::Tensor,AMREX_SPACEDIM> RHSFinal)
 {  
@@ -1163,7 +798,8 @@ void Collectumac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
                    ,std::array<torch::Tensor,AMREX_SPACEDIM> umacFinal)
 {  
@@ -1171,6 +807,26 @@ void Collectumac(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
         {
             umacCollect[d]=torch::cat({umacCollect[d],umacFinal[d]},0);
         }
+}
+
+
+
+void CollectDivF(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
+                   const std::array< MultiFab, AMREX_SPACEDIM >& stochMfluxdiv,
+                   std::array< MultiFab, AMREX_SPACEDIM >& sourceTerms,
+                   std::array< MultiFab, AMREX_SPACEDIM >& alpha_fc,
+                   MultiFab& beta,
+                   MultiFab& gamma,
+                   std::array< MultiFab, NUM_EDGE >& beta_ed,
+                   const Geometry geom, const Real& dt,
+                   torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
+                   ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
+                   ,torch::Tensor DivFfinal)
+{  
+
+        DivFCollect=torch::cat({DivFCollect,DivFfinal},0);
+    
 }
 
 void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab& pres,
@@ -1181,7 +837,8 @@ void update_TimeDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFab
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
                    ,std::vector<double>& TimeDataWindow_In)
 {  
@@ -1197,7 +854,8 @@ void update_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFa
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
                    ,std::vector<double>& ResidDataWindow_In)
 {  
@@ -1214,7 +872,8 @@ void update_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFa
                    MultiFab& gamma,
                    std::array< MultiFab, NUM_EDGE >& beta_ed,
                    const Geometry geom, const Real& dt,
-                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect
+                   torch::Tensor& PresCollect, std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
+                   std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect, torch::Tensor& DivFCollect
                    ,int step,std::vector<double>& TimeDataWindow,std::vector<double>& ResidDataWindow
                    ,amrex::DistributionMapping dmap, BoxArray  ba, std::array<MultiFab, AMREX_SPACEDIM>& source_termsTrimmed)
 {  
@@ -1227,90 +886,14 @@ void update_ResidDataWindow(std::array< MultiFab, AMREX_SPACEDIM >& umac,MultiFa
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-// void  TrainLoop(std::shared_ptr<Net> NETPres,std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,
-//                 torch::Tensor& PresCollect,std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,
-//                 const IntVect presTensordim, const std::vector<int> srctermTensordim, 
-//                 const std::vector<int> umacTensordims)
-// {
-// /*Setting up learning loop below */
-//                 torch::optim::Adagrad optimizer(NETPres->parameters(), torch::optim::AdagradOptions(0.01));
-
-//                 /* Create dataset object from tensors that have collected relevant data */
-//                 auto custom_dataset = CustomDataset(RHSCollect,PresCollect,umacCollect).map(torch::data::transforms::Stack<>());
-
-//                 int64_t batch_size = 16;
-//                 float e1 = 1e-5;
-//                 int64_t epoch = 0;
-//                 int64_t numEpoch = 250; 
-//                 float loss = 10.0;
-
-//                 /* Now, we create a data loader object and pass dataset. Note this returns a std::unique_ptr of the correct type that depends on the
-//                 dataset, type of sampler, etc */
-//                 auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset),batch_size); // random batches
-
-//                 /* NOTE: Weights and tensors must be of the same type. So, for function calls where input tensors interact with
-//                         weights, the input tensors are converted to  single precesion(weights are floats by default). Alternatively we can 
-//                         convert weights to double precision (at the cost of performance) */
-//                 while(loss>e1 && epoch<numEpoch )
-//                 {
-//                     for(torch::data::Example<>& batch: *data_loader) 
-//                     {      // RHS data
-//                             torch::Tensor data = batch.data; 
-//                             // Solution data
-//                             torch::Tensor target = batch.target; 
-
-//                             // Reset gradients
-//                             optimizer.zero_grad();
-
-//                             // forward pass
-//                             torch::Tensor output = NETPres->forward(data.to(torch::kFloat32),srctermTensordim,presTensordim,umacTensordims);
-
-//                             //evaulate loss
-//                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
-//                             torch::Tensor loss_out = torch::mse_loss(output, target.to(torch::kFloat32));
-//                             loss = loss_out.item<float>();
-
-//                             // Backward pass
-//                             loss_out.backward();
-
-//                             // Apply gradients
-//                             optimizer.step();
-
-//                             // Print loop info to console
-//                             epoch = epoch +1;
-//                     }
-//                     // std::cout << "___________" << std::endl;
-//                     // std::cout << "Loss: "  << loss << std::endl;
-//                     // std::cout << "Epoch Number: " << epoch << std::endl;
-//                 }
-
-// }
-
-
-void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<StokesCNNet_Uy> CNN_UY,
-                       std::shared_ptr<StokesCNNet_Uz> CNN_UZ,std::shared_ptr<StokesCNNet_P> CNN_P,
+void  CNN_TrainLoop(   std::shared_ptr<StokesCNNet_P> CNN_P,
                        std::array<torch::Tensor,AMREX_SPACEDIM>& RHSCollect,torch::Tensor& PresCollect,
                        std::array<torch::Tensor,AMREX_SPACEDIM>& umacCollect,const IntVect presTensordim, 
                        const std::vector<int> srctermTensordim, const std::vector<int> umacTensordims)
 {
                 /*Setting up learning loop below */
 
-                // torch::optim::Adagrad optimizerUx({CNN_11->parameters(),CNN_12->parameters(),CNN_13->parameters()}, torch::optim::AdagradOptions(0.01));
-                // torch::optim::Adagrad optimizerUy({CNN_21->parameters(),CNN_22->parameters(),CNN_23->parameters()}, torch::optim::AdagradOptions(0.01));
-                // torch::optim::Adagrad optimizerUz({CNN_31->parameters(),CNN_32->parameters(),CNN_33->parameters()}, torch::optim::AdagradOptions(0.01));
-                // torch::optim::Adagrad optimizerPres({CNN_P1->parameters(),CNN_P2->parameters(),CNN_P3->parameters()}, torch::optim::AdagradOptions(0.01));
-
-                // torch::optim::SGD optimizerUx({CNN_UX->parameters()}, torch::optim::SGDOptions(0.001));
-                // torch::optim::SGD optimizerUy({CNN_UY->parameters()}, torch::optim::SGDOptions (0.001));
-                // torch::optim::SGD optimizerUz({CNN_UZ->parameters()}, torch::optim::SGDOptions (0.001));
-                torch::optim::SGD optimizerPres({CNN_P->parameters()}, torch::optim::SGDOptions (0.001));
-
-                // torch::optim::Adagrad optimizerUx({CNN_UX->parameters()}, torch::optim::AdagradOptions(0.01));
-                // torch::optim::Adagrad optimizerUy({CNN_UY->parameters()}, torch::optim::AdagradOptions (0.01));
-                // torch::optim::Adagrad optimizerUz({CNN_UZ->parameters()}, torch::optim::AdagradOptions (0.01));
+                torch::optim::SGD optimizerPres({CNN_P->parameters()}, torch::optim::SGDOptions (0.0001));
                 // torch::optim::Adagrad optimizerPres({CNN_P->parameters()}, torch::optim::AdagradOptions (0.01));
 
 
@@ -1321,11 +904,8 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                 int64_t batch_size = 32;
                 float e1 = 1e-5;
                 int64_t epoch = 0;
-                int64_t numEpoch = 250000; 
+                int64_t numEpoch = 100; 
 
-                float lossUx = 0.0;
-                float lossUy = 0.0;
-                float lossUz = 0.0;
                 float lossP  = 10.0;
 
                 // Compute maximal dimension for slicing down tensor output of dataloader object
@@ -1371,7 +951,7 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                 /* NOTE: Weights and tensors must be of the same type. So, for function calls where input tensors interact with
                         weights, the input tensors are converted to  single precesion(weights are floats by default). Alternatively we can 
                         convert weights to double precision (at the cost of performance) */
-                while((lossUx+lossUy+lossUz+lossP)>5*e1 and epoch<numEpoch )
+                while((lossP)>5*e1 and epoch<numEpoch )
                 {
 
 
@@ -1383,33 +963,12 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                             torch::Tensor target = batch.target; 
    
                             // Reset gradients
-                            // optimizerUx.zero_grad();
-                            // optimizerUy.zero_grad();
-                            // optimizerUz.zero_grad();
                             optimizerPres.zero_grad();
 
                             // forward pass
-                            // Note: Inputs to forward function are de-paded appropriately
-
-                            // torch::Tensor outputUx = CNN_UX->forward(data.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-                            //                     data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-                            //                     data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-                            //                     maxDim,srctermTensordim,umacTensordims);
-
-                            // torch::Tensor outputUy = CNN_UY->forward(data.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-                            //                     data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-                            //                     data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-                            //                     maxDim,srctermTensordim,umacTensordims);
-                                                
-                            // torch::Tensor outputUz = CNN_UZ->forward(data.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-                            //                     data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-                            //                     data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-                            //                     maxDim,srctermTensordim,umacTensordims);
-
+                            // Note: Inputs to forward function inputs are de-paded appropriately
                             torch::Tensor outputP = CNN_P->forward(data.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-                                                data.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-                                                data.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-                                                maxDim,srctermTensordim,presTensordim);
+                                              presTensordim);
 
 
                             // Pad network outputs with zeros so that all outputs have the same uniform length
@@ -1424,46 +983,19 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                             // Note: target solution data input to  loss function are also de-paded appropriately (since they are padded prior to being added to the dataloader)
                             // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
 
-                            // torch::Tensor loss_outUx = torch::mse_loss(outputUx,
-                            //                 target.index({Slice(),0,Slice(0,umacTensordims[0]),
-                            //                 Slice(0,umacTensordims[1])
-                            //                 ,Slice(0,umacTensordims[2])}).to(torch::kFloat32));  
-
-                            // torch::Tensor loss_outUy = torch::mse_loss(outputUy,
-                            //                 target.index({Slice(),1,Slice(0,umacTensordims[3]),
-                            //                 Slice(0,umacTensordims[4])
-                            //                 ,Slice(0,umacTensordims[5])}).to(torch::kFloat32));  
-
-                            // torch::Tensor loss_outUz = torch::mse_loss(outputUz,
-                            //                 target.index({Slice(),2,Slice(0,umacTensordims[6]),
-                            //                 Slice(0,umacTensordims[7])
-                            //                 ,Slice(0,umacTensordims[8])}).to(torch::kFloat32));  
-
                            torch::Tensor loss_outP = torch::mse_loss(outputP,
                                             target.index({Slice(),3,Slice(0,presTensordim[0]),
                                             Slice(0,presTensordim[1])
                                             ,Slice(0,presTensordim[2])}).to(torch::kFloat32));  
 
                             // Extract loss value for printing to console
-                            
-                            // lossUx = loss_outUx.item<float>();
-                            // lossUy = loss_outUy.item<float>();
-                            // lossUz = loss_outUz.item<float>();
                             lossP  = loss_outP.item<float>();
 
-
-
                             // Backward pass
-                            // loss_outUx.backward();
-                            // loss_outUy.backward();
-                            // loss_outUz.backward();
                             loss_outP.backward();
 
 
                             // Apply gradients
-                            // optimizerUx.step();
-                            // optimizerUy.step();
-                            // optimizerUz.step();
                             optimizerPres.step();
 
                             epoch = epoch +1;
@@ -1471,15 +1003,80 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                             // Print loop info to console
                     }
                     std::cout << "___________" << std::endl;
-                    std::cout << "Loss Ux: "  << lossUx << std::endl;
-                    std::cout << "Loss Uy: "  << lossUy << std::endl;
-                    std::cout << "Loss Uz: "  << lossUz << std::endl;
                     std::cout << "Loss P : "  << lossP << std::endl;
-                    std::cout << "Epoch Number: " << epoch << std::endl;
+                    std::cout << "Batch Number: " << epoch << std::endl;
                 }
 
 }
 
+void  CNN_P_TrainLoop( std::shared_ptr<StokesCNNet_P> CNN_P,
+                       torch::Tensor& DivSrcTensorCollect,torch::Tensor& PresCollect,
+                       const IntVect presTensordim, const IntVect DivFdim)
+{
+                /*Setting up learning loop below */
+                // torch::optim::SGD optimizerPres({CNN_P->parameters()}, torch::optim::SGDOptions (0.01));
+                torch::optim::Adagrad optimizerPres({CNN_P->parameters()}, torch::optim::AdagradOptions (0.001));
+
+                /* Create dataset object from tensors that have collected relevant data */
+                auto custom_dataset = CustomDatasetCNN_Pres(DivSrcTensorCollect,PresCollect,DivFdim,presTensordim).map(torch::data::transforms::Stack<>());
+
+                int64_t batch_size = 8;
+                float e1 = 1e-5;
+                int64_t epoch = 0;
+                int64_t numEpoch = 3000; 
+
+                float lossP  = 10.0;
+                /* Now, we create a data loader object and pass dataset. Note this returns a std::unique_ptr of the correct type that depends on the
+                dataset, type of sampler, etc */
+                auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset),batch_size); // random batches
+
+                /* NOTE: Weights and tensors must be of the same type. So, for function calls where input tensors interact with
+                        weights, the input tensors are converted to  single precesion(weights are floats by default). Alternatively we can 
+                        convert weights to double precision (at the cost of performance) */
+                while((lossP)>5*e1 and epoch<numEpoch )
+                {
+
+
+                    for(torch::data::Example<>& batch: *data_loader) 
+                    {      // RHS data
+                            torch::Tensor data = batch.data; 
+
+                            // Solution data
+                            torch::Tensor target = batch.target; 
+   
+                            // Reset gradients
+                            optimizerPres.zero_grad();
+
+
+
+                            // forward pass
+                            torch::Tensor outputP = CNN_P->forward(data.to(torch::kFloat32),presTensordim);
+
+
+                            //evaulate loss                        
+                            // auto loss_out = torch::nn::functional::mse_loss(output,target, torch::nn::functional::MSELossFuncOptions(torch::kSum));
+                            torch::Tensor loss_outP = torch::mse_loss(outputP,target.to(torch::kFloat32));  
+
+                            // Extract loss value for printing to console
+                            lossP  = loss_outP.item<float>();
+
+                            // Backward pass
+                            loss_outP.backward();
+
+
+                            // Apply gradients
+                            optimizerPres.step();
+
+                            epoch = epoch +1;
+
+                            // Print loop info to console
+                    }
+                    std::cout << "___________" << std::endl;
+                    std::cout << "Loss P : "  << lossP << std::endl;
+                    std::cout << "Batch Number: " << epoch << std::endl;
+                }
+
+}
 
 double MovingAvg (std::vector<double>& InDataWindow)
 {
@@ -1495,17 +1092,16 @@ double MovingAvg (std::vector<double>& InDataWindow)
 
 
 
-
 /* ML Wrapper for advanceStokes */
 template<typename F>
 auto Wrapper(F func,bool RefineSol ,torch::Device device,
-                std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<StokesCNNet_Uy> CNN_UY,
-                std::shared_ptr<StokesCNNet_Uz> CNN_UZ,std::shared_ptr<StokesCNNet_P> CNN_P,                 
+                std::shared_ptr<StokesCNNet_P> CNN_P,                 
                 const IntVect presTensordim, const std::vector<int> srctermTensordim, 
-                 const std::vector<int> umacTensordims,amrex::DistributionMapping dmap, 
-                 BoxArray  ba)
+                const std::vector<int> umacTensordims, const IntVect DivFdim,
+                amrex::DistributionMapping dmap, 
+                BoxArray  ba)
 {
-    auto new_function = [func,RefineSol,device,CNN_UX,CNN_UY,CNN_UZ,CNN_P,presTensordim,srctermTensordim,umacTensordims,dmap,ba](auto&&... args)
+    auto new_function = [func,RefineSol,device,CNN_P,presTensordim,srctermTensordim,umacTensordims,DivFdim,dmap,ba](auto&&... args)
     {
         int retrainFreq =128;
         int initNum     =128;
@@ -1520,10 +1116,19 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
 
         MultiFab presNN(ba, dmap, 1, 1); 
         presNN.setVal(0.);  
+        // MultiFabPhysBC(presNN, geom, 0, 1, 0);     // varType  0: pressure+
+
 
         std::array< MultiFab, AMREX_SPACEDIM > umacNN;
         defineFC(umacNN, ba, dmap, 1);
         setVal(umacNN, 0.);
+
+
+
+
+        MultiFab DivF(ba, dmap, 1, 1);   
+        DivF.setVal(0);
+        ComputeDiv(DivF,Unpack_sourceTerms(args...),0,0,1,Unpack_geom(args...),0);
 
 
 
@@ -1539,7 +1144,6 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             std::array<MultiFab, AMREX_SPACEDIM> source_termsTrimmed;
             TrimSourceMultiFab(args...,dmap,ba,source_termsTrimmed);
             Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed,RHSTensor); /* Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM> */
-
 
             /* Appropriately Pad input */ 
                 /* Add channel dim to ever tensor component of the Std::array<torch::tensor,Amrex_dim> objects */
@@ -1580,81 +1184,94 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             if (srctermTensordim[7]-maxDim==0) f3_Slice_y =Slice();
             if (srctermTensordim[8]-maxDim==0) f3_Slice_z =Slice();
 
+
+            torch::Tensor DivFTensor= torch::zeros({1,DivFdim[0],DivFdim[1],DivFdim[2] },options);
+            ConvertToTensor(DivF,DivFTensor);
+
+
+
             /* Get prediction as tensor */
-
-            // std::array<torch::Tensor,AMREX_SPACEDIM> umacTensor;
-            // umacTensor[0] = CNN_UX->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
+            // torch::Tensor presTensor = CNN_P->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
             //                     SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
             //                     SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-            //                     maxDim,srctermTensordim,umacTensordims);
-
-            // umacTensor[1] = CNN_UY->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-            //                     SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-            //                     SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-            //                     maxDim,srctermTensordim,umacTensordims);
-                                                
-            // umacTensor[2] = CNN_UZ->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-            //                     SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-            //                     SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-            //                     maxDim,srctermTensordim,umacTensordims);
-
-            torch::Tensor presTensor = CNN_P->forward(SourceTermTensor.index({Slice(),0,f1_Slice_x,f1_Slice_y,f1_Slice_z}).to(torch::kFloat32),
-                                SourceTermTensor.index({Slice(),1,f2_Slice_x,f2_Slice_y,f2_Slice_z}).to(torch::kFloat32),
-                                SourceTermTensor.index({Slice(),2,f3_Slice_x,f3_Slice_y,f3_Slice_z}).to(torch::kFloat32),
-                                maxDim,srctermTensordim,presTensordim);
+            //                     maxDim,srctermTensordim,presTensordim);
+            torch::Tensor presTensor = CNN_P->forward(DivFTensor.to(torch::kFloat32),presTensordim);
 
 
             /* Convert tensors to multifab using distribution map of original pressure MultiFab */
             TensorToMultifab(presTensor,presNN);
 
-            /* Convert std::array tensor to std::array multifab using distribution map of original pressure MultiFab */
-            // stdArrTensorTostdArrMultifab(umacTensor,umacNN);
+            std::array< MultiFab, AMREX_SPACEDIM > umacDirect;
+            defineFC(umacDirect, ba, dmap, 1);
+            setVal(umacDirect, 0.);
+
+            std::array< MultiFab, AMREX_SPACEDIM > umacML;
+            defineFC(umacML, ba, dmap, 1);
+            setVal(umacML, 0.);
+
+
+            for (int d=0; d<AMREX_SPACEDIM; ++d)
+            {
+                MultiFab::Copy(umacDirect[d], Unpack_umac(args...)[d], 0, 0, 1, 1);
+                MultiFab::Copy(umacML[d], Unpack_umac(args...)[d], 0, 0, 1, 1);
+            }
+
+            MultiFab presDirect(ba, dmap, 1, 1); 
+            presDirect.setVal(0.); 
+            MultiFab presML(ba, dmap, 1, 1); 
+            presML.setVal(0.); 
+
+            MultiFab::Copy(presML,presNN, 0, 0, 1, 1);
+            MultiFab::Copy(presDirect,Unpack_pres(args...), 0, 0, 1, 1);
+
+
+
+
 
 
             Real norm_residNN;
             Real norm_resid;
+            gmres_max_iter = 15 ;
 
-            gmres_max_iter = 10 ;
-
-            // func(umacNN,presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
-            //     Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-            //     Unpack_geom(args...),Unpack_dt(args...));
-
-            // ResidCompute(umacNN,presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
-            //     Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-            //     Unpack_geom(args...),Unpack_dt(args...),norm_residNN);
-
-            func(Unpack_umac(args...),presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            func(umacML,presML,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...));
 
-            ResidCompute(Unpack_umac(args...),presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            ResidCompute(umacML,presML,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...),norm_residNN);
 
-            func(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+            func(umacDirect,presDirect,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...));
 
-            ResidCompute(Unpack_umac(args...),Unpack_pres(args...),Unpack_flux(args...),Unpack_sourceTerms(args...),
+            ResidCompute(umacDirect,presDirect,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...),norm_resid);
 
             gmres_max_iter = 100;
 
-            // amrex::Print() <<  "Direct resid "<<  norm_resid << " *****************" << " \n";
-            // amrex::Print() <<  "NN resid "<<  norm_residNN << " *****************" << " \n";
+
 
             if (norm_residNN < norm_resid)
             {
                 amrex::Print() << "Use guess provided by NN" << " \n";
                 use_NN_prediction=true;
+                for (int d=0; d<AMREX_SPACEDIM; ++d)
+                {
+                    MultiFab::Copy(Unpack_umac(args...)[d],umacML[d],0, 0, 1, 1);
+                }
+                MultiFab::Copy(presNN,presML, 0, 0, 1, 1);
             }else if(norm_residNN > norm_resid)
             {
                 amrex::Print() << "10th GMRES resid for NN guess is too high. Discarding NN guess " << " \n";
                 use_NN_prediction=false;
+                for (int d=0; d<AMREX_SPACEDIM; ++d)
+                {
+                    MultiFab::Copy(Unpack_umac(args...)[d],umacDirect[d],0, 0, 1, 1);
+                } 
+                MultiFab::Copy(Unpack_pres(args...),presDirect, 0, 0, 1, 1);
             }
-            
             ResidDataWindow[WindowIdx]= norm_residNN; /* Add residual to window of values */
         }
 
@@ -1663,7 +1280,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
         {
             Real step_strt_time = ParallelDescriptor::second();
 
-            func(umacNN,presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            func(Unpack_umac(args...),presNN,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...));
 
@@ -1723,10 +1340,14 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
         if(RefineSol == true and step<(initNum+TimeDataWindow.size()))
         {
 
+
             torch::Tensor presTensor= torch::zeros({1,presTensordim[0] , presTensordim[1],presTensordim[2] },options);
             ConvertToTensor(Unpack_pres(args...),presTensor);
             CollectPressure(args...,presTensor);
 
+            torch::Tensor DivFTensor= torch::zeros({1,DivFdim[0],DivFdim[1],DivFdim[2] },options);
+            ConvertToTensor(DivF,DivFTensor);
+            CollectDivF(args...,DivFTensor);
 
             std::array<torch::Tensor,AMREX_SPACEDIM> umacTensor;
             umacTensor[0]=torch::zeros({1,umacTensordims[0] , umacTensordims[1],umacTensordims[2] },options);
@@ -1756,6 +1377,9 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             ConvertToTensor(Unpack_pres(args...),presTensor);
             CollectPressure(args...,presTensor);
 
+            torch::Tensor DivFTensor= torch::zeros({1,DivFdim[0],DivFdim[1],DivFdim[2] },options);
+            ConvertToTensor(DivF,DivFTensor);
+            CollectDivF(args...,DivFTensor);
 
 
             std::array<torch::Tensor,AMREX_SPACEDIM> umacTensor;
@@ -1789,16 +1413,21 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             /* Train model every "retrainFreq" number of steps during initial data collection period (size of moving average window) */
             if(step<(initNum+TimeDataWindow.size()) and step%retrainFreq==0 and step>0)
             {
-                CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
-                            Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
-                            srctermTensordim,umacTensordims);
+                // CNN_TrainLoop(CNN_P,
+                //             Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
+                //             srctermTensordim,umacTensordims);
+
+                CNN_P_TrainLoop(CNN_P, Unpack_DivFCollect(args...), Unpack_PresCollect(args...),presTensordim, DivFdim);
 
             /* Train model every time 3 new data points have been added to training set after initialization period */
             }else if ( SampleIndex>0 and SampleIndex%retrainFreq==0 )
             {
-                CNN_TrainLoop(CNN_UX,CNN_UY,CNN_UZ,CNN_P,
-                            Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
-                            srctermTensordim,umacTensordims);
+                // CNN_TrainLoop(CNN_P,
+                //             Unpack_RHSCollect(args...),Unpack_PresCollect(args...),Unpack_umacCollect(args...),presTensordim,
+                //             srctermTensordim,umacTensordims);
+
+                CNN_P_TrainLoop(CNN_P, Unpack_DivFCollect(args...), Unpack_PresCollect(args...),presTensordim, DivFdim);
+
             }
         }
 
@@ -2103,6 +1732,12 @@ void main_driver(const char * argv) {
     }
 
 
+    // Compute div(F) used in NN calculations
+    MultiFab DivF(ba, dmap, 1, 1); 
+    DivF.setVal(0);
+    ComputeDiv(DivF,source_terms,0,0,1,geom,0);
+
+
 
     torch::Device device(torch::kCPU);
     if (torch::cuda::is_available())  device = torch::Device(torch::kCUDA);
@@ -2112,6 +1747,9 @@ void main_driver(const char * argv) {
     const auto & presbox  =   pres[0];
     IntVect presTensordim = presbox.bigEnd()-presbox.smallEnd()+1;
 
+    /* Compute dimensions of single component div(F) box */
+    const auto & DivFbox  =   DivF[0];
+    IntVect DivFdim = DivFbox.bigEnd()-DivFbox.smallEnd()+1;
 
 
     /* Compute dimensions of each source term component box */
@@ -2143,33 +1781,10 @@ void main_driver(const char * argv) {
         umacTensordims[i+3]=umacYTensordim[i]+1;
         umacTensordims[i+6]=umacZTensordim[i]+1;
     }
-
-    int FlatdimIn= sourceTermTensordims[0]*sourceTermTensordims[1]*sourceTermTensordims[2] 
-                    +sourceTermTensordims[3]*sourceTermTensordims[4]*sourceTermTensordims[5]
-                    +sourceTermTensordims[6]*sourceTermTensordims[7]*sourceTermTensordims[8]
-                    +presTensordim[0]*presTensordim[1]*presTensordim[2];
-
-    int FlatdimOut= umacTensordims[0]*umacTensordims[1]*umacTensordims[2] 
-                    +umacTensordims[3]*umacTensordims[4]*umacTensordims[5]
-                    +umacTensordims[6]*umacTensordims[7]*umacTensordims[8]
-                    +presTensordim[0]*presTensordim[1]*presTensordim[2];
-    
-
-
-    //   Define model and move to GPU
-    // auto TestNet = std::make_shared<Net>(FlatdimIn,FlatdimOut);
-    // TestNet->to(device);
-
+ 
     // Define CNN models and move to GPU
-    auto CNN_UX= std::make_shared<StokesCNNet_Ux>();
-    auto CNN_UY= std::make_shared<StokesCNNet_Uy>();
-    auto CNN_UZ= std::make_shared<StokesCNNet_Uz>();
     auto CNN_P= std::make_shared<StokesCNNet_P>();
-    CNN_UX->to(device);
-    CNN_UY->to(device);
-    CNN_UZ->to(device);
     CNN_P->to(device);
-
 
 
 
@@ -2185,21 +1800,22 @@ void main_driver(const char * argv) {
     /* Wrap advanceStokes function pointer */
     bool RefineSol=false;
     auto advanceStokes_ML=Wrapper(advanceStokesPtr,RefineSol,device,
-                                CNN_UX,CNN_UY,CNN_UZ,CNN_P,
+                                CNN_P,
                                 presTensordim,sourceTermTensordims,
-                                umacTensordims,dmap,ba);
+                                umacTensordims,DivFdim,dmap,ba);
 
     RefineSol=true;
     auto advanceStokes_ML2=Wrapper(advanceStokesPtr,RefineSol,device,
-                                    CNN_UX,CNN_UY,CNN_UZ,CNN_P,
+                                    CNN_P,
                                     presTensordim,sourceTermTensordims,
-                                    umacTensordims,dmap,ba) ;
+                                    umacTensordims,DivFdim,dmap,ba) ;
 
 
     /* Initialize tensors that collect all pressure and source term data*/
     auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
     torch::Tensor presCollect= torch::zeros({1,presTensordim[0], presTensordim[1],presTensordim[2]},options);
 
+    torch::Tensor DivFCollect= torch::zeros({1,DivFdim[0], DivFdim[1],DivFdim[2]},options);
 
     std::array<torch::Tensor,AMREX_SPACEDIM> RHSCollect;
     RHSCollect[0]=torch::zeros({1,sourceTermTensordims[0] , sourceTermTensordims[1],sourceTermTensordims[2] },options);
@@ -2226,7 +1842,7 @@ void main_driver(const char * argv) {
     //___________________________________________________________________________
 
     MultiFab presDirect(ba, dmap, 1, 1); 
-    pres.setVal(0.);  
+    presDirect.setVal(0.);  
 
     std::array< MultiFab, AMREX_SPACEDIM > umacDirect;
     defineFC(umacDirect, ba, dmap, 1);
@@ -2238,9 +1854,7 @@ void main_driver(const char * argv) {
         source_termsDirect[d].setVal(0.);
     }
 
-
-
-    int initNum     =32; //number of data points needed before making predictions. Note, must be set in wrapper as well.
+    int initNum     =128; //number of data points needed before making predictions. Note, must be set in wrapper as well.
     while (step < 3000)
     {
         // Spread forces to RHS
@@ -2262,9 +1876,9 @@ void main_driver(const char * argv) {
 
             for (int i =0; i<np; ++i) {
                 ParticleType & mark = markers[i];
-                mark.pos(0)=0.4*dis(gen);
-                mark.pos(1)=0.4*dis(gen);
-                mark.pos(2)=0.4*dis(gen);
+                mark.pos(0)=0.9*dis(gen);
+                mark.pos(1)=0.9*dis(gen);
+                mark.pos(2)=0.9*dis(gen);
                 for (int d=0; d<AMREX_SPACEDIM; ++d)
                     mark.rdata(IBMReal::forcex + d) = f_0[d];
             }
@@ -2275,9 +1889,6 @@ void main_driver(const char * argv) {
         ib_mc.SpreadMarkers(0, source_terms);
         for (int d=0; d<AMREX_SPACEDIM; ++d)
             source_terms[d].SumBoundary(geom.periodicity());
-
-
-
 
         // if(variance_coef_mom != 0.0) {
 
@@ -2311,9 +1922,10 @@ void main_driver(const char * argv) {
             MultiFab::Copy(source_termsDirect[d], source_terms[d], 0, 0, 1, 6);
         }
         // mimicing split in NN-wrapper (for comparison)
+        Print() << "*** COARSE SOLUTION  ***" << "\n"; 
         if (step> initNum)
         {
-            gmres_max_iter = 10 ;
+            gmres_max_iter = 15 ;
             advanceStokes(
                     umacDirect, presDirect,              /* LHS */
                     mfluxdiv, source_termsDirect,  /* RHS */
@@ -2337,11 +1949,12 @@ void main_driver(const char * argv) {
 
         Real step_strt_time = ParallelDescriptor::second();
 
-        // Print() << "COARSE SOLUTION" << "\n"; 
+        Print() << "*** COARSE SOLUTION (ML) ***" << "\n"; 
         advanceStokes_ML(umac,pres, /* LHS */
                         mfluxdiv,source_terms, /* RHS*/
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
-                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow,ResidDataWindow /* ML */
+                        presCollect,RHSCollect,umacCollect,DivFCollect,/* ML */
+                        step,TimeDataWindow,ResidDataWindow /* ML */
                         );
 
 
@@ -2366,19 +1979,21 @@ void main_driver(const char * argv) {
 
 
 
-        // Print() << "REFINE SOLUTION" << "\n"; 
-        
+        Print() << "*** REFINE SOLUTION (ML) ***" << "\n"; 
         gmres::gmres_abs_tol = 1e-6;
         advanceStokes_ML2(umac,pres, /* LHS */
                         mfluxdiv,source_terms,/* RHS */
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
-                        presCollect,RHSCollect,umacCollect,step,TimeDataWindow,ResidDataWindow /* ML */
+                        presCollect,RHSCollect,umacCollect,DivFCollect,/* ML */
+                        step,TimeDataWindow,ResidDataWindow /* ML */
                         );
 
         Real step_stop_time = ParallelDescriptor::second() - step_strt_time;
         ParallelDescriptor::ReduceRealMax(step_stop_time);
 
         amrex::Print() << "Advanced step " << step << " in " << step_stop_time << " seconds\n";
+        Print() << "*** ____________________ ***" << "\n"; 
+
 
         time = time + dt;
         step ++;
