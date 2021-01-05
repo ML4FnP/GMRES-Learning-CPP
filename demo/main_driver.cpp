@@ -1342,16 +1342,17 @@ void  CNN_TrainLoop(std::shared_ptr<StokesCNNet_Ux> CNN_UX,std::shared_ptr<Stoke
                                             Slice(0,umacTensordims[7])
                                             ,Slice(0,umacTensordims[8])}).to(torch::kFloat32));   
 
-
+                            torch::Tensor TotalLoss =loss_outUx+loss_outUy+loss_outUz;
                             // Extract loss value for printing to console
                             lossUx = loss_outUx.item<float>();
                             lossUy = loss_outUy.item<float>();
                             lossUz = loss_outUz.item<float>();
 
                             // Backward pass
-                            loss_outUx.backward();
-                            loss_outUy.backward();
-                            loss_outUz.backward();
+                            TotalLoss.backward();
+                            // loss_outUx.backward();
+                            // loss_outUy.backward();
+                            // loss_outUz.backward();
 
                             // Apply gradients
                             optimizerUx.step();
@@ -1599,8 +1600,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             setVal(umacML, 0.);
             for (int d=0; d<AMREX_SPACEDIM; ++d)
             {
-                MultiFab::Copy(umacDirect[d], Unpack_umac(args...)[d], 0, 0, 1, 1);
-                MultiFab::Copy(umacML[d], Unpack_umac(args...)[d], 0, 0, 1, 1);
+                MultiFab::Copy(umacML[d], umacNN[d], 0, 0, 1, 1);
             }
             MultiFab presML(ba, dmap, 1, 1); 
             presML.setVal(0.); 
@@ -1610,26 +1610,26 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             Real norm_residNN;
             Real norm_resid;
 
-            gmres_max_iter = 1 ;
-            func(umacML,presML,Unpack_flux(args...),Unpack_sourceTerms(args...),
-                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-                Unpack_geom(args...),Unpack_dt(args...));
+            // gmres_max_iter = 5 ;
+            // func(umacML,presML,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            //     Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            //     Unpack_geom(args...),Unpack_dt(args...));
 
             ResidCompute(umacML,presML,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...),norm_residNN);
 
-            func(umacDirect,presDirect,Unpack_flux(args...),Unpack_sourceTerms(args...),
-                Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
-                Unpack_geom(args...),Unpack_dt(args...));
+            // func(umacDirect,presDirect,Unpack_flux(args...),Unpack_sourceTerms(args...),
+            //     Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
+            //     Unpack_geom(args...),Unpack_dt(args...));
 
             ResidCompute(umacDirect,presDirect,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...),norm_resid);
-            gmres_max_iter = 100;
+            // gmres_max_iter = 100;
 
-            // amrex::Print() <<  "Direct resid "<<  norm_resid << " *****************" << " \n";
-            // amrex::Print() <<  "NN resid "<<  norm_residNN << " *****************" << " \n";
+            amrex::Print() <<  "Direct resid "<<  norm_resid << " *****************" << " \n";
+            amrex::Print() <<  "NN resid "<<  norm_residNN << " *****************" << " \n";
 
             if (norm_residNN < norm_resid)
             {
@@ -2220,7 +2220,7 @@ void main_driver(const char * argv) {
 
 
 
-    int initNum     =128; //number of data points needed before making predictions. Note, must be set in wrapper as well.
+    // int initNum     =64; //number of data points needed before making predictions. Note, must be set in wrapper as well.
     while (step < 3000)
     {
         // Spread forces to RHS
@@ -2293,16 +2293,16 @@ void main_driver(const char * argv) {
 
         Print() << "*** COARSE SOLUTION  ***" << "\n"; 
         // mimicing split in NN-wrapper (for comparison)
-        if (step> initNum)
-        {
-            gmres_max_iter = 1 ;
-            advanceStokes(
-                    umacDirect, presDirect,              /* LHS */
-                    mfluxdiv, source_termsDirect,  /* RHS */
-                    alpha_fc, beta, gamma, beta_ed, geom, dt
-                );
-            gmres_max_iter = 100 ;
-        }
+        // if (step> initNum)
+        // {
+        //     gmres_max_iter = 5 ;
+        //     advanceStokes(
+        //             umacDirect, presDirect,              /* LHS */
+        //             mfluxdiv, source_termsDirect,  /* RHS */
+        //             alpha_fc, beta, gamma, beta_ed, geom, dt
+        //         );
+        //     gmres_max_iter = 100 ;
+        // }
         Real Direct_step_strt_time = ParallelDescriptor::second();
         advanceStokes(
                 umacDirect, presDirect,              /* LHS */
