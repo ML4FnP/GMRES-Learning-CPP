@@ -56,9 +56,6 @@ inline void setVal(std::array< MultiFab, AMREX_SPACEDIM > & mf_in,
         mf_in[i].setVal(set_val);
 }
 
-
-
-
 /* Ideal to explicitly use std::shared_ptr<MyModule> rahter than a "TorchModule" */
 /* Need to set up NN using this approach where the  module is registered and constructed in the initializer list  */
 /* Can also instead first construct the holder with a null pointer and then assign it in the constructor */
@@ -141,10 +138,8 @@ class CustomDatasetCNN_Pres : public torch::data::Dataset<CustomDatasetCNN_Pres>
             /* Add channel dim to ever tensor component of the Std::array<torch::tensor,Amrex_dim> objects */
             DivSrcTensor=DivSrcTensor;
             Pres=Pres;
-
             /* Network input tensor */
             bTensor=DivSrcTensor;
-
             /* Network solution tensor */
             SolTensor=Pres;    
         };
@@ -163,6 +158,8 @@ class CustomDatasetCNN_Pres : public torch::data::Dataset<CustomDatasetCNN_Pres>
           return SolTensor.size(0);
         };
   }; 
+  //////////////////////////////////////////////////////////////////////////////
+
 
 
 /* copy values of single box multifab to Pytorch Tensor  */
@@ -905,7 +902,7 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
 {
     auto new_function = [func,RefineSol,device,CNN_P,presTensordim,srctermTensordim,umacTensordims,DivFdim,dmap,ba](auto&&... args)
     {
-        int retrainFreq =128;
+        int retrainFreq =64;
         int initNum     =128;
         auto options = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false); 
         int step=unpack_Step(args...);
@@ -948,14 +945,14 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             Convert_StdArrMF_To_StdArrTensor(source_termsTrimmed,RHSTensor); /* Convert Std::array<MultiFab,AMREX_SPACEDIM > to  std::array<torch::tensor, AMREX_SPACEDIM> */
 
             /* Appropriately Pad input */ 
-                /* Add channel dim to ever tensor component of the Std::array<torch::tensor,Amrex_dim> objects */
-                for (int d=0;d<AMREX_SPACEDIM;d++) 
-                {
-                    RHSTensor[d]=RHSTensor[d].unsqueeze(1);
-                }
+            /* Add channel dim to ever tensor component of the Std::array<torch::tensor,Amrex_dim> objects */
+            for (int d=0;d<AMREX_SPACEDIM;d++) 
+            {
+                RHSTensor[d]=RHSTensor[d].unsqueeze(1);
+            }
 
-                // The tensors are padded so that every component is the same size as the largest component
-                // Note: This allows the tensors to be concatencated, and allows the most direct use of the pytorch dataloader
+            // The tensors are padded so that every component is the same size as the largest component
+            // Note: This allows the tensors to be concatencated, and allows the most direct use of the pytorch dataloader
             int maxSrc = *std::max_element(srctermTensordim.begin(), srctermTensordim.end());
             RHSTensor[0]= torch::nn::functional::pad(RHSTensor[0], torch::nn::functional::PadFuncOptions({0, maxSrc-srctermTensordim[2], 0, maxSrc-srctermTensordim[1],0, maxSrc-srctermTensordim[0]}).mode(torch::kConstant).value(0));
             RHSTensor[1]= torch::nn::functional::pad(RHSTensor[1], torch::nn::functional::PadFuncOptions({0, maxSrc-srctermTensordim[5], 0, maxSrc-srctermTensordim[4],0, maxSrc-srctermTensordim[3]}).mode(torch::kConstant).value(0));
@@ -999,8 +996,8 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
 
             Real norm_residNN;
             Real norm_resid;
-            gmres_max_iter = 5 ;
 
+            gmres_max_iter = 1 ;
             func(umacML,presML,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...));
@@ -1016,7 +1013,6 @@ auto Wrapper(F func,bool RefineSol ,torch::Device device,
             ResidCompute(umacDirect,presDirect,Unpack_flux(args...),Unpack_sourceTerms(args...),
                 Unpack_alpha_fc(args...),Unpack_beta(args...),Unpack_gamma(args...),Unpack_beta_ed(args...),
                 Unpack_geom(args...),Unpack_dt(args...),norm_resid);
-
             gmres_max_iter = 100;
 
 
@@ -1540,7 +1536,7 @@ void main_driver(const char * argv) {
         umacTensordims[i+6]=umacZTensordim[i]+1;
     }
  
-    // Define CNN models and move to GPU
+    /* Define CNN models and move to GPU */
     auto CNN_P= std::make_shared<StokesCNNet_P>();
     CNN_P->to(device);
 
@@ -1634,9 +1630,9 @@ void main_driver(const char * argv) {
 
             for (int i =0; i<np; ++i) {
                 ParticleType & mark = markers[i];
-                mark.pos(0)=0.25*dis(gen);
-                mark.pos(1)=0.25*dis(gen);
-                mark.pos(2)=0.25*dis(gen);
+                mark.pos(0)=0.95*dis(gen);
+                mark.pos(1)=0.95*dis(gen);
+                mark.pos(2)=0.95*dis(gen);
                 for (int d=0; d<AMREX_SPACEDIM; ++d)
                     mark.rdata(IBMReal::forcex + d) = f_0[d];
             }
@@ -1683,7 +1679,7 @@ void main_driver(const char * argv) {
         Print() << "*** COARSE SOLUTION  ***" << "\n"; 
         if (step> initNum)
         {
-            gmres_max_iter = 5 ;
+            gmres_max_iter = 1 ;
             advanceStokes(
                     umacDirect, presDirect,              /* LHS */
                     mfluxdiv, source_termsDirect,  /* RHS */
@@ -1704,10 +1700,8 @@ void main_driver(const char * argv) {
         outfileDirect << Direct_step_stop_time << std::setw(10) << " \n"; 
 
 
-
-        Real step_strt_time = ParallelDescriptor::second();
-
         Print() << "*** COARSE SOLUTION (ML) ***" << "\n"; 
+        Real step_strt_time = ParallelDescriptor::second();
         advanceStokes_ML(umac,pres, /* LHS */
                         mfluxdiv,source_terms, /* RHS*/
                         alpha_fc, beta, gamma, beta_ed, geom, dt,
